@@ -1,7 +1,20 @@
 from flask import Flask, render_template, request, redirect
 import sqlite3
+import os
+from werkzeug.utils import secure_filename
+
 
 app = Flask(__name__)
+
+UPLOAD_FOLDER = "static/uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # make sure folder exists
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+#allows all the mentioned file formats 
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 # DB init
@@ -36,10 +49,14 @@ def add_pet():
         if 'photo' in request.files:
             file = request.files['photo']
             if file.filename != '':
-                filename = secure_filename(file.filename)
-                filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                file.save(filepath)
-                photo = filename
+                if allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
+                    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                    file.save(filepath)
+                    photo = filename
+                else:
+            # Optional: show a flash message saying file type not allowed
+                    print("Invalid file type")        
 
         with sqlite3.connect("pets.db") as conn:
             conn.execute(

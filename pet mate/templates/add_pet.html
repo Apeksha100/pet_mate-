@@ -12,10 +12,17 @@
     <input type="number" name="age" placeholder="Age" required><br>
 
     <select name="purpose" required>
-        <option value="Sale">Sale</option>
-        <option value="Adoption">Adoption</option>
-        <option value="Mate">Mate</option>
-    </select><br>
+    <option value="Sale">Sale</option>
+    <option value="Adoption">Adoption</option>
+    <option value="Mate">Mate</option>
+    {% if pet[6] %}
+    <img src="{{ url_for('static', filename='uploads/' ~ pet[6]) }}" class="img-fluid mt-2">
+    {% else %}
+    <p>No image</p>
+    {% endif %}
+
+</select>
+<br>
 
     <input type="file" name="photo"><br>
 
