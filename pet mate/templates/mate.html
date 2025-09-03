@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Find Mate</title>
+</head>
+<body>
+    <h1>Find a Mate for Your Pet</h1>
+
+    <form method="POST">
+        <label for="breed">Enter Breed:</label>
+        <input type="text" name="breed" id="breed" required>
+        <button type="submit">Search</button>
+    </form>
+
+    {% if pets %}
+        <h2>Available Mates:</h2>
+        <ul>
+        {% for pet in pets %}
+            <li>{{ pet[1] }} ({{ pet[2] }}) - Location: {{ pet[3] }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>

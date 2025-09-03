@@ -1,0 +1,31 @@
+<h2>🔍 Search Pets</h2>
+<form method="POST">
+    <input type="text" name="breed" placeholder="Breed">
+    <input type="text" name="location" placeholder="Location">
+    <input type="number" name="age" placeholder="Age">
+    <select name="purpose">
+        <option value="">Any Purpose</option>
+        <option value="Sale">Sale</option>
+        <option value="Adoption">Adoption</option>
+        <option value="Mate">Mate</option>
+    </select>
+    <button type="submit">Search</button>
+</form>
+
+{% if pets %}
+    <h3>Results:</h3>
+    <div>
+    {% for pet in pets %}
+        <div>
+            <h4>{{ pet[1] }}</h4>
+            <p>Breed: {{ pet[2] }}</p>
+            <p>Location: {{ pet[3] }}</p>
+            <p>Age: {{ pet[4] }}</p>
+            <p>Purpose: {{ pet[5] }}</p>
+            {% if pet[6] %}
+                <img src="{{ url_for('static', filename='uploads/' ~ pet[6]) }}" width="150">
+            {% endif %}
+        </div>
+    {% endfor %}
+    </div>
+{% endif %}
