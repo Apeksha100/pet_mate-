@@ -2,31 +2,97 @@
 <html>
 <head>
     <title>Add Pet</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
-<body>
+<body class="container py-5">
     <h1>Add a Pet</h1>
     <form method="POST" enctype="multipart/form-data">
-    <input type="text" name="name" placeholder="Pet Name" required><br>
-    <input type="text" name="breed" placeholder="Breed" required><br>
-    <input type="text" name="location" placeholder="Location" required><br>
-    <input type="number" name="age" placeholder="Age" required><br>
+        <div class="mb-3">
+            <input type="text" name="name" placeholder="Pet Name" class="form-control" required>
+        </div>
 
-    <select name="purpose" required>
-    <option value="Sale">Sale</option>
-    <option value="Adoption">Adoption</option>
-    <option value="Mate">Mate</option>
-    {% if pet[6] %}
-    <img src="{{ url_for('static', filename='uploads/' ~ pet[6]) }}" class="img-fluid mt-2">
-    {% else %}
-    <p>No image</p>
-    {% endif %}
+        <!-- Category dropdown -->
+        <div class="mb-3">
+            <select name="category" id="category" class="form-control" required onchange="showBreedOptions()">
+                <option value="">Select Category</option>
+                <option value="Dog">Dog</option>
+                <option value="Cat">Cat</option>
+                <option value="Bird">Bird</option>
+                <option value="Small Pet">Small Pet</option>
+                <option value="Reptile">Reptile</option>
+                <option value="Fish">Fish</option>
+            </select>
+        </div>
 
-</select>
-<br>
+        <!-- Breed dropdowns -->
+        <div class="mb-3" id="breed-div" style="display:none;">
+            <select name="breed" id="breed" class="form-control" required>
+                <option value="">Select Breed/Species</option>
+            </select>
+        </div>
 
-    <input type="file" name="photo"><br>
+        <div class="mb-3">
+            <select name="location" class="form-control" required>
+                <option value="">Select Location</option>
+                <option value="Mumbai">Mumbai</option>
+                <option value="Pune">Pune</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Bangalore">Bangalore</option>
+                <option value="Chennai">Chennai</option>
+                <option value="Hyderabad">Hyderabad</option>
+                <option value="Kolkata">Kolkata</option>
+            </select>
+        </div>
 
-    <button type="submit">Add Pet</button>
+        <div class="mb-3">
+            <input type="number" name="age" placeholder="Age" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <select name="purpose" class="form-control" required>
+                <option value="Sale">Sale</option>
+                <option value="Adoption">Adoption</option>
+                <option value="Mate">Mate</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <input type="file" name="photo" class="form-control">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Add Pet</button>
     </form>
+
+    <script>
+        const breeds = {
+            "Dog": ["Beagle", "Labrador", "Pug", "Golden Retriever", "Husky", "German Shepherd"],
+            "Cat": ["Siamese", "Persian", "Maine Coon", "Bengal"],
+            "Bird": ["Parrot", "Canary", "Budgerigar"],
+            "Small Pet": ["Rabbit", "Hamster", "Guinea Pig"],
+            "Reptile": ["Turtle", "Lizard", "Snake"],
+            "Fish": ["Goldfish", "Betta Fish"]
+        };
+
+        function showBreedOptions() {
+            const category = document.getElementById("category").value;
+            const breedSelect = document.getElementById("breed");
+            const breedDiv = document.getElementById("breed-div");
+
+            // Clear previous options
+            breedSelect.innerHTML = '<option value="">Select Breed/Species</option>';
+
+            if (category && breeds[category]) {
+                breeds[category].forEach(b => {
+                    const option = document.createElement("option");
+                    option.value = b;
+                    option.textContent = b;
+                    breedSelect.appendChild(option);
+                });
+                breedDiv.style.display = "block";
+            } else {
+                breedDiv.style.display = "none";
+            }
+        }
+    </script>
 </body>
 </html>

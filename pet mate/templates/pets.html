@@ -11,12 +11,15 @@
         <div class="col-md-4 mb-4">
             <div class="card p-3">
                 <h4>{{ pet[1] }}</h4> <!-- Name -->
-                <p><strong>Breed:</strong> {{ pet[2] }}</p>
+                <p><strong>Category:</strong> {{ pet[7] if pet|length > 7 else 'N/A' }}</p>
+                <p><strong>Breed/Species:</strong> {{ pet[2] }}</p>
                 <p><strong>Location:</strong> {{ pet[3] }}</p>
                 <p><strong>Age:</strong> {{ pet[4] }}</p>
-                <p><strong>Purpose:</strong> {{ pet[5] }}</p> <!-- Correct index -->
+                <p><strong>Purpose:</strong> {{ pet[5] }}</p>
                 {% if pet[6] %}
                     <img src="{{ url_for('static', filename='uploads/' ~ pet[6]) }}" class="img-fluid mt-2">
+                {% else %}
+                    <p>No image</p>
                 {% endif %}
             </div>
         </div>

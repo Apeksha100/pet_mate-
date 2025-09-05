@@ -9,13 +9,26 @@
     <div class="row mt-4">
         {% for pet in pets %}
         <div class="col-md-4 mb-4">
-            <div class="card p-3">
-                <h4>{{ pet[1] }}</h4> <!-- Name -->
-                <p><strong>Breed:</strong> {{ pet[2] }}</p>
-                <p><strong>Location:</strong> {{ pet[3] }}</p>
-                <p><strong>Purpose:</strong> {{ pet[4] }}</p>
-            </div>
-        </div>
+    <div class="card p-3">
+        <h4>{{ pet[1] }}</h4> <!-- Name -->
+        <p><strong>Category:</strong> {{ pet[7] }}</p>
+        <p><strong>Breed:</strong> {{ pet[2] }}</p>
+        <p><strong>Location:</strong> {{ pet[3] }}</p>
+        <p><strong>Age:</strong> {{ pet[4] }}</p>
+        <p><strong>Purpose:</strong> {{ pet[5] }}</p>
+        {% if pet[6] %}
+            <img src="{{ url_for('static', filename='uploads/' ~ pet[6]) }}" class="img-fluid mt-2">
+        {% endif %}
+
+        {% if pet[5] == 'Sale' %}
+            <a href="{{ url_for('buy_pet', pet_id=pet[0]) }}" class="btn btn-success mt-2">Buy</a>
+        {% elif pet[5] == 'Adoption' %}
+            <a href="{{ url_for('buy_pet', pet_id=pet[0]) }}" class="btn btn-primary mt-2">Adopt</a>
+        {% endif %}
+    </div>
+</div>
+</div>
+
         {% endfor %}
         {% if pets|length == 0 %}
         <p class="text-center mt-4">No pets listed for sale right now.</p>

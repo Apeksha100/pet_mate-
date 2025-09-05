@@ -1,24 +1,89 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Find Mate</title>
+    <title>Find a Mate</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
-<body>
-    <h1>Find a Mate for Your Pet</h1>
+<body class="container py-5">
+    <h2>Find a Mate</h2>
 
     <form method="POST">
-        <label for="breed">Enter Breed:</label>
-        <input type="text" name="breed" id="breed" required>
-        <button type="submit">Search</button>
+        <!-- Category -->
+        <div class="mb-3">
+            <select name="category" id="category" class="form-control" onchange="showBreedOptions()">
+                <option value="">Select Category</option>
+                <option value="Dog" {% if selected_category=="Dog" %}selected{% endif %}>Dog</option>
+                <option value="Cat" {% if selected_category=="Cat" %}selected{% endif %}>Cat</option>
+                <option value="Bird" {% if selected_category=="Bird" %}selected{% endif %}>Bird</option>
+                <option value="Small Pet" {% if selected_category=="Small Pet" %}selected{% endif %}>Small Pet</option>
+                <option value="Reptile" {% if selected_category=="Reptile" %}selected{% endif %}>Reptile</option>
+                <option value="Fish" {% if selected_category=="Fish" %}selected{% endif %}>Fish</option>
+            </select>
+        </div>
+
+        <!-- Breed -->
+        <div class="mb-3" id="breed-div" style="display:none;">
+            <select name="breed" id="breed" class="form-control">
+                <option value="">Select Breed/Species</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Search</button>
     </form>
 
-    {% if pets %}
-        <h2>Available Mates:</h2>
-        <ul>
-        {% for pet in pets %}
-            <li>{{ pet[1] }} ({{ pet[2] }}) - Location: {{ pet[3] }}</li>
-        {% endfor %}
-        </ul>
-    {% endif %}
+    <div class="mt-4">
+        {% if pets %}
+            {% for pet in pets %}
+                <div class="card mb-3 p-3">
+                    <h4>{{ pet[1] }}</h4>
+                    <p><strong>Category:</strong> {{ pet[7] }}</p>
+                    <p><strong>Breed:</strong> {{ pet[2] }}</p>
+                    <p><strong>Location:</strong> {{ pet[3] }}</p>
+                    <p><strong>Age:</strong> {{ pet[4] }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No pets found for mating.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        const breeds = {
+            "Dog": ["Beagle", "Labrador", "Pug", "Golden Retriever", "Husky", "German Shepherd"],
+            "Cat": ["Siamese", "Persian", "Maine Coon", "Bengal"],
+            "Bird": ["Parrot", "Canary", "Budgerigar"],
+            "Small Pet": ["Rabbit", "Hamster", "Guinea Pig"],
+            "Reptile": ["Turtle", "Lizard", "Snake"],
+            "Fish": ["Goldfish", "Betta Fish"]
+        };
+
+        function showBreedOptions() {
+            const category = document.getElementById("category").value;
+            const breedSelect = document.getElementById("breed");
+            const breedDiv = document.getElementById("breed-div");
+
+            // reset
+            breedSelect.innerHTML = '<option value="">Select Breed/Species</option>';
+
+            if (category && breeds[category]) {
+                breeds[category].forEach(b => {
+                    const option = document.createElement("option");
+                    option.value = b;
+                    option.textContent = b;
+                    // keep selected on reload
+                    if ("{{ selected_breed }}" === b) {
+                        option.selected = true;
+                    }
+                    breedSelect.appendChild(option);
+                });
+                breedDiv.style.display = "block";
+            } else {
+                breedDiv.style.display = "none";
+            }
+        }
+
+        // auto-run to restore selected breed after reload
+        showBreedOptions();
+    </script>
 </body>
 </html>

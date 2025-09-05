@@ -3,12 +3,13 @@
     <input type="text" name="breed" placeholder="Breed">
     <input type="text" name="location" placeholder="Location">
     <input type="number" name="age" placeholder="Age">
-    <select name="purpose">
-        <option value="">Any Purpose</option>
-        <option value="Sale">Sale</option>
-        <option value="Adoption">Adoption</option>
-        <option value="Mate">Mate</option>
-    </select>
+  <select name="purpose">
+    <option value="">Select Purpose</option>
+    <option value="Sale" {% if selected_purpose=='Sale' %}selected{% endif %}>Sale</option>
+    <option value="Adoption" {% if selected_purpose=='Adoption' %}selected{% endif %}>Adoption</option>
+    <option value="Mate" {% if selected_purpose=='Mate' %}selected{% endif %}>Mate</option>
+</select>
+
     <button type="submit">Search</button>
 </form>
 
