@@ -178,6 +178,22 @@ def search_pets():
             pets = conn.execute(query, params).fetchall()
     selected_purpose = request.form.get('purpose')
     return render_template('search.html', pets=pets, selected_purpose=selected_purpose)
+# Route for rescue page
+@app.route('/rescue')
+def rescue():
+    # Example: Fetch rescue reports from DB if you want
+    # For now, just render the page
+    return render_template('rescue.html')
+
+
+# Route for vet directory page
+@app.route('/vet')
+def vet():
+    # Example: Fetch vets from DB if you want
+    # For now, just render the page
+    return render_template('vet.html')
+
+
 
 
 if __name__ == '__main__':
