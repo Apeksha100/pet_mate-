@@ -42,9 +42,7 @@ def init_db():
 def index():
     return render_template('index.html')
 
-@app.route('/quiz')
-def quiz():
-    return render_template('quiz.html')
+
 
 @app.route('/breed_quiz')
 def breed_quiz():

@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pet Shops Directory - PetConnect</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .hero-section {
+            padding: 3rem 0;
+            color: white;
+            text-align: center;
+        }
+        
+        .shop-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .shop-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
+        
+        .map-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+            min-height: 400px;
+        }
+        
+        .filter-section {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .shop-name {
+            color: #333;
+            font-weight: bold;
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .shop-category {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin: 0.2rem;
+        }
+        
+        .shop-info {
+            margin: 0.8rem 0;
+        }
+        
+        .shop-rating {
+            color: #ffc107;
+            margin-bottom: 0.5rem;
+        }
+        
+        .shop-distance {
+            color: #28a745;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .contact-info {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .btn-direction {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            color: white;
+            font-size: 0.9rem;
+            margin: 0.2rem;
+        }
+        
+        .btn-call {
+            background: linear-gradient(135deg, #007bff 0%, #6610f2 100%);
+            border: none;
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            color: white;
+            font-size: 0.9rem;
+            margin: 0.2rem;
+        }
+        
+        .btn-back {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 0.5rem 2rem;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+        
+        .search-box {
+            border-radius: 25px;
+            border: 2px solid #e9ecef;
+            padding: 0.8rem 1.2rem;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        
+        .search-box:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+            outline: none;
+        }
+        
+        .filter-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            color: white;
+            margin: 0.2rem;
+            font-size: 0.9rem;
+        }
+        
+        .filter-btn.active {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+        
+        .map-placeholder {
+            background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+            height: 350px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .shop-hours {
+            color: #28a745;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+        
+        .shop-hours.closed {
+            color: #dc3545;
+        }
+        
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            top: 0;
+            left: 0;
+        }
+        
+        .floating-shop {
+            position: absolute;
+            font-size: 1.5rem;
+            opacity: 0.1;
+            animation: float 30s infinite linear;
+        }
+        
+        @keyframes float {
+            from {
+                transform: translateX(-50px);
+            }
+            to {
+                transform: translateX(calc(100vw + 50px));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="floating-shop" style="top: 15%; animation-delay: 0s;">🏪</div>
+        <div class="floating-shop" style="top: 35%; animation-delay: 8s;">🦴</div>
+        <div class="floating-shop" style="top: 55%; animation-delay: 16s;">🥫</div>
+        <div class="floating-shop" style="top: 75%; animation-delay: 24s;">🧸</div>
+    </div>
+
+    <div class="hero-section">
+        <div class="container">
+            <h1 class="display-4 mb-3">🏪 Pet Shops Directory</h1>
+            <p class="lead">Find the best pet supply stores near you</p>
+        </div>
+    </div>
+
+    <div class="container pb-5">
+        <a href="javascript:history.back()" class="btn-back">← Back to PetConnect</a>
+        
+        <!-- Search and Filter Section -->
+        <div class="filter-section">
+            <div class="row">
+                <div class="col-md-6">
+                    <input type="text" class="search-box" placeholder="🔍 Search by shop name or location..." id="searchInput">
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex flex-wrap align-items-center">
+                        <span class="me-2">Filter by:</span>
+                        <button class="filter-btn active" data-category="all">All Shops</button>
+                        <button class="filter-btn" data-category="food">Pet Food</button>
+                        <button class="filter-btn" data-category="toys">Toys & Accessories</button>
+                        <button class="filter-btn" data-category="medical">Medical Supplies</button>
+                        <button class="filter-btn" data-category="grooming">Grooming</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map Section -->
+        <div class="map-container">
+            <h4 class="mb-3">📍 Shop Locations Map</h4>
+            <div class="map-placeholder">
+                <div class="text-center">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🗺️</div>
+                    <div>Interactive Map Coming Soon</div>
+                    <small class="text-muted">Showing pet shops in Mumbai, Maharashtra</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shop Listings -->
+        <div class="row" id="shopListings">
+            <!-- Shop 1 -->
+            <div class="col-lg-6" data-category="food toys">
+                <div class="shop-card">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <h4 class="shop-name">PetZone Megastore</h4>
+                            <div class="mb-2">
+                                <span class="shop-category">Pet Food</span>
+                                <span class="shop-category">Toys & Accessories</span>
+                            </div>
+                            <div class="shop-rating">
+                                ⭐⭐⭐⭐⭐ 4.8 (342 reviews)
+                            </div>
+                            <div class="shop-distance">📍 1.2 km away</div>
+                        </div>
+                    </div>
+                    <div class="shop-info">
+                        <div class="contact-info">
+                            📍 Shop 15, Bandra West, Mumbai, Maharashtra 400050<br>
+                            📞 +91 98765 43210<br>
+                            🕒 Open: 9:00 AM - 9:00 PM
+                        </div>
+                        <div class="shop-hours">Open Now</div>
+                    </div>
+                    <div class="mt-3">
+                        <button class="btn-direction">Get Directions</button>
+                        <button class="btn-call">Call Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shop 2 -->
+            <div class="col-lg-6" data-category="medical grooming">
+                <div class="shop-card">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <h4 class="shop-name">Pawsome Pet Care</h4>
+                            <div class="mb-2">
+                                <span class="shop-category">Medical Supplies</span>
+                                <span class="shop-category">Grooming</span>
+                            </div>
+                            <div class="shop-rating">
+                                ⭐⭐⭐⭐⭐ 4.9 (128 reviews)
+                            </div>
+                            <div class="shop-distance">📍 2.8 km away</div>
+                        </div>
+                    </div>
+                    <div class="shop-info">
+                        <div class="contact-info">
+                            📍 321 Linking Road, Khar West, Mumbai 400052<br>
+                            📞 +91 98765 54321<br>
+                            🕒 Open: 8:00 AM - 8:00 PM
+                        </div>
+                        <div class="shop-hours">Open Now</div>
+                    </div>
+                    <div class="mt-3">
+                        <button class="btn-direction">Get Directions</button>
+                        <button class="btn-call">Call Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shop 3 -->
+            <div class="col-lg-6" data-category="food toys medical">
+                <div class="shop-card">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <h4 class="shop-name">Pet Paradise</h4>
+                            <div class="mb-2">
+                                <span class="shop-category">Pet Food</span>
+                                <span class="shop-category">Toys & Accessories</span>
+                                <span class="shop-category">Medical Supplies</span>
+                            </div>
+                            <div class="shop-rating">
+                                ⭐⭐⭐⭐ 4.6 (89 reviews)
+                            </div>
+                            <div class="shop-distance">📍 3.5 km away</div>
+                        </div>
+                    </div>
+                    <div class="shop-info">
+                        <div class="contact-info">
+                            📍 Tower B, Phoenix Mall, Kurla West, Mumbai 400070<br>
+                            📞 +91 98765 67890<br>
+                            🕒 Open: 10:00 AM - 10:00 PM
+                        </div>
+                        <div class="shop-hours">Open Now</div>
+                    </div>
+                    <div class="mt-3">
+                        <button class="btn-direction">Get Directions</button>
+                        <button class="btn-call">Call Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shop 4 -->
+            <div class="col-lg-6" data-category="toys grooming">
+                <div class="shop-card">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <h4 class="shop-name">Furry Friends Store</h4>
+                            <div class="mb-2">
+                                <span class="shop-category">Toys & Accessories</span>
+                                <span class="shop-category">Grooming</span>
+                            </div>
+                            <div class="shop-rating">
+                                ⭐⭐⭐⭐ 4.3 (156 reviews)
+                            </div>
+                            <div class="shop-distance">📍 4.1 km away</div>
+                        </div>
+                    </div>
+                    <div class="shop-info">
+                        <div class="contact-info">
+                            📍 45 Hill Road, Bandra West, Mumbai 400050<br>
+                            📞 +91 98765 11223<br>
+                            🕒 Open: 9:30 AM - 8:30 PM
+                        </div>
+                        <div class="shop-hours">Open Now</div>
+                    </div>
+                    <div class="mt-3">
+                        <button class="btn-direction">Get Directions</button>
+                        <button class="btn-call">Call Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shop 5 -->
+            <div class="col-lg-6" data-category="food medical">
+                <div class="shop-card">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <h4 class="shop-name">Pet Nutrition Hub</h4>
+                            <div class="mb-2">
+                                <span class="shop-category">Pet Food</span>
+                                <span class="shop-category">Medical Supplies</span>
+                            </div>
+                            <div class="shop-rating">
+                                ⭐⭐⭐⭐⭐ 4.7 (201 reviews)
+                            </div>
+                            <div class="shop-distance">📍 5.3 km away</div>
+                        </div>
+                    </div>
+                    <div class="shop-info">
+                        <div class="contact-info">
+                            📍 Ground Floor, Palladium Mall, Lower Parel, Mumbai 400013<br>
+                            📞 +91 98765 99887<br>
+                            🕒 Open: 11:00 AM - 9:00 PM
+                        </div>
+                        <div class="shop-hours">Open Now</div>
+                    </div>
+                    <div class="mt-3">
+                        <button class="btn-direction">Get Directions</button>
+                        <button class="btn-call">Call Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shop 6 -->
+            <div class="col-lg-6" data-category="toys food">
+                <div class="shop-card">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <h4 class="shop-name">Happy Paws Emporium</h4>
+                            <div class="mb-2">
+                                <span class="shop-category">Toys & Accessories</span>
+                                <span class="shop-category">Pet Food</span>
+                            </div>
+                            <div class="shop-rating">
+                                ⭐⭐⭐⭐ 4.5 (73 reviews)
+                            </div>
+                            <div class="shop-distance">📍 6.2 km away</div>
+                        </div>
+                    </div>
+                    <div class="shop-info">
+                        <div class="contact-info">
+                            📍 Shop 8, Lokhandwala Complex, Andheri West, Mumbai 400053<br>
+                            📞 +91 98765 33445<br>
+                            🕒 Open: 10:00 AM - 9:30 PM
+                        </div>
+                        <div class="shop-hours closed">Closed (Opens at 10:00 AM)</div>
+                    </div>
+                    <div class="mt-3">
+                        <button class="btn-direction">Get Directions</button>
+                        <button class="btn-call">Call Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Shop Section -->
+        <div class="shop-card text-center mt-4">
+            <h4>Can't find your favorite pet shop?</h4>
+            <p class="text-muted">Help us expand our directory by adding missing shops in your area</p>
+            <a href="/add-petshop" class="filter-btn" style="padding: 1rem 2rem; text-decoration: none; color: white;">+ Add New Pet Shop</a>
+        </div>
+    </div>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
+    <script>
+        // Pet shop data with coordinates
+        const petShops = [
+            {
+                id: 1,
+                name: "PetZone Megastore",
+                lat: 19.0596,
+                lng: 72.8295,
+                address: "Shop 15, Bandra West, Mumbai, Maharashtra 400050",
+                phone: "+91 98765 43210",
+                rating: 4.8,
+                reviews: 342,
+                categories: ["Pet Food", "Toys & Accessories"],
+                hours: "9:00 AM - 9:00 PM",
+                distance: "1.2 km"
+            },
+            {
+                id: 2,
+                name: "Pawsome Pet Care",
+                lat: 19.0728,
+                lng: 72.8311,
+                address: "321 Linking Road, Khar West, Mumbai 400052",
+                phone: "+91 98765 54321",
+                rating: 4.9,
+                reviews: 128,
+                categories: ["Medical Supplies", "Grooming"],
+                hours: "8:00 AM - 8:00 PM",
+                distance: "2.8 km"
+            },
+            {
+                id: 3,
+                name: "Pet Paradise",
+                lat: 19.0822,
+                lng: 72.8991,
+                address: "Tower B, Phoenix Mall, Kurla West, Mumbai 400070",
+                phone: "+91 98765 67890",
+                rating: 4.6,
+                reviews: 89,
+                categories: ["Pet Food", "Toys & Accessories", "Medical Supplies"],
+                hours: "10:00 AM - 10:00 PM",
+                distance: "3.5 km"
+            },
+            {
+                id: 4,
+                name: "Furry Friends Store",
+                lat: 19.0521,
+                lng: 72.8294,
+                address: "45 Hill Road, Bandra West, Mumbai 400050",
+                phone: "+91 98765 11223",
+                rating: 4.3,
+                reviews: 156,
+                categories: ["Toys & Accessories", "Grooming"],
+                hours: "9:30 AM - 8:30 PM",
+                distance: "4.1 km"
+            },
+            {
+                id: 5,
+                name: "Pet Nutrition Hub",
+                lat: 19.0144,
+                lng: 72.8318,
+                address: "Ground Floor, Palladium Mall, Lower Parel, Mumbai 400013",
+                phone: "+91 98765 99887",
+                rating: 4.7,
+                reviews: 201,
+                categories: ["Pet Food", "Medical Supplies"],
+                hours: "11:00 AM - 9:00 PM",
+                distance: "5.3 km"
+            },
+            {
+                id: 6,
+                name: "Happy Paws Emporium",
+                lat: 19.1373,
+                lng: 72.8265,
+                address: "Shop 8, Lokhandwala Complex, Andheri West, Mumbai 400053",
+                phone: "+91 98765 33445",
+                rating: 4.5,
+                reviews: 73,
+                categories: ["Toys & Accessories", "Pet Food"],
+                hours: "10:00 AM - 9:30 PM",
+                distance: "6.2 km"
+            }
+        ];
+
+        let map;
+        let markers = [];
+        let infoWindow;
+
+        // Initialize Google Map
+        function initMap() {
+            // Center map on Mumbai
+            const mumbai = { lat: 19.0760, lng: 72.8777 };
+
+            map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 11,
+                center: mumbai,
+                styles: [
+                    {
+                        "featureType": "all",
+                        "elementType": "geometry.fill",
+                        "stylers": [{"weight": "2.00"}]
+                    },
+                    {
+                        "featureType": "all",
+                        "elementType": "geometry.stroke",
+                        "stylers": [{"color": "#9c9c9c"}]
+                    },
+                    {
+                        "featureType": "all",
+                        "elementType": "labels.text",
+                        "stylers": [{"visibility": "on"}]
+                    },
+                    {
+                        "featureType": "landscape",
+                        "elementType": "all",
+                        "stylers": [{"color": "#f2f2f2"}]
+                    },
+                    {
+                        "featureType": "water",
+                        "elementType": "all",
+                        "stylers": [{"color": "#46bcec"}, {"visibility": "on"}]
+                    }
+                ]
+            });
+
+            infoWindow = new google.maps.InfoWindow();
+
+            // Add markers for each pet shop
+            petShops.forEach(shop => {
+                addMarker(shop);
+            });
+
+            // Try to center on user's location
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const userLocation = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude,
+                        };
+                        
+                        // Add user location marker
+                        new google.maps.Marker({
+                            position: userLocation,
+                            map: map,
+                            title: "Your Location",
+                            icon: {
+                                url: "data:image/svg+xml;charset=UTF-8,%3csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='10' cy='10' r='8' fill='%23667eea' stroke='white' stroke-width='2'/%3e%3c/svg%3e",
+                                scaledSize: new google.maps.Size(20, 20),
+                            }
+                        });
+
+                        map.setCenter(userLocation);
+                        map.setZoom(13);
+                    },
+                    () => {
+                        console.log("Geolocation failed, using default location");
+                    }
+                );
+            }
+        }
+
+        // Add marker for a pet shop
+        function addMarker(shop) {
+            const marker = new google.maps.Marker({
+                position: { lat: shop.lat, lng: shop.lng },
+                map: map,
+                title: shop.name,
+                icon: {
+                    url: "data:image/svg+xml;charset=UTF-8,%3csvg width='30' height='30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M15 0C6.716 0 0 6.716 0 15c0 8.284 6.716 15 15 15 8.284 0 15-6.716 15-15C30 6.716 23.284 0 15 0z' fill='%23667eea'/%3e%3ctext x='15' y='20' text-anchor='middle' fill='white' font-size='16'%3e🏪%3c/text%3e%3c/svg%3e",
+                    scaledSize: new google.maps.Size(30, 30),
+                }
+            });
+
+            const contentString = `
+                <div style="max-width: 300px; font-family: 'Segoe UI', sans-serif;">
+                    <h4 style="margin: 0 0 10px 0; color: #333;">${shop.name}</h4>
+                    <div style="margin-bottom: 8px;">
+                        ${shop.categories.map(cat => 
+                            `<span style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px; margin-right: 4px; display: inline-block; margin-bottom: 4px;">${cat}</span>`
+                        ).join('')}
+                    </div>
+                    <div style="color: #ffc107; margin-bottom: 8px;">
+                        ⭐ ${shop.rating} (${shop.reviews} reviews)
+                    </div>
+                    <div style="color: #666; font-size: 14px; margin-bottom: 8px;">
+                        📍 ${shop.address}<br>
+                        📞 ${shop.phone}<br>
+                        🕒 ${shop.hours}
+                    </div>
+                    <div style="margin-top: 12px;">
+                        <button onclick="getDirections(${shop.lat}, ${shop.lng}, '${shop.address}')" 
+                                style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); border: none; border-radius: 15px; padding: 8px 16px; color: white; font-size: 12px; margin-right: 8px; cursor: pointer;">
+                            Get Directions
+                        </button>
+                        <button onclick="callShop('${shop.phone}')" 
+                                style="background: linear-gradient(135deg, #007bff 0%, #6610f2 100%); border: none; border-radius: 15px; padding: 8px 16px; color: white; font-size: 12px; cursor: pointer;">
+                            Call Now
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            marker.addListener("click", () => {
+                infoWindow.setContent(contentString);
+                infoWindow.open(map, marker);
+            });
+
+            markers.push(marker);
+        }
+
+        // Get directions function
+        function getDirections(lat, lng, address) {
+            window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`, '_blank');
+        }
+
+        // Call shop function
+        function callShop(phone) {
+            window.open(`tel:${phone}`, '_self');
+        }
+
+        // Filter markers based on category
+        function filterMarkers(category) {
+            markers.forEach((marker, index) => {
+                const shop = petShops[index];
+                if (category === 'all' || shop.categories.some(cat => cat.toLowerCase().includes(category))) {
+                    marker.setVisible(true);
+                } else {
+                    marker.setVisible(false);
+                }
+            });
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const shopCards = document.querySelectorAll('#shopListings .col-lg-6');
+            
+            shopCards.forEach(card => {
+                const shopName = card.querySelector('.shop-name').textContent.toLowerCase();
+                const shopAddress = card.querySelector('.contact-info').textContent.toLowerCase();
+                
+                if (shopName.includes(searchTerm) || shopAddress.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Also filter map markers
+            markers.forEach((marker, index) => {
+                const shop = petShops[index];
+                if (shop.name.toLowerCase().includes(searchTerm) || 
+                    shop.address.toLowerCase().includes(searchTerm)) {
+                    marker.setVisible(true);
+                } else {
+                    marker.setVisible(false);
+                }
+            });
+        });
+
+        // Filter functionality with map integration
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active class from all buttons
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const category = this.dataset.category;
+                const shopCards = document.querySelectorAll('#shopListings .col-lg-6');
+                
+                // Filter shop cards
+                shopCards.forEach(card => {
+                    if (category === 'all' || card.dataset.category.includes(category)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                // Filter map markers
+                filterMarkers(category === 'all' ? 'all' : category);
+            });
+        });
+
+        // Direction and call buttons for shop cards
+        document.querySelectorAll('.btn-direction').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const shopCard = this.closest('.shop-card');
+                const address = shopCard.querySelector('.contact-info').textContent.split('📍')[1].split('📞')[0].trim();
+                
+                // Open Google Maps
+                window.open(`https://www.google.com/maps/search/${encodeURIComponent(address)}`, '_blank');
+            });
+        });
+
+        document.querySelectorAll('.btn-call').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const shopCard = this.closest('.shop-card');
+                const phone = shopCard.querySelector('.contact-info').textContent.split('📞')[1].split('🕒')[0].trim();
+                
+                // Initiate phone call
+                window.open(`tel:${phone}`, '_self');
+            });
+        });
+
+        // Hover effects for shop cards
+        document.querySelectorAll('.shop-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Simulate dynamic shop hours
+        function updateShopHours() {
+            const currentHour = new Date().getHours();
+            document.querySelectorAll('.shop-hours').forEach(hourEl => {
+                const shopCard = hourEl.closest('.shop-card');
+                const timeInfo = shopCard.querySelector('.contact-info').textContent;
+                
+                // Simple logic to show open/closed status
+                if (currentHour >= 9 && currentHour < 21) {
+                    hourEl.textContent = 'Open Now';
+                    hourEl.classList.remove('closed');
+                } else {
+                    hourEl.textContent = 'Closed (Opens at 9:00 AM)';
+                    hourEl.classList.add('closed');
+                }
+            });
+        }
+
+        // Update shop hours on page load
+        updateShopHours();
+
+        // Handle map loading errors
+        window.gm_authFailure = function() {
+            document.getElementById('map').innerHTML = `
+                <div style="height: 350px; display: flex; align-items: center; justify-content: center; background: #f8f9fa; border-radius: 15px;">
+                    <div class="text-center">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🗺️</div>
+                        <div>Map requires Google Maps API key</div>
+                        <small class="text-muted">Please add your API key to enable interactive map</small>
+                    </div>
+                </div>
+            `;
+        };
+    </script>
+</body>
+</html>

@@ -68,7 +68,7 @@ def add_petshop():
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_pet():
-    pet = None  # Initialize pet as None
+    pet = None # Initialize pet as None
 
     if request.method == 'POST':
         # 1️⃣ Get form data
@@ -119,6 +119,7 @@ def list_pets():
     with sqlite3.connect("pets.db") as conn:
         pets = conn.execute("SELECT * FROM pets").fetchall()
     return render_template('pets.html', pets=pets)
+
 
 @app.route('/buy')
 def buy_pets():

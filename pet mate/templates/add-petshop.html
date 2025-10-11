@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add New Pet Shop - PetConnect</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .hero-section {
+            padding: 3rem 0;
+            color: white;
+            text-align: center;
+        }
+        
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .form-section {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        .section-title {
+            color: #333;
+            font-weight: bold;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-icon {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.2);
+            outline: none;
+        }
+        
+        .form-label {
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .required {
+            color: #dc3545;
+        }
+        
+        .btn-back {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 0.5rem 2rem;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+        
+        .btn-submit {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 1rem 3rem;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(40, 167, 69, 0.4);
+            color: white;
+        }
+        
+        .btn-preview {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 0.8rem 2rem;
+            color: white;
+            font-weight: bold;
+            margin-right: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .category-checkbox {
+            margin: 0.5rem;
+        }
+        
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .category-item {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .category-item:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        .category-item.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .upload-area {
+            border: 2px dashed #667eea;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            background: rgba(102, 126, 234, 0.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+        
+        .upload-area:hover {
+            border-color: #495057;
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        .upload-area.dragover {
+            border-color: #28a745;
+            background: rgba(40, 167, 69, 0.1);
+        }
+        
+        .preview-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            border: 2px solid #667eea;
+        }
+        
+        .success-message {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            text-align: center;
+            display: none;
+        }
+        
+        .error-message {
+            background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            display: none;
+        }
+        
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            top: 0;
+            left: 0;
+        }
+        
+        .floating-shop {
+            position: absolute;
+            font-size: 1.5rem;
+            opacity: 0.1;
+            animation: float 25s infinite linear;
+        }
+        
+        @keyframes float {
+            from {
+                transform: translateX(-50px) rotate(0deg);
+            }
+            to {
+                transform: translateX(calc(100vw + 50px)) rotate(360deg);
+            }
+        }
+        
+        .map-container {
+            height: 300px;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+        
+        .location-info {
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="floating-shop" style="top: 15%; animation-delay: 0s;">🏪</div>
+        <div class="floating-shop" style="top: 35%; animation-delay: 8s;">➕</div>
+        <div class="floating-shop" style="top: 55%; animation-delay: 16s;">📝</div>
+        <div class="floating-shop" style="top: 75%; animation-delay: 24s;">📍</div>
+    </div>
+
+    <div class="hero-section">
+        <div class="container">
+            <h1 class="display-4 mb-3">➕ Add New Pet Shop</h1>
+            <p class="lead">Help grow our pet community by adding your favorite pet shop</p>
+        </div>
+    </div>
+
+    <div class="container pb-5">
+        <a href="javascript:history.back()" class="btn-back">← Back to Pet Shops</a>
+        
+        <div class="form-container">
+            <form id="petShopForm">
+                <!-- Basic Information Section -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <span class="section-icon">🏪</span>
+                        Basic Information
+                    </h3>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="shopName" class="form-label">Shop Name <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="shopName" required placeholder="e.g., Happy Paws Pet Store">
+                            <div class="error-message" id="shopNameError"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="ownerName" class="form-label">Owner/Manager Name</label>
+                            <input type="text" class="form-control" id="ownerName" placeholder="e.g., John Smith">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="phone" class="form-label">Phone Number <span class="required">*</span></label>
+                            <input type="tel" class="form-control" id="phone" required placeholder="+91 98765 43210">
+                            <div class="error-message" id="phoneError"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="email" placeholder="shop@example.com">
+                        </div>
+                    </div>
+                    
+                    <label for="website" class="form-label">Website URL</label>
+                    <input type="url" class="form-control" id="website" placeholder="https://www.petshop.com">
+                </div>
+
+                <!-- Location Section -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <span class="section-icon">📍</span>
+                        Location Details
+                    </h3>
+                    
+                    <label for="address" class="form-label">Full Address <span class="required">*</span></label>
+                    <textarea class="form-control" id="address" rows="3" required placeholder="Enter complete address with landmark"></textarea>
+                    <div class="error-message" id="addressError"></div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="city" class="form-label">City <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="city" required placeholder="Mumbai">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="state" class="form-label">State <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="state" required placeholder="Maharashtra">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="pincode" class="form-label">PIN Code <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="pincode" required placeholder="400001">
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="btn-preview" id="detectLocation">📍 Detect My Location</button>
+                    <div class="location-info" id="locationInfo" style="display: none;">
+                        <strong>📍 Location Detected:</strong>
+                        <div id="detectedLocation"></div>
+                    </div>
+                    
+                    <div class="map-container" id="shopLocationMap">
+                        <div style="height: 100%; display: flex; align-items: center; justify-content: center; background: #f8f9fa;">
+                            <div class="text-center text-muted">
+                                <div style="font-size: 2rem;">🗺️</div>
+                                <div>Map will show location after entering address</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categories Section -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <span class="section-icon">🛍️</span>
+                        Shop Categories
+                    </h3>
+                    <p class="text-muted mb-3">Select all categories that apply to this pet shop</p>
+                    
+                    <div class="category-grid">
+                        <div class="category-item" data-category="food">
+                            <div style="font-size: 2rem;">🥫</div>
+                            <strong>Pet Food</strong>
+                            <div><small>Dog food, cat food, treats</small></div>
+                        </div>
+                        <div class="category-item" data-category="toys">
+                            <div style="font-size: 2rem;">🧸</div>
+                            <strong>Toys & Accessories</strong>
+                            <div><small>Toys, leashes, collars</small></div>
+                        </div>
+                        <div class="category-item" data-category="medical">
+                            <div style="font-size: 2rem;">💊</div>
+                            <strong>Medical Supplies</strong>
+                            <div><small>Medicines, vitamins, first aid</small></div>
+                        </div>
+                        <div class="category-item" data-category="grooming">
+                            <div style="font-size: 2rem;">✂️</div>
+                            <strong>Grooming Services</strong>
+                            <div><small>Bathing, trimming, nail cutting</small></div>
+                        </div>
+                        <div class="category-item" data-category="boarding">
+                            <div style="font-size: 2rem;">🏠</div>
+                            <strong>Pet Boarding</strong>
+                            <div><small>Day care, overnight stay</small></div>
+                        </div>
+                        <div class="category-item" data-category="training">
+                            <div style="font-size: 2rem;">🎓</div>
+                            <strong>Training Services</strong>
+                            <div><small>Obedience, behavior training</small></div>
+                        </div>
+                    </div>
+                    <div class="error-message" id="categoryError"></div>
+                </div>
+
+                <!-- Hours Section -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <span class="section-icon">🕒</span>
+                        Operating Hours
+                    </h3>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="openTime" class="form-label">Opening Time <span class="required">*</span></label>
+                            <input type="time" class="form-control" id="openTime" required value="09:00">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="closeTime" class="form-label">Closing Time <span class="required">*</span></label>
+                            <input type="time" class="form-control" id="closeTime" required value="21:00">
+                        </div>
+                    </div>
+                    
+                    <label for="closedDays" class="form-label">Closed Days (if any)</label>
+                    <select class="form-select" id="closedDays" multiple>
+                        <option value="monday">Monday</option>
+                        <option value="tuesday">Tuesday</option>
+                        <option value="wednesday">Wednesday</option>
+                        <option value="thursday">Thursday</option>
+                        <option value="friday">Friday</option>
+                        <option value="saturday">Saturday</option>
+                        <option value="sunday">Sunday</option>
+                    </select>
+                    <small class="text-muted">Hold Ctrl (Cmd on Mac) to select multiple days</small>
+                </div>
+
+                <!-- Additional Information -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <span class="section-icon">📝</span>
+                        Additional Information
+                    </h3>
+                    
+                    <label for="description" class="form-label">Shop Description</label>
+                    <textarea class="form-control" id="description" rows="4" placeholder="Tell us about the shop - specialties, services, what makes it special..."></textarea>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="establishedYear" class="form-label">Established Year</label>
+                            <input type="number" class="form-control" id="establishedYear" min="1900" max="2024" placeholder="2010">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="employeeCount" class="form-label">Number of Employees</label>
+                            <select class="form-select" id="employeeCount">
+                                <option value="">Select...</option>
+                                <option value="1-5">1-5 employees</option>
+                                <option value="6-10">6-10 employees</option>
+                                <option value="11-20">11-20 employees</option>
+                                <option value="20+">20+ employees</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Photo Upload -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <span class="section-icon">📸</span>
+                        Shop Photos
+                    </h3>
+                    
+                    <div class="upload-area" id="photoUpload">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">📷</div>
+                        <h5>Upload Shop Photos</h5>
+                        <p class="text-muted">Drag and drop images here or click to browse<br>
+                        <small>Accepted formats: JPG, PNG, GIF (Max 5MB each)</small></p>
+                        <input type="file" id="photoInput" multiple accept="image/*" style="display: none;">
+                    </div>
+                    
+                    <div id="photoPreview" style="display: none;">
+                        <h6 class="mt-3">Selected Photos:</h6>
+                        <div id="photoList" class="d-flex flex-wrap gap-2"></div>
+                    </div>
+                </div>
+
+                <!-- Submit Section -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <span class="section-icon">✅</span>
+                        Review & Submit
+                    </h3>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="submitterName" class="form-label">Your Name <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="submitterName" required placeholder="Your full name">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="submitterEmail" class="form-label">Your Email <span class="required">*</span></label>
+                            <input type="email" class="form-control" id="submitterEmail" required placeholder="your@email.com">
+                        </div>
+                    </div>
+                    
+                    <div class="form-check mt-3">
+                        <input class="form-check-input" type="checkbox" id="verifyInfo" required>
+                        <label class="form-check-label" for="verifyInfo">
+                            I verify that the information provided is accurate to the best of my knowledge <span class="required">*</span>
+                        </label>
+                    </div>
+                    
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                        <label class="form-check-label" for="agreeTerms">
+                            I agree to the Terms of Service and Privacy Policy <span class="required">*</span>
+                        </label>
+                    </div>
+                    
+                    <div class="mt-4 text-center">
+                        <button type="button" class="btn-preview" id="previewBtn">👀 Preview Listing</button>
+                        <button type="submit" class="btn-submit">
+                            🚀 Submit Pet Shop for Review
+                        </button>
+                    </div>
+                </div>
+            </form>
+            
+            <div class="success-message" id="successMessage">
+                <h4>🎉 Thank You!</h4>
+                <p>Your pet shop has been submitted successfully! We'll review it within 24-48 hours and add it to our directory.</p>
+                <p><strong>Reference ID:</strong> <span id="referenceId"></span></p>
+            </div>
+        </div>
+
+        <!-- Preview Modal would go here -->
+        <div class="preview-card" id="previewCard" style="display: none;">
+            <h4>📋 Preview Your Listing</h4>
+            <div id="previewContent"></div>
+            <div class="mt-3 text-center">
+                <button type="button" class="btn-preview" onclick="closePreview()">Edit Details</button>
+                <button type="button" class="btn-submit" style="width: auto; padding: 0.8rem 2rem;" onclick="submitForm()">Looks Good - Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedCategories = [];
+        let selectedPhotos = [];
+
+        // Initialize form interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCategorySelection();
+            initializePhotoUpload();
+            initializeLocationDetection();
+            initializeFormValidation();
+        });
+
+        // Category selection
+        function initializeCategorySelection() {
+            document.querySelectorAll('.category-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const category = this.dataset.category;
+                    
+                    if (this.classList.contains('selected')) {
+                        this.classList.remove('selected');
+                        selectedCategories = selectedCategories.filter(cat => cat !== category);
+                    } else {
+                        this.classList.add('selected');
+                        selectedCategories.push(category);
+                    }
+                    
+                    // Clear category error if at least one is selected
+                    if (selectedCategories.length > 0) {
+                        document.getElementById('categoryError').style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        // Photo upload functionality
+        function initializePhotoUpload() {
+            const uploadArea = document.getElementById('photoUpload');
+            const photoInput = document.getElementById('photoInput');
+            
+            uploadArea.addEventListener('click', () => photoInput.click());
+            
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('dragover');
+            });
+            
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+            });
+            
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+                handleFiles(e.dataTransfer.files);
+            });
+            
+            photoInput.addEventListener('change', function(e) {
+                handleFiles(e.target.files);
+            });
+        }
+
+        function handleFiles(files) {
+            const photoPreview = document.getElementById('photoPreview');
+            const photoList = document.getElementById('photoList');
+            
+            Array.from(files).forEach(file => {
+                if (file.type.startsWith('image/') && file.size <= 5 * 1024 * 1024) {
+                    selectedPhotos.push(file);
+                    
+                    const photoItem = document.createElement('div');
+                    photoItem.className = 'position-relative';
+                    photoItem.style.cssText = 'width: 100px; height: 100px; border-radius: 10px; overflow: hidden; border: 2px solid #e9ecef;';
+                    
+                    const img = document.createElement('img');
+                    img.style.cssText = 'width: 100%; height: 100%; object-fit: cover;';
+                    
+                    const reader = new FileReader();
+                    reader.onload = e => img.src = e.target.result;
+                    reader.readAsDataURL(file);
+                    
+                    const removeBtn = document.createElement('button');
+                    removeBtn.innerHTML = '×';
+                    removeBtn.style.cssText = 'position: absolute; top: -5px; right: -5px; background: #dc3545; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; cursor: pointer;';
+                    removeBtn.onclick = () => {
+                        photoItem.remove();
+                        selectedPhotos = selectedPhotos.filter(p => p !== file);
+                        if (selectedPhotos.length === 0) {
+                            photoPreview.style.display = 'none';
+                        }
+                    };
+                    
+                    photoItem.appendChild(img);
+                    photoItem.appendChild(removeBtn);
+                    photoList.appendChild(photoItem);
+                }
+            });
+            
+            if (selectedPhotos.length > 0) {
+                photoPreview.style.display = 'block';
+            }
+        }
+
+        // Location detection
+        function initializeLocationDetection() {
+            document.getElementById('detectLocation').addEventListener('click', function() {
+                if (navigator.geolocation) {
+                    this.innerHTML = '🔄 Detecting...';
+                    this.disabled = true;
+                    
+                    navigator.geolocation.getCurrentPosition(
+                        position => {
+                            const { latitude, longitude } = position.coords;
+                            document.getElementById('locationInfo').style.display = 'block';
+                            document.getElementById('detectedLocation').innerHTML = `
+                                Latitude: ${latitude.toFixed(6)}<br>
+                                Longitude: ${longitude.toFixed(6)}
+                            `;
+                            this.innerHTML = '✅ Location Detected';
+                        },
+                        error => {
+                            alert('Could not detect location. Please enter address manually.');
+                            this.innerHTML = '📍 Detect My Location';
+                            this.disabled = false;
+                        }
+                    );
+                } else {
+                    alert('Geolocation is not supported by this browser.');
+                }
+            });
+        }
+
+        // Form validation
+        function initializeFormValidation() {
+            const form = document.getElementById('petShopForm');
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                validateAndSubmit();
+            });
+
+            // Real-time validation
+            document.getElementById('shopName').addEventListener('blur', validateShopName);
+            document.getElementById('phone').addEventListener('blur', validatePhone);
+            document.getElementById('address').addEventListener('blur', validateAddress);
+        }
+
+        function validateShopName() {
+            const name = document.getElementById('shopName').value.trim();
+            const error = document.getElementById('shopNameError');
+            
+            if (!name) {
+                error.textContent = 'Shop name is required';
+                error.style.display = 'block';
+                return false;
+            }
+            
+            error.style.display = 'none';
+            return true;
+        }
+
+        function validatePhone() {
+            const phone = document.getElementById('phone').value.trim();
+            const error = document.getElementById('phoneError');
+            const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+            
+            if (!phone) {
+                error.textContent = 'Phone number is required';
+                error.style.display = 'block';
+                return false;
+            }
+            
+            if (!phoneRegex.test(phone.replace(/\s|-/g, ''))) {
+                error.textContent = 'Please enter a valid phone number';
+                error.style.display = 'block';
+                return false;
+            }
+            
+            error.style.display = 'none';
+            return true;
+        }
+
+        function validateAddress() {
+            const address = document.getElementById('address').value.trim();
+            const error = document.getElementById('addressError');
+            
+            if (!address) {
+                error.textContent = 'Address is required';
+                error.style.display = 'block';
+                return false;
+            }
+            
+            error.style.display = 'none';
+            return true;
+        }
+
+        function validateCategories() {
+            const error = document.getElementById('categoryError');
+            
+            if (selectedCategories.length === 0) {
+                error.textContent = 'Please select at least one category';
+                error.style.display = 'block';
+                return false;
+            }
+            
+            error.style.display = 'none';
+            return true;
+        }
+
+        function validateAndSubmit() {
+            const isNameValid = validateShopName();
+            const isPhoneValid = validatePhone();
+            const isAddressValid = validateAddress();
+            const isCategoryValid = validateCategories();
+            
+            const submitterName = document.getElementById('submitterName').value.trim();
+            const submitterEmail = document.getElementById('submitterEmail').value.trim();
+            const verifyInfo = document.getElementById('verifyInfo').checked;
+            const agreeTerms = document.getElementById('agreeTerms').checked;
+            
+            if (isNameValid && isPhoneValid && isAddressValid && isCategoryValid && 
+                submitterName && submitterEmail && verifyInfo && agreeTerms) {
+                submitForm();
+            } else {
+                alert('Please fill in all required fields and fix any errors.');
+            }
+        }
+
+        // Preview functionality
+        document.getElementById('previewBtn').addEventListener('click', function() {
+            generatePreview();
+        });
+
+        function generatePreview() {
+            const formData = gatherFormData();
+            const previewContent = document.getElementById('previewContent');
+            
+            const categoriesBadges = selectedCategories.map(cat => {
+                const categoryNames = {
+                    'food': 'Pet Food',
+                    'toys': 'Toys & Accessories', 
+                    'medical': 'Medical Supplies',
+                    'grooming': 'Grooming Services',
+                    'boarding': 'Pet Boarding',
+                    'training': 'Training Services'
+                };
+                return `<span style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem; margin-right: 0.5rem; margin-bottom: 0.5rem; display: inline-block;">${categoryNames[cat]}</span>`;
+            }).join('');
+            
+            const hours = `${formData.openTime} - ${formData.closeTime}`;
+            const closedDaysText = formData.closedDays.length > 0 ? 
+                `<br><small class="text-muted">Closed: ${formData.closedDays.join(', ')}</small>` : '';
+            
+            previewContent.innerHTML = `
+                <div style="border: 2px solid #667eea; border-radius: 20px; padding: 1.5rem; background: rgba(255,255,255,0.9);">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <h4 style="color: #333; margin-bottom: 0.5rem;">${formData.shopName}</h4>
+                            <div style="color: #ffc107; margin-bottom: 0.5rem;">⭐⭐⭐⭐⭐ New Shop</div>
+                            <div style="color: #28a745; font-weight: bold;">📍 Pending Location Verification</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        ${categoriesBadges}
+                    </div>
+                    
+                    <div style="color: #666; margin-bottom: 1rem;">
+                        📍 ${formData.address}, ${formData.city}, ${formData.state} ${formData.pincode}<br>
+                        📞 ${formData.phone}<br>
+                        ${formData.email ? `📧 ${formData.email}<br>` : ''}
+                        ${formData.website ? `🌐 ${formData.website}<br>` : ''}
+                        🕒 ${hours}${closedDaysText}
+                    </div>
+                    
+                    ${formData.description ? `
+                        <div style="background: rgba(102, 126, 234, 0.1); padding: 1rem; border-radius: 10px; margin-bottom: 1rem;">
+                            <strong>About this shop:</strong><br>
+                            ${formData.description}
+                        </div>
+                    ` : ''}
+                    
+                    ${selectedPhotos.length > 0 ? `
+                        <div style="margin-bottom: 1rem;">
+                            <strong>Photos:</strong> ${selectedPhotos.length} image(s) uploaded
+                        </div>
+                    ` : ''}
+                    
+                    <div style="background: rgba(40, 167, 69, 0.1); padding: 1rem; border-radius: 10px; border: 1px solid rgba(40, 167, 69, 0.2);">
+                        <strong>🔄 Status:</strong> Pending Review<br>
+                        <small class="text-muted">This listing will be reviewed by our team and added to the directory within 24-48 hours.</small>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('previewCard').style.display = 'block';
+            document.getElementById('previewCard').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function closePreview() {
+            document.getElementById('previewCard').style.display = 'none';
+        }
+
+        function gatherFormData() {
+            const closedDaysSelect = document.getElementById('closedDays');
+            const closedDays = Array.from(closedDaysSelect.selectedOptions).map(option => 
+                option.text
+            );
+            
+            return {
+                shopName: document.getElementById('shopName').value.trim(),
+                ownerName: document.getElementById('ownerName').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                website: document.getElementById('website').value.trim(),
+                address: document.getElementById('address').value.trim(),
+                city: document.getElementById('city').value.trim(),
+                state: document.getElementById('state').value.trim(),
+                pincode: document.getElementById('pincode').value.trim(),
+                openTime: document.getElementById('openTime').value,
+                closeTime: document.getElementById('closeTime').value,
+                closedDays: closedDays,
+                description: document.getElementById('description').value.trim(),
+                establishedYear: document.getElementById('establishedYear').value,
+                employeeCount: document.getElementById('employeeCount').value,
+                submitterName: document.getElementById('submitterName').value.trim(),
+                submitterEmail: document.getElementById('submitterEmail').value.trim(),
+                categories: selectedCategories,
+                photos: selectedPhotos
+            };
+        }
+
+        function submitForm() {
+            const formData = gatherFormData();
+            const referenceId = 'PS' + Date.now().toString().slice(-8);
+            
+            // Hide the form and show success message
+            document.getElementById('petShopForm').style.display = 'none';
+            document.getElementById('previewCard').style.display = 'none';
+            document.getElementById('referenceId').textContent = referenceId;
+            document.getElementById('successMessage').style.display = 'block';
+            
+            // Scroll to success message
+            document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
+            
+            // Here you would typically send the data to your backend
+            console.log('Form submitted:', formData);
+            console.log('Reference ID:', referenceId);
+            
+            // Simulate API call
+            setTimeout(() => {
+                // You could add additional success actions here
+                // For example, sending a confirmation email
+            }, 1000);
+        }
+
+        // Add some interactive effects
+        document.querySelectorAll('.form-control, .form-select').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.style.transform = 'scale(1.02)';
+                this.style.transition = 'transform 0.2s ease';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+
+        // Auto-format phone number
+        document.getElementById('phone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.startsWith('91') && value.length > 2) {
+                value = '+91 ' + value.substring(2);
+            } else if (value.length > 0 && !value.startsWith('91')) {
+                value = '+91 ' + value;
+            }
+            
+            // Format as +91 XXXXX XXXXX
+            if (value.length > 8) {
+                value = value.substring(0, 4) + ' ' + value.substring(4, 9) + ' ' + value.substring(9, 14);
+            }
+            
+            e.target.value = value;
+        });
+
+        // PIN code validation
+        document.getElementById('pincode').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '').substring(0, 6);
+        });
+
+        // Auto-capitalize city and state
+        document.getElementById('city').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\b\w/g, l => l.toUpperCase());
+        });
+
+        document.getElementById('state').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\b\w/g, l => l.toUpperCase());
+        });
+
+        // Character counter for description
+        document.getElementById('description').addEventListener('input', function(e) {
+            const maxLength = 500;
+            const currentLength = e.target.value.length;
+            
+            if (!e.target.nextElementSibling || !e.target.nextElementSibling.classList.contains('char-counter')) {
+                const counter = document.createElement('div');
+                counter.className = 'char-counter text-muted text-end';
+                counter.style.fontSize = '0.85rem';
+                e.target.parentNode.insertBefore(counter, e.target.nextSibling);
+            }
+            
+            const counter = e.target.nextElementSibling;
+            counter.textContent = `${currentLength}/${maxLength} characters`;
+            
+            if (currentLength > maxLength) {
+                counter.style.color = '#dc3545';
+                e.target.value = e.target.value.substring(0, maxLength);
+            } else {
+                counter.style.color = '#6c757d';
+            }
+        });
+
+        // Add floating animation trigger
+        document.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelectorAll('.floating-shop');
+            
+            parallax.forEach(element => {
+                const speed = 0.5;
+                element.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+        });
+    </script>
+</body>
+</html>

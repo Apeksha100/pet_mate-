@@ -120,6 +120,10 @@ def list_pets():
         pets = conn.execute("SELECT * FROM pets").fetchall()
     return render_template('pets.html', pets=pets)
 
+Not Found
+The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+
 @app.route('/buy')
 def buy_pets():
     with sqlite3.connect("pets.db") as conn:

@@ -120,6 +120,9 @@ def list_pets():
         pets = conn.execute("SELECT * FROM pets").fetchall()
     return render_template('pets.html', pets=pets)
 
+
+
+
 @app.route('/buy')
 def buy_pets():
     with sqlite3.connect("pets.db") as conn:
@@ -206,6 +209,8 @@ def rescue():
     # Example: Fetch rescue reports from DB if you want
     # For now, just render the page
     return render_template('rescue.html')
+
+
 
 
 # Route for vet directory page
