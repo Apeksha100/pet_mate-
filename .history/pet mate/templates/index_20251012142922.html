@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PetNova - Your Complete Pet Platform</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .hero-section {
+            padding: 4rem 0;
+            color: white;
+            text-align: center;
+        }
+        
+        .service-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            height: 100%;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
+        
+        .service-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .service-title {
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .service-description {
+            color: #666;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+        
+        .btn-service {
+            border: none;
+            border-radius: 25px;
+            padding: 1rem 1.5rem;
+            color: white;
+            font-weight: bold;
+            width: 100%;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-service:hover {
+            transform: translateY(-2px);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .btn-add { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); }
+        .btn-add:hover { box-shadow: 0 10px 25px rgba(40, 167, 69, 0.4); }
+        
+        .btn-view { background: linear-gradient(135deg, #007bff 0%, #6610f2 100%); }
+        .btn-view:hover { box-shadow: 0 10px 25px rgba(0, 123, 255, 0.4); }
+        
+        .btn-buy { background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%); }
+        .btn-buy:hover { box-shadow: 0 10px 25px rgba(255, 193, 7, 0.4); }
+        
+        .btn-sell { background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%); }
+        .btn-sell:hover { box-shadow: 0 10px 25px rgba(23, 162, 184, 0.4); }
+        
+        .btn-mate { background: linear-gradient(135deg, #e83e8c 0%, #fd7e14 100%); }
+        .btn-mate:hover { box-shadow: 0 10px 25px rgba(232, 62, 140, 0.4); }
+        
+        .btn-rescue { background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%); }
+        .btn-rescue:hover { box-shadow: 0 10px 25px rgba(220, 53, 69, 0.4); }
+        
+        .btn-vet { background: linear-gradient(135deg, #6c757d 0%, #495057 100%); }
+        .btn-vet:hover { box-shadow: 0 10px 25px rgba(108, 117, 125, 0.4); }
+        
+        .btn-quiz { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .btn-quiz:hover { box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4); }
+        
+        .featured-card {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .featured-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #fff;
+            color: #ff6b6b;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            font-size: 1.2rem;
+        }
+        
+        .featured-card .service-title,
+        .featured-card .service-description {
+            color: white;
+        }
+        
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            top: 0;
+            left: 0;
+        }
+        
+        .floating-pet {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.1;
+            animation: float 25s infinite linear;
+        }
+        
+        @keyframes float {
+            from {
+                transform: translateX(-100px) rotate(0deg);
+            }
+            to {
+                transform: translateX(calc(100vw + 100px)) rotate(360deg);
+            }
+        }
+        
+        .stats-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 3rem 0;
+            color: white;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        /* Navbar Styles */
+        .navbar-custom {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-custom.scrolled {
+            box-shadow: 0 5px 30px rgba(0,0,0,0.2);
+            padding: 0.5rem 0;
+        }
+        
+        .navbar-brand-custom {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-right: 2rem;
+        }
+        
+        .nav-link-custom {
+            color: #333 !important;
+            font-weight: 600;
+            margin: 0 0.5rem;
+            padding: 0.5rem 1rem !important;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-link-custom:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white !important;
+            transform: translateY(-2px);
+        }
+        
+        .nav-link-custom.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white !important;
+        }
+        
+        .navbar-toggler-custom {
+            border: none;
+            padding: 0.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+        }
+        
+        .navbar-toggler-custom:focus {
+            box-shadow: none;
+        }
+        
+        .navbar-toggler-icon-custom {
+            width: 25px;
+            height: 2px;
+            background: white;
+            display: block;
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand-custom" href="/">
+                🐾 PetNova
+            </a>
+            <button class="navbar-toggler navbar-toggler-custom" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon-custom"></span>
+                <span class="navbar-toggler-icon-custom"></span>
+                <span class="navbar-toggler-icon-custom"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link-custom active" href="/">🏠 Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom" href="/pets">👀 Browse</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom" href="/buy">🛒 Buy</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom" href="/add">➕ Add Pet</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom" href="/quiz">🧩 Quiz</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link-custom dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            🔧 Services
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="servicesDropdown" style="border-radius: 15px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                            <li><a class="dropdown-item" href="/mate" style="border-radius: 10px;">💕 Find Mate</a></li>
+                            <li><a class="dropdown-item" href="/rescue" style="border-radius: 10px;">🏠 Rescue</a></li>
+                            <li><a class="dropdown-item" href="/vet" style="border-radius: 10px;">🏥 Vet Directory</a></li>
+                            <li><a class="dropdown-item" href="/petaccessories" style="border-radius: 10px;">🏪 Pet Shops</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="floating-elements">
+        <div class="floating-pet" style="top: 10%; animation-delay: 0s;">🐕</div>
+        <div class="floating-pet" style="top: 30%; animation-delay: 7s;">🐱</div>
+        <div class="floating-pet" style="top: 50%; animation-delay: 14s;">🦜</div>
+        <div class="floating-pet" style="top: 70%; animation-delay: 21s;">🐰</div>
+        <div class="floating-pet" style="top: 20%; animation-delay: 5s;">🐠</div>
+        <div class="floating-pet" style="top: 80%; animation-delay: 12s;">🦎</div>
+        <div class="floating-pet" style="top: 45%; animation-delay: 18s;">🐹</div>
+    </div>
+
+    <div class="hero-section">
+        <div class="container">
+            <h1 class="display-3 mb-4">🐾 Welcome to PetNova 🐾</h1>
+            <p class="lead mb-5">Your complete platform for everything pet-related - from finding your perfect companion to connecting with other pet lovers</p>
+            
+            <div class="stats-section">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stat-item">
+                            <span class="stat-number">🎓</span>
+                            <span class="stat-label">College Project</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-item">
+                            <span class="stat-number">🚀</span>
+                            <span class="stat-label">Demo Platform</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-item">
+                            <span class="stat-number">💡</span>
+                            <span class="stat-label">Innovative Solution</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container pb-5">
+        <div class="row">
+            <!-- Pet Quiz Hub - Featured -->
+            <div class="col-lg-6 mb-4">
+                <div class="service-card featured-card position-relative">
+                    <div class="featured-badge">NEW</div>
+                    <div class="service-icon">🧩</div>
+                    <h3 class="service-title">Pet Quiz Hub</h3>
+                    <p class="service-description">
+                        Discover your perfect pet match with our comprehensive quiz system! Take personalized quizzes to find the ideal pet type, breed, or even help your pet find their perfect companion.
+                    </p>
+                    <a href="/quiz" class="btn-service btn-quiz">
+                        Take Pet Quizzes
+                    </a>
+                </div>
+            </div>
+
+            <!-- Add a Pet -->
+            <div class="col-lg-6 mb-4">
+                <div class="service-card">
+                    <div class="service-icon">➕</div>
+                    <h3 class="service-title">Add a Pet</h3>
+                    <p class="service-description">
+                        Share your beloved pet with the PetNova community. Create a detailed profile with photos, personality traits, and fun facts about your furry friend.
+                    </p>
+                    <a href="/add" class="btn-service btn-add">
+                        Add Your Pet
+                    </a>
+                </div>
+            </div>
+
+            <!-- View All Pets -->
+            <div class="col-lg-4 mb-4">
+                <div class="service-card">
+                    <div class="service-icon">👀</div>
+                    <h3 class="service-title">Browse Pets</h3>
+                    <p class="service-description">
+                        Explore our amazing collection of pets from the community. Filter by type, breed, age, and location to find exactly what you're looking for.
+                    </p>
+                    <a href="/pets" class="btn-service btn-view">
+                        View All Pets
+                    </a>
+                </div>
+            </div>
+
+            <!-- Buy a Pet -->
+            <div class="col-lg-4 mb-4">
+                <div class="service-card">
+                    <div class="service-icon">🛒</div>
+                    <h3 class="service-title">Buy a Pet</h3>
+                    <p class="service-description">
+                        Find your perfect companion from trusted sellers. Browse available pets with detailed health records and meet before you commit.
+                    </p>
+                    <a href="/buy" class="btn-service btn-buy">
+                        Shop for Pets
+                    </a>
+                </div>
+            </div>
+
+            <!-- Sell a Pet -->
+            <div class="col-lg-4 mb-4">
+                <div class="service-card">
+                    <div class="service-icon">💰</div>
+                    <h3 class="service-title">Sell a Pet</h3>
+                    <p class="service-description">
+                        Responsibly rehome your pet or sell from your breeding program. Create listings with health certificates and detailed information.
+                    </p>
+                    <a href="/sell" class="btn-service btn-sell">
+                        List Your Pet
+                    </a>
+                </div>
+            </div>
+
+            <!-- Find a Mate -->
+            <div class="col-lg-4 mb-4">
+                <div class="service-card">
+                    <div class="service-icon">💕</div>
+                    <h3 class="service-title">Find a Mate</h3>
+                    <p class="service-description">
+                        Help your pet find their perfect breeding partner. Connect with compatible pets in your area for healthy, happy offspring.
+                    </p>
+                    <a href="/mate" class="btn-service btn-mate">
+                        Find Pet Mates
+                    </a>
+                </div>
+            </div>
+
+            <!-- Rescue -->
+            <div class="col-lg-4 mb-4">
+                <div class="service-card">
+                    <div class="service-icon">🏠</div>
+                    <h3 class="service-title">Pet Rescue</h3>
+                    <p class="service-description">
+                        Give a loving home to pets in need. Browse rescue animals and connect with local shelters to save a life and gain a friend.
+                    </p>
+                    <a href="/rescue" class="btn-service btn-rescue">
+                        Rescue a Pet
+                    </a>
+                </div>
+            </div>
+
+            <!-- Vet Directory -->
+            <div class="col-lg-4 mb-4">
+                <div class="service-card">
+                    <div class="service-icon">🏥</div>
+                    <h3 class="service-title">Vet Directory</h3>
+                    <p class="service-description">
+                        Find trusted veterinarians in your area. Read reviews, compare services, and book appointments for your pet's health needs.
+                    </p>
+                    <a href="/vet" class="btn-service btn-vet">
+                        Find Vets
+                    </a>
+                </div>
+            </div>
+
+            <!-- Pet Shops Directory -->
+            <div class="col-lg-4 mb-4">
+                <div class="service-card">
+                    <div class="service-icon">🏪</div>
+                    <h3 class="service-title">Pet Shops Directory</h3>
+                    <p class="service-description">
+                        Discover pet supply stores near you. Find food, toys, accessories, medical supplies, and grooming services for your pets.
+                    </p>
+                    <a href="/petshops" class="btn-service btn-view">
+                        Find Pet Shops
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- How PetConnect Works -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="service-card">
+                    <h3 class="text-center mb-4">🌟 How PetNova Works</h3>
+                    <div class="row">
+                        <div class="col-md-3 text-center">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
+                            <h5>Discover</h5>
+                            <p class="text-muted">Take our quiz or browse to find your perfect pet</p>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🤝</div>
+                            <h5>Connect</h5>
+                            <p class="text-muted">Meet with sellers, rescues, or other pet owners</p>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">❤️</div>
+                            <h5>Adopt</h5>
+                            <p class="text-muted">Welcome your new companion home</p>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🎉</div>
+                            <h5>Enjoy</h5>
+                            <p class="text-muted">Build lasting memories with your pet</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add interactive hover effects
+        document.querySelectorAll('.service-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                if (!this.classList.contains('featured-card')) {
+                    this.style.transform = 'translateY(-8px) scale(1.02)';
+                }
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Animate stats on scroll
+        function isElementInViewport(el) {
+            const rect = el.getBoundingClientRect();
+            return (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+            );
+        }
+
+        let statsAnimated = false;
+        function checkStatsAnimation() {
+            const statsSection = document.querySelector('.stats-section');
+            if (isElementInViewport(statsSection) && !statsAnimated) {
+                statsAnimated = true;
+                // Add a subtle pulse animation to stats
+                statsSection.style.animation = 'pulse 2s ease-in-out';
+            }
+        }
+
+        window.addEventListener('scroll', checkStatsAnimation);
+        window.addEventListener('load', checkStatsAnimation);
+
+        // Add pulse animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+                100% { transform: scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar-custom');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // Set active nav link based on current page
+        const currentPage = window.location.pathname;
+        document.querySelectorAll('.nav-link-custom').forEach(link => {
+            if (link.getAttribute('href') === currentPage) {
+                document.querySelectorAll('.nav-link-custom').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+    <title>PetNova - Your Complete Pet Platform</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .hero-section {
+            padding: 4rem 0;
+            color: white;
+            text-align: center;
+        }
+        
+        .service-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            height: 100%;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
+        
+        .service-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .service-title {
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .service-description {
+            color: #666;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+        
+        .btn-service {
+            border: none;
+            border-radius: 25px;
+            padding: 1rem 1.5rem;
+            color: white;
+            font-weight: bold;
+            width: 100%;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-service:hover {
+            transform: translateY(-2px);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .btn-add { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); }
+        .btn-add:hover { box-shadow: 0 10px 25px rgba(40, 167, 69, 0.4); }
+        
+        .btn-view { background: linear-gradient(135deg, #007bff 0%, #6610f2 100%); }
+        .btn-view:hover { box-shadow: 0 10px 25px rgba(0, 123, 255, 0.4); }
+        
+        .btn-buy { background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%); }
+        .btn-buy:hover { box-shadow: 0 10px 25px rgba(255, 193, 7, 0.4); }
+        
+        .btn-sell { background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%); }
+        .btn-sell:hover { box-shadow: 0 10px 25px rgba(23, 162, 184, 0.4); }
+        
+        .btn-mate { background: linear-gradient(135deg, #e83e8c 0%, #fd7e14 100%); }
+        .btn-mate:hover { box-shadow: 0 10px 25px rgba(232, 62, 140, 0.4); }
+        
+        .btn-rescue { background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%); }
+        .btn-rescue:hover { box-shadow: 0 10px 25px rgba(220, 53, 69, 0.4); }
+        
+        .btn-vet { background: linear-gradient(135deg, #6c757d 0%, #495057 100%); }
+        .btn-vet:hover { box-shadow: 0 10px 25px rgba(108, 117, 125, 0.4); }
+        
+        .btn-quiz { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .btn-quiz:hover { box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4); }
+        
+        .featured-card {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .featured-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #fff;
+            color: #ff6b6b;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            font-size: 1.2rem;
+        }
+        
+        .featured-card .service-title,
+        .featured-card .service-description {
+            color: white;
+        }
+        
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            top: 0;
+            left: 0;
+        }
+        
+        .floating-pet {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.1;
+            animation: float 25s infinite linear;
+        }
+        
+        @keyframes float {
+            from {
+                transform: translateX(-100px) rotate(0deg);
+            }
+            to {
+                transform: translateX(calc(100vw + 100px)) rotate(360deg);
+            }
+        }
+        
+        .stats-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 3rem 0;
+            color: white;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        /* Navbar Styles */
+        .navbar-custom {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-custom.scrolled {
+            box-shadow: 0 5px 30px rgba(0,0,0,0.2);
+            padding: 0.5rem 0;
+        }
+        
+        .navbar-brand-custom {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-right: 2rem;
+        }
+        
+        .nav-link-custom {
+            color: #333 !important;
+            font-weight: 600;
+            margin: 0 0.5rem;
+            padding: 0.5rem 1rem !important;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-link-custom:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white !important;
+            transform: translateY(-2px);
+        }
+        
+        .nav-link-custom.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white !important;
+        }
+        
+        .navbar-toggler-custom {
+            border: none;
+            padding: 0.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+        }
+        
+        .navbar-toggler-custom:focus {
+            box-shadow: none;
+        }
+        
+        .navbar-toggler-icon-custom {
+            width: 25px;
+            height: 2px;
+            background: white;
+            display: block;
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand-custom" href="/">
+                🐾 PetNova
+            </a>
+            <button class="navbar-toggler navbar-toggler-custom" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon-custom"></span>
+                <span class="navbar-toggler-icon-custom"></span>
+                <span class="navbar-toggler-icon-custom"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link-custom active" href="/">🏠 Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom" href="/pets">👀 Browse</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom" href="/buy">🛒 Buy</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom" href="/add">➕ Add Pet</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom" href="/quiz">🧩 Quiz</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link-custom dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            🔧 Services
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="servicesDropdown" style="border-radius: 15px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                            <li><a class="dropdown-item" href="/mate" style="border-radius: 10px;">💕 Find Mate</a></li>
+                            <li><a class="dropdown-item" href="/rescue" style="border-radius: 10px;">🏠 Rescue</a></li>
+                            <li><a class="dropdown-item" href="/vet" style="border-radius: 10px;">🏥 Vet Directory</a></li>
+                            <li><a class="dropdown-item" href="/petaccessories" style="border-radius: 10px;">🏪 Pet Shops</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="floating-elements">
+        <div class="floating-pet" style="top: 10%; animation-delay: 0s;">🐕</div>
+        <div class="floating-pet" style="top: 30%; animation-delay: 7s;">🐱</div>
+        <div class="floating-pet" style="top: 50%; animation-delay: 14s;">🦜</div>
+        <div class="floating-pet" style="top: 70%; animation-delay: 21s;">🐰</div>
+        <div class="floating-pet" style="top: 20%; animation-delay: 5s;">🐠</div>
+        <div class="floating-pet" style="top: 80%; animation-delay: 12s;">🦎</div>
+        <div class="floating-pet" style="top: 45%; animation-delay: 18s;">🐹</div>
+    </div>
+
+    <div class="hero-section">
+        <div class="container">
+            <h1 class="display-3 mb-4">🐾 Welcome to PetNova 🐾</h1>
+            <p class="lead mb-5">Your complete platform for everything pet-related - from finding your perfect companion to connecting with other pet lovers</p>
+            
+            <div class="stats-section">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stat-item">
+                            <span class="stat-number">🎓</span>
+                            <span class="stat-label">College Project</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-item">
+                            <span class="stat-number">🚀</span>
+                            <span class="stat-label">Demo Platform</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-item">
+                            <span class="stat-number">💡</span>
+                            <span class="stat-label">Innovative Solution</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container pb-5">
+        <div class="row">
+            <!-- Pet Quiz Hub - Featured -->
+            <div class="col-lg-6 mb-4">
+                <div class="service-card featured-card position-relative">
+                    <div class="featured-badge">NEW</div>
+                    <div class="service-icon">🧩</div>
+                    <h3 class="service-title">Pet Quiz Hub</h3>
+                    <p class="service-description">
+                        Discover your perfect pet match with our comprehensive quiz system! Take personalized quizzes to find the ideal pet type, breed, or even help your pet find their perfect companion.
+                    </p>
+                    <a href="/quiz" class="btn-service btn-quiz">
+                        Take Pet Quizzes
+                    </a>
+                </div>
+            </div>
+
+            <!-- Add a Pet -->
+            <div class="col-lg-6 mb-4">
+                <div class="service-card">
+                    <div class="service-icon">➕</div>
+                    <h3 class="service-title">Add a Pet</h3>
+                    <p class="service-description">
+                        Share your beloved pet with the PetNova community. Create a detailed profile with photos, personality traits, and fun facts about your furry friend.
+                    </p>
+                    <a href="/add" class="btn-service btn-add">
+                        Add Your Pet
+                    </a>
+                </div>
+            </div>
+
+            <!-- View All Pets -->
+            <div class="col-lg-4 mb-4">
+                <div class="service-card">
+                    <div class="service-icon">👀</div>
+                    <h3 class="service-title">Browse Pets</h3>
+                    <p class="service-description">
+                        Explore our amazing collection of pets from the community. Filter by type, breed, age, and location to find exactly what you're looking for.
+                    </p>
+                    <a href="/pets" class="btn-service btn-view">
+                        View All Pets
+                    </a>
+                </div>
+            </div>
+
+            <!-- Buy a Pet -->
+            <div class="col-lg-4 mb-4">
+                <div class="service-card">
+                    <div class="service-icon">🛒</div>
+                    <h3 class="service-title">Buy a Pet</h3>
+                    <p class="service-description">
+                        Find your perfect companion from trusted sellers. Browse available pets with detailed health records and meet before you commit.
+                    </p>
+                    <a href="/buy" class="btn-service btn-buy">
+                        Shop for Pets
+                    </a>
+                </div>
+            </div>
+
+            <!-- Sell a Pet -->
+            <div class="col-lg-4 mb-4">
+                <div class="service-card">
+                    <div class="service-icon">💰</div>
+                    <h3 class="service-title">Sell a Pet</h3>
+                    <p class="service-description">
+                        Responsibly rehome your pet or sell from your breeding program. Create listings with health certificates and detailed information.
+                    </p>
+                    <a href="/sell" class="btn-service btn-sell">
+                        List Your Pet
+                    </a>
+                </div>
+            </div>
+
+            <!-- Find a Mate -->
+            <div class="col-lg-4 mb-4">
+                <div class="service-card">
+                    <div class="service-icon">💕</div>
+                    <h3 class="service-title">Find a Mate</h3>
+                    <p class="service-description">
+                        Help your pet find their perfect breeding partner. Connect with compatible pets in your area for healthy, happy offspring.
+                    </p>
+                    <a href="/mate" class="btn-service btn-mate">
+                        Find Pet Mates
+                    </a>
+                </div>
+            </div>
+
+            <!-- Rescue -->
+            <div class="col-lg-4 mb-4">
+                <div class="service-card">
+                    <div class="service-icon">🏠</div>
+                    <h3 class="service-title">Pet Rescue</h3>
+                    <p class="service-description">
+                        Give a loving home to pets in need. Browse rescue animals and connect with local shelters to save a life and gain a friend.
+                    </p>
+                    <a href="/rescue" class="btn-service btn-rescue">
+                        Rescue a Pet
+                    </a>
+                </div>
+            </div>
+
+            <!-- Vet Directory -->
+            <div class="col-lg-4 mb-4">
+                <div class="service-card">
+                    <div class="service-icon">🏥</div>
+                    <h3 class="service-title">Vet Directory</h3>
+                    <p class="service-description">
+                        Find trusted veterinarians in your area. Read reviews, compare services, and book appointments for your pet's health needs.
+                    </p>
+                    <a href="/vet" class="btn-service btn-vet">
+                        Find Vets
+                    </a>
+                </div>
+            </div>
+
+            <!-- Pet Shops Directory -->
+            <div class="col-lg-4 mb-4">
+                <div class="service-card">
+                    <div class="service-icon">🏪</div>
+                    <h3 class="service-title">Pet Shops Directory</h3>
+                    <p class="service-description">
+                        Discover pet supply stores near you. Find food, toys, accessories, medical supplies, and grooming services for your pets.
+                    </p>
+                    <a href="/petshops" class="btn-service btn-view">
+                        Find Pet Shops
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- How PetConnect Works -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="service-card">
+                    <h3 class="text-center mb-4">🌟 How PetNova Works</h3>
+                    <div class="row">
+                        <div class="col-md-3 text-center">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
+                            <h5>Discover</h5>
+                            <p class="text-muted">Take our quiz or browse to find your perfect pet</p>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🤝</div>
+                            <h5>Connect</h5>
+                            <p class="text-muted">Meet with sellers, rescues, or other pet owners</p>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">❤️</div>
+                            <h5>Adopt</h5>
+                            <p class="text-muted">Welcome your new companion home</p>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🎉</div>
+                            <h5>Enjoy</h5>
+                            <p class="text-muted">Build lasting memories with your pet</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add interactive hover effects
+        document.querySelectorAll('.service-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                if (!this.classList.contains('featured-card')) {
+                    this.style.transform = 'translateY(-8px) scale(1.02)';
+                }
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Animate stats on scroll
+        function isElementInViewport(el) {
+            const rect = el.getBoundingClientRect();
+            return (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+            );
+        }
+
+        let statsAnimated = false;
+        function checkStatsAnimation() {
+            const statsSection = document.querySelector('.stats-section');
+            if (isElementInViewport(statsSection) && !statsAnimated) {
+                statsAnimated = true;
+                // Add a subtle pulse animation to stats
+                statsSection.style.animation = 'pulse 2s ease-in-out';
+            }
+        }
+
+        window.addEventListener('scroll', checkStatsAnimation);
+        window.addEventListener('load', checkStatsAnimation);
+
+        // Add pulse animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+                100% { transform: scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar-custom');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // Set active nav link based on current page
+        const currentPage = window.location.pathname;
+        document.querySelectorAll('.nav-link-custom').forEach(link => {
+            if (link.getAttribute('href') === currentPage) {
+                document.querySelectorAll('.nav-link-custom').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

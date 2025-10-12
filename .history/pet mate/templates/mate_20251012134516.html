@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Find a Mate - PetNova</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .hero-section {
+            padding: 3rem 0;
+            color: white;
+            text-align: center;
+        }
+        
+        .search-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .form-section {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-title {
+            color: #333;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-icon {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 12px;
+            border: 2px solid #e9ecef;
+            padding: 0.8rem 1.2rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.2);
+            outline: none;
+        }
+        
+        .form-label {
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .btn-search {
+            background: linear-gradient(135deg, #e83e8c 0%, #fd7e14 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 0.8rem 2rem;
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .btn-search:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(232, 62, 140, 0.4);
+            color: white;
+        }
+        
+        .btn-back {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 0.5rem 2rem;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+        }
+        
+        .btn-back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(108, 117, 125, 0.4);
+            color: white;
+        }
+        
+        .pet-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .pet-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+        
+        .pet-name {
+            color: #333;
+            font-weight: bold;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .pet-badge {
+            background: linear-gradient(135deg, #e83e8c 0%, #fd7e14 100%);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+        
+        .pet-info {
+            color: #666;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .pet-info-icon {
+            margin-right: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .empty-state {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 4rem 2rem;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+        
+        .empty-state-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            top: 0;
+            left: 0;
+        }
+        
+        .floating-pet {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.1;
+            animation: float 25s infinite linear;
+        }
+        
+        @keyframes float {
+            from {
+                transform: translateX(-100px) rotate(0deg);
+            }
+            to {
+                transform: translateX(calc(100vw + 100px)) rotate(360deg);
+            }
+        }
+        
+        .info-box {
+            background: rgba(232, 62, 140, 0.1);
+            border-left: 4px solid #e83e8c;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-group-text {
+            background: linear-gradient(135deg, #e83e8c 0%, #fd7e14 100%);
+            color: white;
+            border: none;
+            border-radius: 12px 0 0 12px;
+        }
+        
+        .has-icon .form-control, 
+        .has-icon .form-select {
+            border-radius: 0 12px 12px 0;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .btn-contact {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 0.6rem 1.2rem;
+            color: white;
+            font-weight: bold;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-contact:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="floating-pet" style="top: 10%; animation-delay: 0s;">💕</div>
+        <div class="floating-pet" style="top: 30%; animation-delay: 7s;">🐕</div>
+        <div class="floating-pet" style="top: 50%; animation-delay: 14s;">🐱</div>
+        <div class="floating-pet" style="top: 70%; animation-delay: 21s;">❤️</div>
+        <div class="floating-pet" style="top: 20%; animation-delay: 5s;">💑</div>
+    </div>
+
+    <div class="hero-section">
+        <div class="container">
+            <h1 class="display-4 mb-3">💕 Find a Mate</h1>
+            <p class="lead">Help your pet find their perfect breeding partner</p>
+        </div>
+    </div>
+
+    <div class="container pb-5">
+        <a href="/" class="btn-back">← Back to Home</a>
+        
+        <!-- Search Form -->
+        <div class="search-container">
+            <div class="info-box">
+                <strong>💡 How it works:</strong> Select your pet's category and breed to find compatible mates in your area
+            </div>
+
+            <form method="POST">
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <span class="section-icon">🔍</span>
+                        Search Filters
+                    </h3>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="category" class="form-label">Pet Category *</label>
+                            <div class="input-group has-icon">
+                                <span class="input-group-text">🐾</span>
+                                <select name="category" id="category" class="form-control" onchange="showBreedOptions()" required>
+                                    <option value="">Select Category</option>
+                                    <option value="Dog" {% if selected_category=="Dog" %}selected{% endif %}>🐕 Dog</option>
+                                    <option value="Cat" {% if selected_category=="Cat" %}selected{% endif %}>🐱 Cat</option>
+                                    <option value="Bird" {% if selected_category=="Bird" %}selected{% endif %}>🦜 Bird</option>
+                                    <option value="Small Pet" {% if selected_category=="Small Pet" %}selected{% endif %}>🐰 Small Pet</option>
+                                    <option value="Reptile" {% if selected_category=="Reptile" %}selected{% endif %}>🦎 Reptile</option>
+                                    <option value="Fish" {% if selected_category=="Fish" %}selected{% endif %}>🐠 Fish</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3" id="breed-div" style="display:none;">
+                            <label for="breed" class="form-label">Breed/Species</label>
+                            <div class="input-group has-icon">
+                                <span class="input-group-text">🎯</span>
+                                <select name="breed" id="breed" class="form-control">
+                                    <option value="">Select Breed/Species</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-search">
+                    💕 Find Compatible Mates
+                </button>
+            </form>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsSection">
+            {% if pets %}
+                <div class="row">
+                    {% for pet in pets %}
+                    <div class="col-lg-6 mb-4 fade-in">
+                        <div class="pet-card">
+                            <h4 class="pet-name">
+                                {{ pet[1] }}
+                                <span class="pet-badge">Available for Mating</span>
+                            </h4>
+                            
+                            <div class="pet-info">
+                                <span class="pet-info-icon">🏷️</span>
+                                <span><strong>Category:</strong> {{ pet[7] }}</span>
+                            </div>
+                            
+                            <div class="pet-info">
+                                <span class="pet-info-icon">🎯</span>
+                                <span><strong>Breed:</strong> {{ pet[2] }}</span>
+                            </div>
+                            
+                            <div class="pet-info">
+                                <span class="pet-info-icon">📍</span>
+                                <span><strong>Location:</strong> {{ pet[3] }}</span>
+                            </div>
+                            
+                            <div class="pet-info">
+                                <span class="pet-info-icon">🎂</span>
+                                <span><strong>Age:</strong> {{ pet[4] }} years</span>
+                            </div>
+                            
+                            <button class="btn-contact">
+                                📞 Contact Owner
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% elif request.method == 'POST' %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">😔</div>
+                    <h3>No Pets Found</h3>
+                    <p class="text-muted">We couldn't find any pets matching your criteria. Try adjusting your search filters or check back later.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Initial State -->
+        {% if not pets and request.method != 'POST' %}
+        <div class="empty-state">
+            <div class="empty-state-icon">💕</div>
+            <h3>Start Your Search</h3>
+            <p class="text-muted">Select your pet's category and breed above to find compatible mates in your area</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        const breeds = {
+            "Dog": ["Beagle", "Labrador", "Pug", "Golden Retriever", "Husky", "German Shepherd", "Bulldog", "Poodle", "Rottweiler"],
+            "Cat": ["Siamese", "Persian", "Maine Coon", "Bengal", "British Shorthair", "Ragdoll"],
+            "Bird": ["Parrot", "Canary", "Budgerigar", "Cockatiel", "Lovebird"],
+            "Small Pet": ["Rabbit", "Hamster", "Guinea Pig", "Chinchilla"],
+            "Reptile": ["Turtle", "Lizard", "Snake", "Gecko"],
+            "Fish": ["Goldfish", "Betta Fish", "Guppy", "Angelfish"]
+        };
+
+        function showBreedOptions() {
+            const category = document.getElementById("category").value;
+            const breedSelect = document.getElementById("breed");
+            const breedDiv = document.getElementById("breed-div");
+
+            // Reset
+            breedSelect.innerHTML = '<option value="">Select Breed/Species</option>';
+
+            if (category && breeds[category]) {
+                breeds[category].forEach(b => {
+                    const option = document.createElement("option");
+                    option.value = b;
+                    option.textContent = b;
+                    // Keep selected on reload
+                    if ("{{ selected_breed }}" === b) {
+                        option.selected = true;
+                    }
+                    breedSelect.appendChild(option);
+                });
+                breedDiv.style.display = "block";
+            } else {
+                breedDiv.style.display = "none";
+            }
+        }
+
+        // Auto-run to restore selected breed after reload
+        showBreedOptions();
+
+        // Add hover effects to cards
+        document.querySelectorAll('.pet-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Add staggered fade-in animation
+        document.querySelectorAll('.fade-in').forEach((item, index) => {
+            item.style.animationDelay = `${index * 0.1}s`;
+        });
+
+        // Contact button functionality
+        document.querySelectorAll('.btn-contact').forEach(btn => {
+            btn.addEventListener('click', function() {
+                alert('Contact feature coming soon! This will allow you to message the pet owner directly.');
+            });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

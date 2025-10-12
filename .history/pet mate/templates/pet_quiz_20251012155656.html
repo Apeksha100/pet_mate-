@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Your Perfect Pet Mate | PetNova</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* === Navbar Styling === */
+        .navbar {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+        .navbar-brand, .nav-link {
+            color: white !important;
+            font-weight: 500;
+        }
+        .nav-link:hover {
+            color: #ffdf80 !important;
+        }
+
+        /* === Main Quiz Section === */
+        body {
+            background-color: #f8f9fa;
+        }
+        .quiz-container {
+            max-width: 800px;
+            margin: 100px auto 60px auto;
+        }
+        .question-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .option-btn {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            width: 100%;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .option-btn:hover {
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.6);
+            transform: translateY(-2px);
+        }
+        .option-btn.selected {
+            background: rgba(255,255,255,0.3);
+            border-color: white;
+            font-weight: bold;
+        }
+        .result-card {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .pet-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        .progress-bar {
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+            height: 8px;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 0.75rem 2rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* === Footer Styling === */
+        footer {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px 0;
+        }
+        footer a {
+            color: #ffdf80;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 🌟 Navbar (Same as Pet Shops Directory) -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top shadow">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">🐾 PetNova</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="petshops.html">Pet Shops</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="findmate.html">Find Mate</a></li>
+                    <li class="nav-item"><a class="nav-link" href="adopt.html">Adopt</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 🧩 Quiz Section -->
+    <div class="container quiz-container">
+        <div class="text-center mb-5">
+            <h1 class="display-5 mb-3">🐾 Find Your Perfect Pet Mate</h1>
+            <p class="lead text-muted">Take our fun quiz to discover which pet suits your personality and lifestyle!</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted">Question <span id="current-question">1</span> of <span id="total-questions">8</span></span>
+                <span class="text-muted"><span id="progress-percent">0</span>% Complete</span>
+            </div>
+            <div class="progress" style="height: 8px; background: #e9ecef;">
+                <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Quiz Content -->
+        <div id="quiz-container"></div>
+
+        <!-- Navigation Buttons -->
+        <div class="d-flex justify-content-between mt-4" id="navigation">
+            <button class="btn btn-outline-secondary" id="prev-btn" onclick="previousQuestion()" disabled>Previous</button>
+            <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()">Next</button>
+        </div>
+
+        <!-- Result Section -->
+        <div id="results" style="display: none;">
+            <div class="result-card">
+                <div class="pet-icon" id="result-icon">🐕</div>
+                <h2 id="result-title">Your Perfect Pet Match</h2>
+                <h3 id="result-pet" class="text-primary mb-3"></h3>
+                <p id="result-description" class="lead"></p>
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <h5>Care Level</h5>
+                        <div class="progress mb-3">
+                            <div class="progress-bar bg-info" id="care-level"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Activity Level</h5>
+                        <div class="progress mb-3">
+                            <div class="progress-bar bg-success" id="activity-level"></div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-primary mt-3" onclick="restartQuiz()">Take Quiz Again</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🌍 Footer (Same as Pet Shops Directory) -->
+    <footer class="text-center mt-auto">
+        <div class="container">
+            <p class="mb-1">&copy; 2025 PetNova. All rights reserved.</p>
+            <p>
+                <a href="privacy.html">Privacy Policy</a> | 
+                <a href="terms.html">Terms of Service</a>
+            </p>
+            <p class="small">Follow us on 
+                <a href="#">Instagram</a>, 
+                <a href="#">Facebook</a>, 
+                <a href="#">Twitter</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap & Quiz Script -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 👇 Paste your existing quiz JavaScript here (unchanged)
+        // Everything from const questions = [...] down to initializeQuiz();
+        // Your existing logic will remain the same
+    </script>
+</body>
+</html>

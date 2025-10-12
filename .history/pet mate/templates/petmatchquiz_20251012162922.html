@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Find Your Perfect Pet Mate</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        /* Navbar Styles */
+        .navbar-custom {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-custom.scrolled {
+            box-shadow: 0 5px 30px rgba(0,0,0,0.2);
+            padding: 0.5rem 0;
+        }
+        
+        .navbar-brand-custom {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-right: 2rem;
+        }
+        
+        .nav-link-custom {
+            color: #333 !important;
+            font-weight: 600;
+            margin: 0 0.5rem;
+            padding: 0.5rem 1rem !important;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-link-custom:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white !important;
+            transform: translateY(-2px);
+        }
+        
+        .nav-link-custom.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white !important;
+        }
+        
+        .navbar-toggler-custom {
+            border: none;
+            padding: 0.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+        }
+        
+        .navbar-toggler-custom:focus {
+            box-shadow: none;
+        }
+        
+        .navbar-toggler-icon-custom {
+            width: 25px;
+            height: 2px;
+            background: white;
+            display: block;
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .question-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .option-btn {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            width: 100%;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .option-btn:hover {
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.6);
+            transform: translateY(-2px);
+        }
+        .option-btn.selected {
+            background: rgba(255,255,255,0.3);
+            border-color: white;
+            font-weight: bold;
+        }
+        .result-card {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .pet-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        .progress-bar {
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+            height: 8px;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 0.75rem 2rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand-custom" href="/">
+                🐾 PetNova
+            </a>
+            <button class="navbar-toggler navbar-toggler-custom" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon-custom"></span>
+                <span class="navbar-toggler-icon-custom"></span>
+                <span class="navbar-toggler-icon-custom"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link-custom" href="/">🏠 Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom" href="/pets">👀 Browse</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom" href="/buy">🛒 Buy</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom" href="/add">➕ Add Pet</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom" href="/quiz">🧩 Quiz</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link-custom dropdown-toggle active" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            🔧 Services
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="servicesDropdown" style="border-radius: 15px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                            <li><a class="dropdown-item" href="/mate" style="border-radius: 10px;">💕 Find Mate</a></li>
+                            <li><a class="dropdown-item" href="/rescue" style="border-radius: 10px;">🏠 Rescue</a></li>
+                            <li><a class="dropdown-item" href="/vet" style="border-radius: 10px;">🏥 Vet Directory</a></li>
+                            <li><a class="dropdown-item" href="/petaccessories" style="border-radius: 10px;">🏪 Pet Shops</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="quiz-container">
+        <div class="text-center mb-5">
+            <h1 class="display-4 mb-3">🐾 Find Your Perfect Pet Mate</h1>
+            <p class="lead text-muted">Take our quiz to discover which pet would be your ideal companion!</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted">Question <span id="current-question">1</span> of <span id="total-questions">8</span></span>
+                <span class="text-muted"><span id="progress-percent">0</span>% Complete</span>
+            </div>
+            <div class="progress" style="height: 8px; background: #e9ecef;">
+                <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Quiz Questions -->
+        <div id="quiz-container">
+            <!-- Questions will be dynamically inserted here -->
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="d-flex justify-content-between mt-4" id="navigation">
+            <button class="btn btn-outline-secondary" id="prev-btn" onclick="previousQuestion()" disabled>Previous</button>
+            <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()">Next</button>
+        </div>
+
+        <!-- Results -->
+        <div id="results" style="display: none;">
+            <div class="result-card">
+                <div class="pet-icon" id="result-icon">🐕</div>
+                <h2 id="result-title">Your Perfect Pet Match</h2>
+                <h3 id="result-pet" class="text-primary mb-3"></h3>
+                <p id="result-description" class="lead"></p>
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <h5>Care Level</h5>
+                        <div class="progress mb-3">
+                            <div class="progress-bar bg-info" id="care-level"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Activity Level</h5>
+                        <div class="progress mb-3">
+                            <div class="progress-bar bg-success" id="activity-level"></div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-primary mt-3" onclick="restartQuiz()">Take Quiz Again</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer-custom">
+        <div class="container">
+            <div class="row">
+                <!-- About Section -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h4 class="footer-heading">🐾 PetNova</h4>
+                    <p class="footer-text">
+                        Your complete platform for everything pet-related. Connecting pet lovers, facilitating adoptions, and building a stronger pet community.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">📘</a>
+                        <a href="#" class="social-link">📷</a>
+                        <a href="#" class="social-link">🐦</a>
+                        <a href="#" class="social-link">💼</a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="footer-heading">Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/pets">Browse Pets</a></li>
+                        <li><a href="/add">Add Pet</a></li>
+                        <li><a href="/quiz">Take Quiz</a></li>
+                    </ul>
+                </div>
+
+                <!-- Services -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-heading">Services</h5>
+                    <ul class="footer-links">
+                        <li><a href="/buy">Buy Pets</a></li>
+                        <li><a href="/sell">Sell Pets</a></li>
+                        <li><a href="/mate">Find Mate</a></li>
+                        <li><a href="/rescue">Pet Rescue</a></li>
+                        <li><a href="/vet">Vet Directory</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-heading">Get in Touch</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">📧 info@petnova.com</a></li>
+                        <li><a href="#">📞 +1 (555) 123-4567</a></li>
+                        <li><a href="#">📍 Mumbai, India</a></li>
+                        <li><a href="#">🕒 24/7 Support</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 PetNova. All rights reserved. | College Project</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const questions = [
+            {
+                question: "What's your living situation?",
+                options: [
+                    { text: "Large house with yard", value: "house" },
+                    { text: "Apartment with balcony", value: "apartment" },
+                    { text: "Small apartment", value: "small" },
+                    { text: "Shared living space", value: "shared" }
+                ]
+            },
+            {
+                question: "How much time can you dedicate to pet care daily?",
+                options: [
+                    { text: "4+ hours", value: "high" },
+                    { text: "2-3 hours", value: "medium" },
+                    { text: "1-2 hours", value: "low" },
+                    { text: "Less than 1 hour", value: "minimal" }
+                ]
+            },
+            {
+                question: "What's your activity level?",
+                options: [
+                    { text: "Very active - love outdoor activities", value: "very_active" },
+                    { text: "Moderately active", value: "moderate" },
+                    { text: "Prefer indoor activities", value: "indoor" },
+                    { text: "Low activity level", value: "low_active" }
+                ]
+            },
+            {
+                question: "How do you feel about pet training?",
+                options: [
+                    { text: "Love training and teaching tricks", value: "love_training" },
+                    { text: "Don't mind basic training", value: "basic_training" },
+                    { text: "Prefer minimal training needed", value: "minimal_training" },
+                    { text: "Want a pet that needs no training", value: "no_training" }
+                ]
+            },
+            {
+                question: "What's your budget for pet expenses?",
+                options: [
+                    { text: "High budget - money is no object", value: "high_budget" },
+                    { text: "Medium budget", value: "medium_budget" },
+                    { text: "Low budget", value: "low_budget" },
+                    { text: "Very limited budget", value: "minimal_budget" }
+                ]
+            },
+            {
+                question: "Do you have experience with pets?",
+                options: [
+                    { text: "Lots of experience with various pets", value: "experienced" },
+                    { text: "Some experience", value: "some_experience" },
+                    { text: "Limited experience", value: "beginner" },
+                    { text: "Complete beginner", value: "no_experience" }
+                ]
+            },
+            {
+                question: "What type of interaction do you prefer?",
+                options: [
+                    { text: "Highly interactive and social", value: "interactive" },
+                    { text: "Moderate interaction", value: "moderate_interaction" },
+                    { text: "Independent but affectionate", value: "independent" },
+                    { text: "Minimal interaction required", value: "minimal_interaction" }
+                ]
+            },
+            {
+                question: "How do you feel about pet grooming?",
+                options: [
+                    { text: "Don't mind regular grooming", value: "grooming_ok" },
+                    { text: "Occasional grooming is fine", value: "occasional_grooming" },
+                    { text: "Prefer low-maintenance grooming", value: "low_maintenance" },
+                    { text: "Want minimal grooming needs", value: "minimal_grooming" }
+                ]
+            }
+        ];
+
+        const petProfiles = {
+            dog: {
+                name: "Dog",
+                icon: "🐕",
+                description: "Dogs are loyal, loving companions perfect for active households. They thrive on interaction and make excellent family pets.",
+                care: 80,
+                activity: 90
+            },
+            cat: {
+                name: "Cat",
+                icon: "🐱",
+                description: "Cats are independent yet affectionate pets. They're perfect for people who want companionship without constant attention.",
+                care: 60,
+                activity: 50
+            },
+            bird: {
+                name: "Bird",
+                icon: "🦜",
+                description: "Birds are intelligent, social creatures that can learn tricks and provide years of entertainment with proper care.",
+                care: 70,
+                activity: 60
+            },
+            fish: {
+                name: "Fish",
+                icon: "🐠",
+                description: "Fish are peaceful, low-maintenance pets perfect for beginners or those with limited space and time.",
+                care: 30,
+                activity: 20
+            },
+            rabbit: {
+                name: "Rabbit",
+                icon: "🐰",
+                description: "Rabbits are gentle, social animals that can be litter trained and make wonderful indoor companions.",
+                care: 65,
+                activity: 55
+            },
+            reptile: {
+                name: "Reptile",
+                icon: "🦎",
+                description: "Reptiles are fascinating, low-maintenance pets perfect for those interested in unique animal behavior.",
+                care: 45,
+                activity: 25
+            }
+        };
+
+        let currentQuestion = 0;
+        let answers = {};
+
+        function initializeQuiz() {
+            displayQuestion();
+            updateProgress();
+        }
+
+        function displayQuestion() {
+            const container = document.getElementById('quiz-container');
+            const question = questions[currentQuestion];
+            
+            container.innerHTML = `
+                <div class="question-card">
+                    <h3 class="mb-4">${question.question}</h3>
+                    ${question.options.map((option, index) => `
+                        <div class="option-btn" onclick="selectOption('${option.value}', this)">
+                            ${option.text}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            // Restore previous selection if exists
+            if (answers[currentQuestion]) {
+                const selectedBtn = container.querySelector(`[onclick*="${answers[currentQuestion]}"]`);
+                if (selectedBtn) selectedBtn.classList.add('selected');
+            }
+
+            updateNavigationButtons();
+        }
+
+        function selectOption(value, element) {
+            // Remove selected class from all options
+            document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
+            
+            // Add selected class to clicked option
+            element.classList.add('selected');
+            
+            // Store answer
+            answers[currentQuestion] = value;
+            
+            // Enable next button
+            document.getElementById('next-btn').disabled = false;
+        }
+
+        function nextQuestion() {
+            if (!answers[currentQuestion]) return;
+            
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                displayQuestion();
+                updateProgress();
+            } else {
+                showResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                displayQuestion();
+                updateProgress();
+            }
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+            document.getElementById('progress-percent').textContent = Math.round(progress);
+            document.getElementById('current-question').textContent = currentQuestion + 1;
+            document.getElementById('total-questions').textContent = questions.length;
+        }
+
+        function updateNavigationButtons() {
+            document.getElementById('prev-btn').disabled = currentQuestion === 0;
+            document.getElementById('next-btn').disabled = !answers[currentQuestion];
+            
+            if (currentQuestion === questions.length - 1) {
+                document.getElementById('next-btn').textContent = 'See Results';
+            } else {
+                document.getElementById('next-btn').textContent = 'Next';
+            }
+        }
+
+        function calculateResult() {
+            const scores = {
+                dog: 0,
+                cat: 0,
+                bird: 0,
+                fish: 0,
+                rabbit: 0,
+                reptile: 0
+            };
+
+            // Scoring logic based on answers
+            Object.values(answers).forEach(answer => {
+                switch(answer) {
+                    case 'house':
+                    case 'high':
+                    case 'very_active':
+                    case 'love_training':
+                        scores.dog += 3;
+                        scores.rabbit += 1;
+                        break;
+                    case 'apartment':
+                    case 'medium':
+                    case 'moderate':
+                    case 'basic_training':
+                        scores.cat += 2;
+                        scores.bird += 2;
+                        scores.dog += 1;
+                        scores.rabbit += 2;
+                        break;
+                    case 'small':
+                    case 'low':
+                    case 'indoor':
+                    case 'minimal_training':
+                        scores.cat += 3;
+                        scores.fish += 2;
+                        scores.bird += 1;
+                        scores.reptile += 2;
+                        break;
+                    case 'shared':
+                    case 'minimal':
+                    case 'low_active':
+                    case 'no_training':
+                        scores.fish += 3;
+                        scores.reptile += 3;
+                        break;
+                    case 'interactive':
+                        scores.dog += 3;
+                        scores.bird += 2;
+                        break;
+                    case 'independent':
+                        scores.cat += 3;
+                        scores.rabbit += 2;
+                        break;
+                    case 'minimal_interaction':
+                        scores.fish += 3;
+                        scores.reptile += 2;
+                        break;
+                }
+            });
+
+            // Find the pet with highest score
+            let bestPet = 'cat';
+            let highestScore = 0;
+            
+            for (let pet in scores) {
+                if (scores[pet] > highestScore) {
+                    highestScore = scores[pet];
+                    bestPet = pet;
+                }
+            }
+
+            return bestPet;
+        }
+
+        function showResults() {
+            const result = calculateResult();
+            const pet = petProfiles[result];
+            
+            document.getElementById('quiz-container').style.display = 'none';
+            document.getElementById('navigation').style.display = 'none';
+            document.getElementById('results').style.display = 'block';
+            
+            document.getElementById('result-icon').textContent = pet.icon;
+            document.getElementById('result-pet').textContent = pet.name;
+            document.getElementById('result-description').textContent = pet.description;
+            document.getElementById('care-level').style.width = pet.care + '%';
+            document.getElementById('activity-level').style.width = pet.activity + '%';
+            
+            // Add some celebration animation
+            setTimeout(() => {
+                document.querySelector('.result-card').style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    document.querySelector('.result-card').style.transform = 'scale(1)';
+                }, 200);
+            }, 100);
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            answers = {};
+            
+            // Reset UI elements
+            document.getElementById('quiz-container').style.display = 'block';
+            document.getElementById('navigation').style.display = 'flex';
+            document.getElementById('results').style.display = 'none';
+            
+            // Reset progress bar
+            document.getElementById('progress-bar').style.width = '0%';
+            document.getElementById('progress-percent').textContent = '0';
+            document.getElementById('current-question').textContent = '1';
+            
+            // Reset navigation buttons
+            document.getElementById('prev-btn').disabled = true;
+            document.getElementById('next-btn').disabled = true;
+            document.getElementById('next-btn').textContent = 'Next';
+            
+            // Clear any existing animations
+            const resultCard = document.querySelector('.result-card');
+            if (resultCard) {
+                resultCard.style.transform = 'scale(1)';
+            }
+            
+            // Reinitialize quiz
+            initializeQuiz();
+        }
+
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            
+            // Update previous button
+            prevBtn.disabled = currentQuestion === 0;
+            
+            // Update next button
+            const hasAnswer = answers.hasOwnProperty(currentQuestion);
+            nextBtn.disabled = !hasAnswer;
+            
+            // Update next button text
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.textContent = 'See Results';
+            } else {
+                nextBtn.textContent = 'Next';
+            }
+        }
+
+        function selectOption(value, element) {
+            // Remove selected class from all options in current question
+            const currentOptions = document.querySelectorAll('.option-btn');
+            currentOptions.forEach(btn => btn.classList.remove('selected'));
+            
+            // Add selected class to clicked option
+            element.classList.add('selected');
+            
+            // Store answer
+            answers[currentQuestion] = value;
+            
+            // Update navigation buttons
+            updateNavigationButtons();
+            
+            // Add some visual feedback
+            element.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                element.style.transform = 'scale(1)';
+            }, 150);
+        }
+
+        function nextQuestion() {
+            // Check if answer exists for current question
+            if (!answers.hasOwnProperty(currentQuestion)) {
+                alert('Please select an option before continuing.');
+                return;
+            }
+            
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                displayQuestion();
+                updateProgress();
+            } else {
+                showResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                displayQuestion();
+                updateProgress();
+            }
+        }
+
+        function displayQuestion() {
+            const container = document.getElementById('quiz-container');
+            const question = questions[currentQuestion];
+            
+            // Add fade effect
+            container.style.opacity = '0';
+            
+            setTimeout(() => {
+                container.innerHTML = `
+                    <div class="question-card">
+                        <h3 class="mb-4">${question.question}</h3>
+                        ${question.options.map((option, index) => `
+                            <div class="option-btn" onclick="selectOption('${option.value}', this)">
+                                ${option.text}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+
+                // Restore previous selection if exists
+                if (answers.hasOwnProperty(currentQuestion)) {
+                    const selectedValue = answers[currentQuestion];
+                    const selectedBtn = container.querySelector(`[onclick*="${selectedValue}"]`);
+                    if (selectedBtn) {
+                        selectedBtn.classList.add('selected');
+                    }
+                }
+
+                updateNavigationButtons();
+                
+                // Fade back in
+                container.style.opacity = '1';
+            }, 150);
+        }
+
+        function calculateResult() {
+            const scores = {
+                dog: 0,
+                cat: 0,
+                bird: 0,
+                fish: 0,
+                rabbit: 0,
+                reptile: 0
+            };
+
+            // Enhanced scoring logic
+            const answerValues = Object.values(answers);
+            
+            answerValues.forEach((answer, index) => {
+                switch(answer) {
+                    // Living situation
+                    case 'house':
+                        scores.dog += 3;
+                        scores.rabbit += 1;
+                        break;
+                    case 'apartment':
+                        scores.cat += 3;
+                        scores.bird += 2;
+                        scores.dog += 1;
+                        scores.rabbit += 2;
+                        break;
+                    case 'small':
+                        scores.cat += 2;
+                        scores.fish += 3;
+                        scores.bird += 2;
+                        scores.reptile += 2;
+                        break;
+                    case 'shared':
+                        scores.fish += 3;
+                        scores.reptile += 3;
+                        break;
+                        
+                    // Time commitment
+                    case 'high':
+                        scores.dog += 3;
+                        scores.bird += 2;
+                        break;
+                    case 'medium':
+                        scores.cat += 2;
+                        scores.rabbit += 3;
+                        scores.dog += 1;
+                        break;
+                    case 'low':
+                        scores.cat += 3;
+                        scores.fish += 2;
+                        scores.reptile += 2;
+                        break;
+                    case 'minimal':
+                        scores.fish += 3;
+                        scores.reptile += 3;
+                        break;
+                        
+                    // Activity level
+                    case 'very_active':
+                        scores.dog += 3;
+                        break;
+                    case 'moderate':
+                        scores.dog += 2;
+                        scores.cat += 2;
+                        scores.rabbit += 2;
+                        break;
+                    case 'indoor':
+                        scores.cat += 3;
+                        scores.bird += 2;
+                        scores.fish += 1;
+                        break;
+                    case 'low_active':
+                        scores.fish += 3;
+                        scores.reptile += 2;
+                        scores.cat += 1;
+                        break;
+                        
+                    // Training preference
+                    case 'love_training':
+                        scores.dog += 3;
+                        scores.bird += 2;
+                        break;
+                    case 'basic_training':
+                        scores.dog += 2;
+                        scores.cat += 1;
+                        break;
+                    case 'minimal_training':
+                        scores.cat += 3;
+                        scores.rabbit += 2;
+                        break;
+                    case 'no_training':
+                        scores.fish += 3;
+                        scores.reptile += 3;
+                        break;
+                        
+                    // Budget considerations
+                    case 'high_budget':
+                        scores.dog += 2;
+                        scores.bird += 2;
+                        break;
+                    case 'medium_budget':
+                        scores.cat += 2;
+                        scores.rabbit += 2;
+                        break;
+                    case 'low_budget':
+                        scores.fish += 2;
+                        scores.reptile += 1;
+                        break;
+                    case 'minimal_budget':
+                        scores.fish += 3;
+                        break;
+                        
+                    // Experience level
+                    case 'experienced':
+                        scores.dog += 2;
+                        scores.bird += 3;
+                        scores.reptile += 2;
+                        break;
+                    case 'some_experience':
+                        scores.cat += 2;
+                        scores.rabbit += 2;
+                        scores.dog += 1;
+                        break;
+                    case 'beginner':
+                        scores.cat += 3;
+                        scores.fish += 2;
+                        break;
+                    case 'no_experience':
+                        scores.fish += 3;
+                        break;
+                        
+                    // Interaction preference
+                    case 'interactive':
+                        scores.dog += 3;
+                        scores.bird += 3;
+                        break;
+                    case 'moderate_interaction':
+                        scores.cat += 2;
+                        scores.rabbit += 2;
+                        break;
+                    case 'independent':
+                        scores.cat += 3;
+                        scores.reptile += 1;
+                        break;
+                    case 'minimal_interaction':
+                        scores.fish += 3;
+                        scores.reptile += 2;
+                        break;
+                        
+                    // Grooming preference
+                    case 'grooming_ok':
+                        scores.dog += 2;
+                        scores.cat += 1;
+                        break;
+                    case 'occasional_grooming':
+                        scores.cat += 2;
+                        scores.rabbit += 2;
+                        break;
+                    case 'low_maintenance':
+                        scores.fish += 2;
+                        scores.reptile += 2;
+                        break;
+                    case 'minimal_grooming':
+                        scores.fish += 3;
+                        scores.reptile += 3;
+                        break;
+                }
+            });
+
+            // Find the pet with highest score
+            let bestPet = 'cat'; // default fallback
+            let highestScore = 0;
+            
+            for (let pet in scores) {
+                if (scores[pet] > highestScore) {
+                    highestScore = scores[pet];
+                    bestPet = pet;
+                }
+            }
+
+            return bestPet;
+        }
+
+        function showResults() {
+            try {
+                const result = calculateResult();
+                const pet = petProfiles[result];
+                
+                if (!pet) {
+                    console.error('Pet profile not found for result:', result);
+                    return;
+                }
+                
+                // Hide quiz elements
+                document.getElementById('quiz-container').style.display = 'none';
+                document.getElementById('navigation').style.display = 'none';
+                
+                // Show results with animation
+                const resultsDiv = document.getElementById('results');
+                resultsDiv.style.display = 'block';
+                resultsDiv.style.opacity = '0';
+                
+                // Update result content
+                document.getElementById('result-icon').textContent = pet.icon;
+                document.getElementById('result-pet').textContent = pet.name;
+                document.getElementById('result-description').textContent = pet.description;
+                document.getElementById('care-level').style.width = pet.care + '%';
+                document.getElementById('activity-level').style.width = pet.activity + '%';
+                
+                // Animate results appearance
+                setTimeout(() => {
+                    resultsDiv.style.opacity = '1';
+                    
+                    // Add celebration animation
+                    setTimeout(() => {
+                        const resultCard = document.querySelector('.result-card');
+                        if (resultCard) {
+                            resultCard.style.transform = 'scale(1.05)';
+                            setTimeout(() => {
+                                resultCard.style.transform = 'scale(1)';
+                            }, 300);
+                        }
+                    }, 500);
+                }, 100);
+                
+            } catch (error) {
+                console.error('Error showing results:', error);
+                alert('There was an error calculating your results. Please try again.');
+                restartQuiz();
+            }
+        }
+
+        // Initialize quiz when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeQuiz();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Find Your Pet's Perfect Mate</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .question-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .option-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            border-radius: 15px;
+            padding: 1.2rem;
+            margin: 0.5rem 0;
+            width: 100%;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .option-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .option-btn.selected {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: #333;
+            font-weight: bold;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(250, 112, 154, 0.4);
+        }
+        
+        .result-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .pet-match-card {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        
+        .compatibility-score {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #fa709a;
+            margin: 1rem 0;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, #fa709a, #fee140);
+            height: 10px;
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 0.75rem 2rem;
+            font-weight: bold;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(250, 112, 154, 0.4);
+            color: #333;
+        }
+        
+        .page-header {
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .pet-info-section {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .trait-indicator {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin: 0.2rem;
+        }
+        
+        .love-hearts {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        
+        .floating-heart {
+            position: absolute;
+            font-size: 1.5rem;
+            opacity: 0.2;
+            animation: floatUp 8s infinite linear;
+        }
+        
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0.2;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .match-percentage {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+        
+        .percentage-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: conic-gradient(#fa709a 0deg, #fee140 180deg, #fa709a 360deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="love-hearts">
+        <div class="floating-heart" style="left: 10%; animation-delay: 0s;">💕</div>
+        <div class="floating-heart" style="left: 30%; animation-delay: 2s;">💖</div>
+        <div class="floating-heart" style="left: 50%; animation-delay: 4s;">💝</div>
+        <div class="floating-heart" style="left: 70%; animation-delay: 6s;">💗</div>
+        <div class="floating-heart" style="left: 90%; animation-delay: 8s;">💕</div>
+    </div>
+
+    <div class="page-header">
+        <div class="container">
+            <h1 class="display-4 mb-3">💕 Find Your Pet's Soulmate</h1>
+            <p class="lead">Help your furry friend find their perfect companion for life</p>
+        </div>
+    </div>
+
+    <div class="container pb-5">
+        <div class="quiz-container">
+            
+            <!-- Pet Information Form -->
+            <div id="pet-info-form" class="pet-info-section">
+                <h3 class="mb-4 text-center">📋 Tell Us About Your Pet</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Pet Name</label>
+                            <input type="text" id="pet-name" class="form-control" placeholder="What's your pet's name?">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Pet Type</label>
+                            <select id="pet-type" class="form-select" onchange="updateBreeds()">
+                                <option value="">Select Pet Type</option>
+                                <option value="dog">🐕 Dog</option>
+                                <option value="cat">🐱 Cat</option>
+                                <option value="bird">🦜 Bird</option>
+                                <option value="rabbit">🐰 Rabbit</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Breed</label>
+                            <select id="pet-breed" class="form-select">
+                                <option value="">Select Pet Type First</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Age</label>
+                            <select id="pet-age" class="form-select">
+                                <option value="">Select Age</option>
+                                <option value="puppy">Puppy/Kitten (0-1 years)</option>
+                                <option value="young">Young (1-3 years)</option>
+                                <option value="adult">Adult (3-7 years)</option>
+                                <option value="senior">Senior (7+ years)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Gender</label>
+                            <select id="pet-gender" class="form-select">
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Size</label>
+                            <select id="pet-size" class="form-select">
+                                <option value="">Select Size</option>
+                                <option value="small">Small</option>
+                                <option value="medium">Medium</option>
+                                <option value="large">Large</option>
+                                <option value="xlarge">Extra Large</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-primary" onclick="startQuiz()">Start Compatibility Quiz 💕</button>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="mb-4" id="progress-section" style="display: none;">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="text-white">Question <span id="current-question">1</span> of <span id="total-questions">8</span></span>
+                    <span class="text-white"><span id="progress-percent">0</span>% Complete</span>
+                </div>
+                <div class="progress" style="height: 10px; background: rgba(255,255,255,0.3);">
+                    <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Quiz Questions -->
+            <div id="quiz-container" style="display: none;">
+                <!-- Questions will be dynamically inserted here -->
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="d-flex justify-content-between mt-4" id="navigation" style="display: none;">
+                <button class="btn btn-outline-light" id="prev-btn" onclick="previousQuestion()" disabled>Previous</button>
+                <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()">Next</button>
+            </div>
+
+            <!-- Results -->
+            <div id="results" style="display: none;">
+                <div class="result-card">
+                    <h2 class="mb-4">🎉 Perfect Matches Found!</h2>
+                    <div class="compatibility-score" id="compatibility-score">95%</div>
+                    <p class="lead mb-4">We found some amazing potential mates for <span id="result-pet-name"></span>!</p>
+                    
+                    <div id="matches-container">
+                        <!-- Match results will be inserted here -->
+                    </div>
+                    
+                    <div class="mt-4">
+                        <button class="btn btn-primary me-3" onclick="restartQuiz()">Find More Matches</button>
+                        <button class="btn btn-outline-primary" onclick="contactOwners()">Contact Pet Owners</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let petInfo = {};
+        let currentQuestion = 0;
+        let answers = {};
+
+        const breeds = {
+            dog: ["Golden Retriever", "Labrador", "German Shepherd", "French Bulldog", "Pug", "Border Collie", "Bulldog", "Poodle", "Beagle", "Rottweiler"],
+            cat: ["Persian", "Siamese", "Maine Coon", "Ragdoll", "British Shorthair", "Abyssinian", "Bengal", "Scottish Fold", "Russian Blue", "Sphynx"],
+            bird: ["Cockatiel", "Budgerigar", "Canary", "African Grey", "Lovebird", "Conure", "Macaw", "Cockatoo", "Finch", "Parakeet"],
+            rabbit: ["Holland Lop", "Netherland Dwarf", "Flemish Giant", "Mini Rex", "Angora", "Lionhead", "Dutch", "English Lop", "Himalayan", "Californian"]
+        };
+
+        const questions = [
+            {
+                question: "What is your pet's personality like?",
+                options: [
+                    { text: "Very social and outgoing", value: "very_social" },
+                    { text: "Friendly but selective", value: "selective_social" },
+                    { text: "Calm and gentle", value: "calm" },
+                    { text: "Independent and reserved", value: "independent" }
+                ]
+            },
+            {
+                question: "How does your pet behave around other animals?",
+                options: [
+                    { text: "Loves playing with others", value: "loves_others" },
+                    { text: "Gets along well after introduction", value: "gets_along" },
+                    { text: "Needs time to warm up", value: "needs_time" },
+                    { text: "Prefers to be the only pet", value: "prefers_alone" }
+                ]
+            },
+            {
+                question: "What is your pet's energy level?",
+                options: [
+                    { text: "High energy - always active", value: "high_energy" },
+                    { text: "Moderate - active but calm", value: "moderate_energy" },
+                    { text: "Low energy - prefers relaxing", value: "low_energy" },
+                    { text: "Very calm - couch potato", value: "very_calm" }
+                ]
+            },
+            {
+                question: "How does your pet handle new situations?",
+                options: [
+                    { text: "Excited and curious", value: "excited" },
+                    { text: "Cautious but adaptable", value: "cautious" },
+                    { text: "Nervous but manageable", value: "nervous" },
+                    { text: "Stressed by changes", value: "stressed" }
+                ]
+            },
+            {
+                question: "What size mate would be ideal?",
+                options: [
+                    { text: "Similar size to my pet", value: "similar_size" },
+                    { text: "Slightly larger", value: "larger" },
+                    { text: "Slightly smaller", value: "smaller" },
+                    { text: "Size doesn't matter", value: "any_size" }
+                ]
+            },
+            {
+                question: "How important is breed compatibility?",
+                options: [
+                    { text: "Must be same breed", value: "same_breed" },
+                    { text: "Similar breed characteristics", value: "similar_breed" },
+                    { text: "Compatible temperament more important", value: "temperament_important" },
+                    { text: "Breed doesn't matter at all", value: "breed_unimportant" }
+                ]
+            },
+            {
+                question: "What age range would be best for a mate?",
+                options: [
+                    { text: "Same age group", value: "same_age" },
+                    { text: "Slightly younger", value: "younger" },
+                    { text: "Slightly older", value: "older" },
+                    { text: "Age doesn't matter", value: "any_age" }
+                ]
+            },
+            {
+                question: "How often would you like the pets to interact?",
+                options: [
+                    { text: "Daily playdates", value: "daily" },
+                    { text: "Weekly meetings", value: "weekly" },
+                    { text: "Occasional visits", value: "occasional" },
+                    { text: "Just for breeding purposes", value: "breeding_only" }
+                ]
+            }
+        ];
+
+        // Sample pet database for matching
+        const availablePets = {
+            dog: [
+                { name: "Buddy", breed: "Golden Retriever", age: "adult", gender: "male", size: "large", personality: "very_social", location: "Mumbai", traits: ["friendly", "active", "loyal"], compatibility: 95 },
+                { name: "Luna", breed: "Labrador", age: "young", gender: "female", size: "large", personality: "loves_others", location: "Delhi", traits: ["gentle", "playful", "smart"], compatibility: 92 },
+                { name: "Max", breed: "German Shepherd", age: "adult", gender: "male", size: "large", personality: "calm", location: "Bangalore", traits: ["protective", "intelligent", "loyal"], compatibility: 88 },
+                { name: "Bella", breed: "French Bulldog", age: "young", gender: "female", size: "small", personality: "selective_social", location: "Mumbai", traits: ["charming", "adaptable", "playful"], compatibility: 90 }
+            ],
+            cat: [
+                { name: "Whiskers", breed: "Persian", age: "adult", gender: "male", size: "medium", personality: "calm", location: "Chennai", traits: ["gentle", "quiet", "affectionate"], compatibility: 94 },
+                { name: "Shadow", breed: "Siamese", age: "young", gender: "female", size: "medium", personality: "very_social", location: "Pune", traits: ["vocal", "intelligent", "social"], compatibility: 91 },
+                { name: "Mittens", breed: "Maine Coon", age: "adult", gender: "male", size: "large", personality: "gets_along", location: "Kolkata", traits: ["gentle", "friendly", "large"], compatibility: 87 }
+            ],
+            bird: [
+                { name: "Polly", breed: "African Grey", age: "adult", gender: "female", size: "medium", personality: "very_social", location: "Mumbai", traits: ["intelligent", "talkative", "social"], compatibility: 96 },
+                { name: "Sunny", breed: "Cockatiel", age: "young", gender: "male", size: "small", personality: "calm", location: "Hyderabad", traits: ["gentle", "musical", "friendly"], compatibility: 89 }
+            ],
+            rabbit: [
+                { name: "Cocoa", breed: "Holland Lop", age: "young", gender: "female", size: "small", personality: "selective_social", location: "Jaipur", traits: ["gentle", "calm", "sweet"], compatibility: 93 },
+                { name: "Bunnington", breed: "Flemish Giant", age: "adult", gender: "male", size: "xlarge", personality: "calm", location: "Ahmedabad", traits: ["docile", "gentle", "large"], compatibility: 85 }
+            ]
+        };
+
+        function updateBreeds() {
+            const petType = document.getElementById('pet-type').value;
+            const breedSelect = document.getElementById('pet-breed');
+            
+            breedSelect.innerHTML = '<option value="">Select Breed</option>';
+            
+            if (petType && breeds[petType]) {
+                breeds[petType].forEach(breed => {
+                    const option = document.createElement('option');
+                    option.value = breed;
+                    option.textContent = breed;
+                    breedSelect.appendChild(option);
+                });
+            }
+        }
+
+        function startQuiz() {
+            // Collect pet information
+            petInfo = {
+                name: document.getElementById('pet-name').value,
+                type: document.getElementById('pet-type').value,
+                breed: document.getElementById('pet-breed').value,
+                age: document.getElementById('pet-age').value,
+                gender: document.getElementById('pet-gender').value,
+                size: document.getElementById('pet-size').value
+            };
+
+            // Validate required fields
+            if (!petInfo.name || !petInfo.type || !petInfo.breed) {
+                alert('Please fill in all required fields (Name, Type, and Breed) before starting the quiz.');
+                return;
+            }
+
+            // Hide pet info form and show quiz
+            document.getElementById('pet-info-form').style.display = 'none';
+            document.getElementById('progress-section').style.display = 'block';
+            document.getElementById('quiz-container').style.display = 'block';
+            document.getElementById('navigation').style.display = 'flex';
+            
+            // Update total questions
+            document.getElementById('total-questions').textContent = questions.length;
+            
+            // Start quiz
+            initializeQuiz();
+        }
+
+        function initializeQuiz() {
+            displayQuestion();
+            updateProgress();
+        }
+
+        function displayQuestion() {
+            const container = document.getElementById('quiz-container');
+            const question = questions[currentQuestion];
+            
+            container.style.opacity = '0';
+            
+            setTimeout(() => {
+                container.innerHTML = `
+                    <div class="question-card">
+                        <h3 class="mb-4">${question.question}</h3>
+                        ${question.options.map((option, index) => `
+                            <div class="option-btn" onclick="selectOption('${option.value}', this)">
+                                ${option.text}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+
+                // Restore previous selection if exists
+                if (answers.hasOwnProperty(currentQuestion)) {
+                    const selectedValue = answers[currentQuestion];
+                    const selectedBtn = container.querySelector(`[onclick*="${selectedValue}"]`);
+                    if (selectedBtn) {
+                        selectedBtn.classList.add('selected');
+                    }
+                }
+
+                updateNavigationButtons();
+                container.style.opacity = '1';
+            }, 150);
+        }
+
+        function selectOption(value, element) {
+            // Remove selected class from all options
+            document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
+            
+            // Add selected class to clicked option
+            element.classList.add('selected');
+            
+            // Store answer
+            answers[currentQuestion] = value;
+            
+            // Update navigation buttons
+            updateNavigationButtons();
+            
+            // Visual feedback
+            element.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                element.style.transform = 'scale(1)';
+            }, 150);
+        }
+
+        function nextQuestion() {
+            if (!answers.hasOwnProperty(currentQuestion)) {
+                alert('Please select an option before continuing.');
+                return;
+            }
+            
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                displayQuestion();
+                updateProgress();
+            } else {
+                showResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                displayQuestion();
+                updateProgress();
+            }
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+            document.getElementById('progress-percent').textContent = Math.round(progress);
+            document.getElementById('current-question').textContent = currentQuestion + 1;
+        }
+
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            
+            prevBtn.disabled = currentQuestion === 0;
+            const hasAnswer = answers.hasOwnProperty(currentQuestion);
+            nextBtn.disabled = !hasAnswer;
+            
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.textContent = 'Find Matches 💕';
+            } else {
+                nextBtn.textContent = 'Next';
+            }
+        }
+
+        function calculateMatches() {
+            const matches = [];
+            const pets = availablePets[petInfo.type] || [];
+            
+            pets.forEach(pet => {
+                let compatibilityScore = pet.compatibility;
+                
+                // Adjust score based on answers
+                Object.values(answers).forEach((answer, index) => {
+                    if (pet.personality === answer) {
+                        compatibilityScore += 5;
+                    }
+                    
+                    // Breed compatibility
+                    if (answer === 'same_breed' && pet.breed === petInfo.breed) {
+                        compatibilityScore += 10;
+                    } else if (answer === 'breed_unimportant') {
+                        compatibilityScore += 3;
+                    }
+                    
+                    // Size compatibility
+                    if (answer === 'similar_size' && pet.size === petInfo.size) {
+                        compatibilityScore += 8;
+                    }
+                    
+                    // Gender compatibility (opposite gender typically better for breeding)
+                    if (pet.gender !== petInfo.gender) {
+                        compatibilityScore += 5;
+                    }
+                });
+                
+                // Ensure score doesn't exceed 100
+                compatibilityScore = Math.min(100, compatibilityScore);
+                pet.finalCompatibility = compatibilityScore;
+                
+                if (compatibilityScore > 70) {
+                    matches.push(pet);
+                }
+            });
+            
+            // Sort by compatibility score
+            return matches.sort((a, b) => b.finalCompatibility - a.finalCompatibility);
+        }
+
+        function showResults() {
+            const matches = calculateMatches();
+            
+            // Hide quiz elements
+            document.getElementById('quiz-container').style.display = 'none';
+            document.getElementById('navigation').style.display = 'none';
+            document.getElementById('progress-section').style.display = 'none';
+            
+            // Show results
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.style.display = 'block';
+            
+            // Update pet name in results
+            document.getElementById('result-pet-name').textContent = petInfo.name;
+            
+            // Display matches
+            const matchesContainer = document.getElementById('matches-container');
+            
+            if (matches.length > 0) {
+                const avgCompatibility = Math.round(matches.reduce((sum, match) => sum + match.finalCompatibility, 0) / matches.length);
+                document.getElementById('compatibility-score').textContent = avgCompatibility + '%';
+                
+                matchesContainer.innerHTML = matches.map(match => `
+                    <div class="pet-match-card">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h4>${match.name}</h4>
+                                <p class="mb-2"><strong>Breed:</strong> ${match.breed}</p>
+                                <p class="mb-2"><strong>Age:</strong> ${match.age.replace('_', ' ')}</p>
+                                <p class="mb-2"><strong>Location:</strong> ${match.location}</p>
+                                <div class="mb-2">
+                                    ${match.traits.map(trait => `<span class="trait-indicator">${trait}</span>`).join('')}
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div class="match-percentage">
+                                    <div class="percentage-circle">
+                                        ${match.finalCompatibility}%
+                                    </div>
+                                </div>
+                                <button class="btn btn-outline-primary btn-sm" onclick="viewProfile('${match.name}')">
+                                    View Profile
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                document.getElementById('compatibility-score').textContent = '0%';
+                matchesContainer.innerHTML = `
+                    <div class="pet-match-card text-center">
+                        <h4>No matches found right now</h4>
+                        <p>Don't worry! New pets are added regularly. Try adjusting your preferences or check back later.</p>
+                        <button class="btn btn-primary" onclick="restartQuiz()">Try Different Preferences</button>
+                    </div>
+                `;
+            }
+        }
+
+        function restartQuiz() {
+            petInfo = {};
+            currentQuestion = 0;
+            answers = {};
+            
+            // Reset UI
+            document.getElementById('pet-info-form').style.display = 'block';
+            document.getElementById('progress-section').style.display = 'none';
+            document.getElementById('quiz-container').style.display = 'none';
+            document.getElementById('navigation').style.display = 'none';
+            document.getElementById('results').style.display = 'none';
+            
+            // Clear form
+            document.getElementById('pet-name').value = '';
+            document.getElementById('pet-type').value = '';
+            document.getElementById('pet-breed').value = '';
+            document.getElementById('pet-age').value = '';
+            document.getElementById('pet-gender').value = '';
+            document.getElementById('pet-size').value = '';
+            
+            // Clear selections
+            document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
+        }
+
+        function viewProfile(petName) {
+            alert(`Opening profile for ${petName}...`);
+            // In a real app, this would open a detailed pet profile page
+        }
+
+        function contactOwners() {
+            alert('Opening contact form to reach out to pet owners...');
+            // In a real app, this would open a messaging interface
+        }
+
+        // Add some animation to floating hearts
+        document.addEventListener('DOMContentLoaded', function() {
+            setInterval(() => {
+                const hearts = document.querySelectorAll('.floating-heart');
+                hearts.forEach(heart => {
+                    heart.style.animationDelay = Math.random() * 8 + 's';
+                });
+            }, 10000);
+        });
+    </script>
+</body>
+</html>

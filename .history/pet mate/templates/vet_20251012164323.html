@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Find a Vet Near You</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    select, input {
+      padding: 8px;
+      font-size: 16px;
+      margin-right: 10px;
+      margin-top: 10px;
+    }
+    .vet-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .vet-card {
+      border: 1px solid #000000;
+      padding: 16px;
+      width: 250px;
+      border-radius: 8px;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+      cursor: pointer;
+    }
+    .vet-card img {
+      width: 100%;
+      height: 270px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      padding: 20px;
+      border: 2px solid #666;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      z-index: 9999;
+      width: 80%;
+      max-width: 600px;
+    }
+    .modal h3 {
+      margin-top: 0;
+    }
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 9998;
+    }
+    .close-btn {
+      background: red;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      float: right;
+      cursor: pointer;
+      border-radius: 4px;      
+    }
+  </style>
+</head>
+<body>
+  <h2>Find a Vet Near You</h2>  
+
+  <label for="location">Choose your city:</label>
+  <select id="location" onchange="filterVets()">
+    <option value="">-- Select a city --</option>
+    <option value="Mumbai">Mumbai</option>
+    <option value="Delhi">Delhi</option>
+    <option value="Bangalore">Bangalore</option>
+     <option value="Gujarat">Gujarat</option>
+      <option value="Punjab">Punjab</option>
+  </select>
+
+  <input type="text" id="searchInput" oninput="filterVets()" placeholder="Search by name or qualification...">
+
+  <div class="vet-container" id="vetList"></div>
+
+  <!-- Overlay & Modal -->
+  <div class="overlay" id="overlay" onclick="closeModal()"></div>
+  <div class="modal" id="vetModal">
+    <button class="close-btn" onclick="closeModal()">X</button>
+    <div id="modalContent"></div>
+  </div>
+  <script>
+    const vets = [
+      {
+        name: "Dr. Nilima Paranjpe",
+        city: "Mumbai",
+        qualification: "BVSc & AH, MVSc - Surgery & Radiology",
+        experience: "Verified | 30+ years experience",
+        contact:"08045688378",
+        clinic: "https://www.practo.com/mumbai/doctor/dr-nilima-paranjpe?practice_id=1140115&specialization=Veterinarian&referrer=doctor_listing&page_uid=23bfe6ec-5a80-4d22-b93b-cefe8de23a4e",
+        image: "dr1.jpg",
+        details: `
+          <strong>Specializations:</strong> Veterinary Physician, Veterinary Surgeon<br>
+          <strong>Experience:</strong> 30 Years Overall (26 years as specialist)<br>
+          <strong>Degrees:</strong> Bachelor in Veterinary Science and Animal Husbandry (BVSc & AH), M.V.Sc - Veterinary Surgery & Radiology<br>
+          <strong>Registration:</strong> Medical Registration Verified<br>
+          <a href="https://www.practo.com/mumbai/doctor/dr-nilima-paranjpe?practice_id=1140115&specialization=Veterinarian&referrer=doctor_listing&page_uid=23bfe6ec-5a80-4d22-b93b-cefe8de23a4e" target="_blank">View Full Profile</a>
+        `
+      },
+        {
+      name: "Dr. Nihar Jayakar",
+      city: "Mumbai",
+      shortInfo: "Veterinarian",
+      experience: "24 Years Experience Overall",
+      qualification: "Pawprints Veterinary Clinic, Goregaon West, ₹500 Consultation Fee",
+       image: "dr2.jpg",
+    details: `
+          Dr. Nihar Jayakar is a Veterinary Surgeon and Veterinary Physician in Goregaon West, Mumbai and has an experience of 15 years in these fields. Dr. Nihar Jayakar practices at Pawprints Veterinary Clinic in Goregaon West, Mumbai and Dr. Hitesh Swali's Animal Care Center in Andheri West, Mumbai.
+          <a href="https://www.practo.com/mumbai/doctor/dr-nihar-jayakar-veterinarian?practice_id=742617&specialization=Veterinarian&referrer=doctor_listing&page_uid=23bfe6ec-5a80-4d22-b93b-cefe8de23a4e">View Full Profile</a>
+        `,
+      contact:"02271873701",
+      
+  },
+  {
+  name: "Dr. Krishna Ingole",
+  city:"mumbai",
+  image:"dr3.jpg",
+  shortInfo: "Veterinary Physician",
+  experience: "24 Years Experience Overall",
+  qualification: "B.V.Sc. & A.H., M.V.Sc (Medicine)",
+  contact:"02071173199",
+  details: `Medical Registration Verified<br>
+            Working as Hospital Registrar at Bombay Veterinary College since April 2008   <a href="https://www.practo.com/mumbai/doctor/dr-krishna-ingole-veterinarian-veterinarian?practice_id=741939&specialization=Veterinarian&referrer=doctor_listing&page_uid=23bfe6ec-5a80-4d22-b93b-cefe8de23a4e">View Full Profile</a>
+        `,
+  
+},
+
+  {
+    name: "Dr. Dheeraj Bhardwaj",
+    city:"Delhi",
+    shortInfo: "Veterinarian",
+    experience: "20 Years Experience Overall",
+    image:"dr4.jpg",
+    qualification: "Apollo Vets, Dwarka — ₹1200 Consultation Fee",
+    details: `Highly experienced in small animal care.<br>
+              Clinic: Apollo Vets, Dwarka<br>
+              Fee: ₹1200 at clinic <a href="https://www.practo.com/delhi/doctor/dr-dheeraj-bhardwaj-veterinarian?practice_id=681116&specialization=Veterinarian&referrer=doctor_listing&page_uid=9721af09-0ffa-40db-a2d4-e6c342f51989">View Full details</a>`,
+   contact:"02071186491"
+  },
+{
+  name: "Dr. Aradhana Pandey",
+  city: "Delhi",
+  shortInfo: "Veterinarian",
+  experience: "27 Years Experience Overall",
+  image: "dr5.jpg", // Use your local image file or image URL
+  qualification: "Doggy World, Rohini — ₹750 Consultation Fee",
+  details: `Experienced in general veterinary practice.<br>
+            Clinic: Doggy World, Rohini<br>
+            Fee: ₹750 at clinic 
+            <a href="https://www.practo.com/delhi/doctor/dr-aradhana-pandey-veterinarian-1?practice_id=654002&specialization=Veterinarian&referrer=doctor_listing&page_uid=2516ba16-a74d-4c05-9010-0960dd323b01" target="_blank">View Full details</a>`,
+  contact: "01140849589"
+},
+{
+  name: "Dr. Ajay Rana",
+  city: "Delhi",
+  shortInfo: "Veterinary Physician",
+  experience: "28 Years Experience Overall",
+  image: "dr6.jpg", 
+  qualification: "Bachelor in Veterinary Science and Animal Husbandary (BVSc & AH)",
+  details: `Veterinary Physician with nearly 3 decades of experience.<br>
+            Qualification: BVSc & AH<br>
+            <a href="https://www.practo.com/delhi/doctor/dr-ajay-rana-veterinarian?practice_id=702939&specialization=Veterinarian&referrer=doctor_listing&page_uid=2516ba16-a74d-4c05-9010-0960dd323b01" target="_blank">View Full details</a>`,
+  contact: "01140036724"
+},
+{
+  name: "Dr. Aishwarya. N",
+  city: "Bangalore",
+  shortInfo: "Veterinarian",
+  experience: "8 Years Experience Overall",
+  image: "dr7.jpg", 
+  qualification: "Swapreran Clinic, BTM Layout — ₹200 Consultation Fee",
+  details: `Specializes in animal care and wellness support.<br>
+            Clinic: Swapreran - Psychological Counselling and Wellness Clinic, BTM Layout 2nd Stage<br>
+            Fee: ₹200 at clinic 
+            <a href="https://www.practo.com/bangalore/doctor/dr-aishwarya-n-veterinarian?practice_id=794863&specialization=Veterinarian&referrer=doctor_listing&page_uid=4a5f4592-382a-4e60-be82-378ca357fbdf" target="_blank">View Full details</a>`,
+  contact: "08071966843"
+},
+{
+  name: "Dr. Vasanth Shetty",
+  city: "Bangalore",
+  shortInfo: "Veterinarian",
+  experience: "47 Years Experience Overall",
+  image: "dr8.jpg", // Replace with correct image path or URL
+  qualification: "Vaatsalya Veterinary Clinic, Malleswaram — ₹100 Consultation Fee",
+  details: `Veteran vet with over 4 decades of animal treatment experience.<br>
+            Clinic: Vaatsalya Veterinary Clinic, Malleswaram<br>
+            Fee: ₹100 at clinic 
+            <a href="https://www.practo.com/bangalore/doctor/dr-vasanth-shetty-veterinary-surgeon?practice_id=1128922&specialization=Veterinarian&referrer=doctor_listing&page_uid=4a5f4592-382a-4e60-be82-378ca357fbdf" target="_blank">View Full details</a>`,
+  contact: "08068960988"
+},
+{
+  name: "Dr. H. S. Growar",
+  city: "Punjab",
+  shortInfo: "Veterinarian",
+  experience: "37 Years Experience Overall",
+  image: "pn.jpg", // Replace with actual image path or URL
+  qualification: "The Healing Touch Pet Clinic & Surgery — ₹400 Consultation Fee",
+  details: `Highly experienced veterinarian providing expert care in Chandigarh.<br>
+            Clinic: The Healing Touch Pet Clinic & Surgery, Sector 54<br>
+            Fee: ₹400 at clinic <br>
+            <a href="https://www.practo.com/chandigarh/doctor/harveer-singh-growar-veterinarian?practice_id=820144&specialization=Veterinary%20doctor&referrer=doctor_listing&page_uid=93383788-8672-417f-bc5b-b1cd7936db2e" target="_blank">View Full details</a>`,
+  contact: "01141193965"
+},{
+  name: "Dr. Chaitanya Solanki",
+  city: "Gujarat",
+  shortInfo: "Veterinarian",
+  experience: "11 Years Experience Overall",
+  image: "gj.jpg", // Replace with actual image path or URL
+  qualification: "Dr. C.M.S Pet Clinic, Bopal — ₹250 Consultation Fee",
+  details: `Dedicated to providing quality veterinary care for pets in Ahmedabad.<br>
+            Clinic: Dr. C.M.S Pet Clinic, Bopal<br>
+            Fee: ₹250 at clinic <br>
+            <a href="https://www.practo.com/ahmedabad/doctor/chaitanya-solanki-veterinarian?practice_id=1237318&specialization=Veterinary%20services&referrer=doctor_listing&page_uid=89ebac1f-06d6-44aa-9edf-8335df618769&category_name=service&category_id=102057" target="_blank">View Full details</a>`,
+  contact: "07941058801"
+}
+    ];
+
+    function filterVets() {
+      const selectedCity = document.getElementById("location").value.toLowerCase();
+      const searchInput = document.getElementById("searchInput").value.toLowerCase();
+      const vetListDiv = document.getElementById("vetList");
+      vetListDiv.innerHTML = "";
+
+      const filteredVets = vets.filter(vet =>
+        (selectedCity === "" || vet.city.toLowerCase() === selectedCity) &&
+        (vet.name.toLowerCase().includes(searchInput) || vet.qualification.toLowerCase().includes(searchInput))
+      );
+
+      if (filteredVets.length === 0) {
+        vetListDiv.innerHTML = "<p>No vets found matching your criteria.</p>";
+        return;
+      }
+
+      filteredVets.forEach(vet => {
+        const card = document.createElement("div");
+        card.className = "vet-card";
+        card.innerHTML = `
+                 <img src="/static/images/${vet.image}" alt="${vet.name}">
+          <h3>${vet.name}</h3>
+          <p>${vet.qualification}</p>
+          <p><strong>Contact:</strong> ${vet.contact}</p>
+        `;
+        card.onclick = () => showDetails(vet);
+        vetListDiv.appendChild(card);
+      });
+    }
+
+    function showDetails(vet) {
+      document.getElementById("modalContent").innerHTML = `
+        <h3>${vet.name}</h3>
+        <p>${vet.details}</p>
+      `;
+      document.getElementById("overlay").style.display = "block";
+      document.getElementById("vetModal").style.display = "block";
+    }
+
+    function closeModal() {
+      document.getElementById("overlay").style.display = "none";
+      document.getElementById("vetModal").style.display = "none";
+    }
+
+    window.onload = filterVets;
+  </script>
+
+</body>
+</html>

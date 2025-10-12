@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Find Your Perfect Breed Quiz - PetNova</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .question-card {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            color: #333;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .option-btn {
+            background: rgba(255,255,255,0.7);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: #333;
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            width: 100%;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .option-btn:hover {
+            background: rgba(255,255,255,0.9);
+            border-color: rgba(255,107,107,0.6);
+            transform: translateY(-2px);
+        }
+        .option-btn.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+        .result-card {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .breed-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        .progress-bar {
+            background: linear-gradient(90deg, #ff9a9e, #fecfef);
+            height: 8px;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 0.75rem 2rem;
+            font-weight: bold;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            color: #333;
+        }
+        .page-header {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            padding: 3rem 0;
+            margin-bottom: 3rem;
+            border-radius: 0 0 30px 30px;
+        }
+        .breed-traits {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        .trait-bar {
+            background: #e9ecef;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+        .trait-fill {
+            background: linear-gradient(90deg, #ff9a9e, #fecfef);
+            height: 100%;
+            transition: width 1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            font-weight: bold;
+        }
+        
+        /* Navbar Styles */
+        .navbar-custom {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-custom.scrolled {
+            box-shadow: 0 5px 30px rgba(0,0,0,0.2);
+            padding: 0.5rem 0;
+        }
+        
+        .navbar-brand-custom {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-right: 2rem;
+        }
+        
+        .nav-link-custom {
+            color: #333 !important;
+            font-weight: 600;
+            margin: 0 0.5rem;
+            padding: 0.5rem 1rem !important;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-link-custom:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white !important;
+            transform: translateY(-2px);
+        }
+        
+        .nav-link-custom.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white !important;
+        }
+        
+        .navbar-toggler-custom {
+            border: none;
+            padding: 0.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+        }
+        
+        .navbar-toggler-custom:focus {
+            box-shadow: none;
+        }
+        
+        .navbar-toggler-icon-custom {
+            width: 25px;
+            height: 2px;
+            background: white;
+            display: block;
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+        
+        /* Footer Styles */
+        .footer-custom {
+            background: #000000;
+            color: #ffffff;
+            padding: 3rem 0 1rem;
+            margin-top: 4rem;
+        }
+        
+        .footer-heading {
+            color: #ffffff;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-text {
+            color: #cccccc;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: #cccccc;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: #667eea;
+            padding-left: 5px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-link {
+            font-size: 1.5rem;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+        
+        .social-link:hover {
+            transform: translateY(-5px);
+        }
+        
+        .footer-bottom {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #333333;
+            text-align: center;
+            color: #999999;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand-custom" href="/">
+                🐾 PetNova
+            </a>
+            <button class="navbar-toggler navbar-toggler-custom" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon-custom"></span>
+                <span class="navbar-toggler-icon-custom"></span>
+                <span class="navbar-toggler-icon-custom"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link-custom" href="/">🏠 Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom" href="/pets">👀 Browse</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom" href="/buy">🛒 Buy</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom" href="/add">➕ Add Pet</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom active" href="pet_quiz_hub.html">🧩 Quiz</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link-custom dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            🔧 Services
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="servicesDropdown" style="border-radius: 15px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                            <li><a class="dropdown-item" href="/mate" style="border-radius: 10px;">💕 Find Mate</a></li>
+                            <li><a class="dropdown-item" href="/rescue" style="border-radius: 10px;">🏠 Rescue</a></li>
+                            <li><a class="dropdown-item" href="/vet" style="border-radius: 10px;">🏥 Vet Directory</a></li>
+                            <li><a class="dropdown-item" href="/petaccessories" style="border-radius: 10px;">🏪 Pet Shops</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="page-header">
+            <div class="container text-center">
+                <h1 class="display-4 mb-3">🏆 Find Your Perfect Breed</h1>
+                <p class="lead text-dark">Discover the ideal breed that matches your lifestyle and preferences</p>
+            </div>
+        </div>
+
+        <div class="quiz-container">
+            <!-- Pet Type Selection -->
+            <div id="pet-type-selection" class="question-card">
+                <h3 class="mb-4">First, what type of pet are you interested in?</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="option-btn" onclick="selectPetType('dog', this)">
+                            🐕 Dog
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="option-btn" onclick="selectPetType('cat', this)">
+                            🐱 Cat
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="option-btn" onclick="selectPetType('bird', this)">
+                            🦜 Bird
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="option-btn" onclick="selectPetType('rabbit', this)">
+                            🐰 Small Pet
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="mb-4" id="progress-section" style="display: none;">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="text-white">Question <span id="current-question">1</span> of <span id="total-questions">7</span></span>
+                    <span class="text-white"><span id="progress-percent">0</span>% Complete</span>
+                </div>
+                <div class="progress" style="height: 8px; background: #e9ecef;">
+                    <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Quiz Questions -->
+            <div id="quiz-container" style="display: none;">
+                <!-- Questions will be dynamically inserted here -->
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="d-flex justify-content-between mt-4" id="navigation" style="display: none;">
+                <button class="btn btn-outline-light" id="prev-btn" onclick="previousQuestion()" disabled>Previous</button>
+                <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()">Next</button>
+            </div>
+
+            <!-- Results -->
+            <div id="results" style="display: none;">
+                <div class="result-card">
+                    <div class="breed-icon" id="result-icon">🐕</div>
+                    <h2 id="result-title">Your Perfect Breed Match</h2>
+                    <h3 id="result-breed" class="text-primary mb-3"></h3>
+                    <p id="result-description" class="lead"></p>
+                    
+                    <div class="breed-traits">
+                        <h5 class="mb-3">Breed Characteristics</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">Energy Level</label>
+                                <div class="trait-bar">
+                                    <div class="trait-fill" id="energy-level"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Trainability</label>
+                                <div class="trait-bar">
+                                    <div class="trait-fill" id="trainability"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Grooming Needs</label>
+                                <div class="trait-bar">
+                                    <div class="trait-fill" id="grooming-needs"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Good with Kids</label>
+                                <div class="trait-bar">
+                                    <div class="trait-fill" id="kid-friendly"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <button class="btn btn-primary me-3" onclick="restartQuiz()">Take Quiz Again</button>
+                        <button class="btn btn-outline-primary" onclick="findMates()">Find Mates for This Breed</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer-custom">
+        <div class="container">
+            <div class="row">
+                <!-- About Section -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h4 class="footer-heading">🐾 PetNova</h4>
+                    <p class="footer-text">
+                        Your complete platform for everything pet-related. Connecting pet lovers, facilitating adoptions, and building a stronger pet community.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">📘</a>
+                        <a href="#" class="social-link">📷</a>
+                        <a href="#" class="social-link">🐦</a>
+                        <a href="#" class="social-link">💼</a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="footer-heading">Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/pets">Browse Pets</a></li>
+                        <li><a href="/add">Add Pet</a></li>
+                        <li><a href="/quiz">Take Quiz</a></li>
+                    </ul>
+                </div>
+
+                <!-- Services -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-heading">Services</h5>
+                    <ul class="footer-links">
+                        <li><a href="/buy">Buy Pets</a></li>
+                        <li><a href="/sell">Sell Pets</a></li>
+                        <li><a href="/mate">Find Mate</a></li>
+                        <li><a href="/rescue">Pet Rescue</a></li>
+                        <li><a href="/vet">Vet Directory</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-heading">Get in Touch</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">📧 info@petnova.com</a></li>
+                        <li><a href="#">📞 +1 (555) 123-4567</a></li>
+                        <li><a href="#">📍 Mumbai, India</a></li>
+                        <li><a href="#">🕒 24/7 Support</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 PetNova. All rights reserved. | College Project</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let selectedPetType = '';
+        let currentQuestion = 0;
+        let answers = {};
+
+        const questions = {
+            dog: [
+                {
+                    question: "What's most important to you?",
+                    options: [
+                        { text: "Companionship and bonding", value: "companionship" },
+                        { text: "Low maintenance pet", value: "low_maintenance" },
+                        { text: "Beautiful appearance", value: "appearance" },
+                        { text: "Unique personality", value: "personality" }
+                    ]
+                }
+            ]
+        };
+
+        const breedProfiles = {
+            dog: {
+                "Golden Retriever": {
+                    icon: "🐕‍🦺",
+                    description: "Friendly, intelligent, and devoted. Golden Retrievers are excellent family dogs known for their gentle temperament and trainability.",
+                    energy: 80,
+                    trainability: 95,
+                    grooming: 70,
+                    kidFriendly: 95
+                },
+                "Labrador": {
+                    icon: "🐕",
+                    description: "America's most popular dog breed. Labs are friendly, outgoing, and active companions who have more than enough affection to go around.",
+                    energy: 85,
+                    trainability: 90,
+                    grooming: 40,
+                    kidFriendly: 95
+                },
+                "Pug": {
+                    icon: "🐶",
+                    description: "Charming, mischievous, and loving. Pugs are happy in the city or country, with kids or old folks, as an only pet or in a pack.",
+                    energy: 40,
+                    trainability: 60,
+                    grooming: 30,
+                    kidFriendly: 85
+                },
+                "German Shepherd": {
+                    icon: "🐕‍🦺",
+                    description: "Confident, courageous, and smart working dogs. They are extremely versatile, serving as family companions and guard dogs.",
+                    energy: 90,
+                    trainability: 95,
+                    grooming: 60,
+                    kidFriendly: 80
+                },
+                "French Bulldog": {
+                    icon: "🐶",
+                    description: "Playful, smart, adaptable, and completely irresistible. Frenchies are among the world's most popular small-dog breeds.",
+                    energy: 30,
+                    trainability: 50,
+                    grooming: 25,
+                    kidFriendly: 85
+                },
+                "Border Collie": {
+                    icon: "🐕",
+                    description: "Remarkably bright workaholic breed. Border Collies are energetic, intelligent, and athletic dogs that thrive on mental stimulation.",
+                    energy: 95,
+                    trainability: 100,
+                    grooming: 60,
+                    kidFriendly: 75
+                }
+            },
+            cat: {
+                "Persian": {
+                    icon: "😸",
+                    description: "Gentle, quiet, and sweet cats. Persians are content to lounge around and be admired for their beauty.",
+                    energy: 20,
+                    trainability: 30,
+                    grooming: 95,
+                    kidFriendly: 70
+                },
+                "Siamese": {
+                    icon: "😺",
+                    description: "Social, intelligent, and vocal cats. Siamese are known for their distinctive appearance and talkative nature.",
+                    energy: 70,
+                    trainability: 80,
+                    grooming: 25,
+                    kidFriendly: 85
+                },
+                "Maine Coon": {
+                    icon: "😸",
+                    description: "Gentle giants with sweet temperaments. Maine Coons are large, sociable cats that get along well with everyone.",
+                    energy: 50,
+                    trainability: 70,
+                    grooming: 80,
+                    kidFriendly: 95
+                },
+                "Ragdoll": {
+                    icon: "😻",
+                    description: "Docile, sweet-natured, and affectionate. Ragdolls are known for going limp when picked up, hence their name.",
+                    energy: 30,
+                    trainability: 60,
+                    grooming: 70,
+                    kidFriendly: 90
+                },
+                "British Shorthair": {
+                    icon: "😸",
+                    description: "Easy-going and placid cats. British Shorthairs are perfect for families who want a calm, affectionate companion.",
+                    energy: 35,
+                    trainability: 50,
+                    grooming: 30,
+                    kidFriendly: 80
+                },
+                "Abyssinian": {
+                    icon: "😺",
+                    description: "Active, playful, and curious cats. Abyssinians love to climb, explore, and play with their favorite people.",
+                    energy: 85,
+                    trainability: 75,
+                    grooming: 25,
+                    kidFriendly: 75
+                }
+            },
+            bird: {
+                "Cockatiel": {
+                    icon: "🦜",
+                    description: "Charming, affectionate, and easy to care for. Cockatiels are excellent beginner birds that can learn to whistle and talk.",
+                    energy: 60,
+                    trainability: 80,
+                    grooming: 40,
+                    kidFriendly: 85
+                },
+                "Budgerigar": {
+                    icon: "🦜",
+                    description: "Small, colorful, and social birds. Budgies are perfect for beginners and can be quite talkative with proper training.",
+                    energy: 70,
+                    trainability: 75,
+                    grooming: 30,
+                    kidFriendly: 90
+                },
+                "Canary": {
+                    icon: "🐤",
+                    description: "Beautiful singers with bright personalities. Canaries are relatively low-maintenance birds perfect for bird song enthusiasts.",
+                    energy: 50,
+                    trainability: 40,
+                    grooming: 25,
+                    kidFriendly: 70
+                },
+                "African Grey": {
+                    icon: "🦜",
+                    description: "Highly intelligent and excellent talkers. African Greys require experienced owners and lots of mental stimulation.",
+                    energy: 65,
+                    trainability: 95,
+                    grooming: 50,
+                    kidFriendly: 60
+                },
+                "Lovebird": {
+                    icon: "🦜",
+                    description: "Small, colorful, and affectionate birds. Lovebirds are social creatures that do well in pairs.",
+                    energy: 80,
+                    trainability: 60,
+                    grooming: 35,
+                    kidFriendly: 75
+                },
+                "Conure": {
+                    icon: "🦜",
+                    description: "Playful, curious, and social birds. Conures are known for their vibrant colors and outgoing personalities.",
+                    energy: 90,
+                    trainability: 85,
+                    grooming: 45,
+                    kidFriendly: 80
+                }
+            },
+            rabbit: {
+                "Holland Lop": {
+                    icon: "🐰",
+                    description: "Sweet, gentle rabbits with distinctive floppy ears. Holland Lops are calm and make excellent house pets.",
+                    energy: 40,
+                    trainability: 70,
+                    grooming: 60,
+                    kidFriendly: 90
+                },
+                "Netherland Dwarf": {
+                    icon: "🐰",
+                    description: "Tiny, compact rabbits with big personalities. Despite their small size, they can be quite energetic.",
+                    energy: 70,
+                    trainability: 60,
+                    grooming: 40,
+                    kidFriendly: 70
+                },
+                "Flemish Giant": {
+                    icon: "🐰",
+                    description: "Gentle giants of the rabbit world. Despite their size, Flemish Giants are known for their calm, docile nature.",
+                    energy: 30,
+                    trainability: 80,
+                    grooming: 50,
+                    kidFriendly: 85
+                },
+                "Mini Rex": {
+                    icon: "🐰",
+                    description: "Known for their incredibly soft, velvety fur. Mini Rex rabbits are calm and enjoy being petted.",
+                    energy: 50,
+                    trainability: 75,
+                    grooming: 30,
+                    kidFriendly: 85
+                },
+                "Angora": {
+                    icon: "🐰",
+                    description: "Beautiful, fluffy rabbits that require daily grooming. Angoras are gentle and rewarding for dedicated owners.",
+                    energy: 35,
+                    trainability: 65,
+                    grooming: 95,
+                    kidFriendly: 75
+                },
+                "Lionhead": {
+                    icon: "🐰",
+                    description: "Distinctive 'mane' around their head gives them a lion-like appearance. Lionheads are friendly and social.",
+                    energy: 55,
+                    trainability: 70,
+                    grooming: 80,
+                    kidFriendly: 80
+                }
+            }
+        };
+
+        function selectPetType(petType, element) {
+            selectedPetType = petType;
+            
+            document.querySelectorAll('#pet-type-selection .option-btn').forEach(btn => btn.classList.remove('selected'));
+            element.classList.add('selected');
+            
+            setTimeout(() => {
+                document.getElementById('pet-type-selection').style.display = 'none';
+                document.getElementById('progress-section').style.display = 'block';
+                document.getElementById('quiz-container').style.display = 'block';
+                document.getElementById('navigation').style.display = 'flex';
+                
+                document.getElementById('total-questions').textContent = questions[petType].length;
+                initializeQuiz();
+            }, 300);
+        }
+
+        function initializeQuiz() {
+            displayQuestion();
+            updateProgress();
+        }
+
+        function displayQuestion() {
+            const container = document.getElementById('quiz-container');
+            const question = questions[selectedPetType][currentQuestion];
+            
+            container.style.opacity = '0';
+            
+            setTimeout(() => {
+                container.innerHTML = `
+                    <div class="question-card">
+                        <h3 class="mb-4">${question.question}</h3>
+                        ${question.options.map((option, index) => `
+                            <div class="option-btn" onclick="selectOption('${option.value}', this)">
+                                ${option.text}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+
+                if (answers.hasOwnProperty(currentQuestion)) {
+                    const selectedValue = answers[currentQuestion];
+                    const selectedBtn = container.querySelector(`[onclick*="${selectedValue}"]`);
+                    if (selectedBtn) {
+                        selectedBtn.classList.add('selected');
+                    }
+                }
+
+                updateNavigationButtons();
+                container.style.opacity = '1';
+            }, 150);
+        }
+
+        function selectOption(value, element) {
+            document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
+            element.classList.add('selected');
+            answers[currentQuestion] = value;
+            updateNavigationButtons();
+            
+            element.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                element.style.transform = 'scale(1)';
+            }, 150);
+        }
+
+        function nextQuestion() {
+            if (!answers.hasOwnProperty(currentQuestion)) {
+                alert('Please select an option before continuing.');
+                return;
+            }
+            
+            if (currentQuestion < questions[selectedPetType].length - 1) {
+                currentQuestion++;
+                displayQuestion();
+                updateProgress();
+            } else {
+                showResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                displayQuestion();
+                updateProgress();
+            }
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / questions[selectedPetType].length) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+            document.getElementById('progress-percent').textContent = Math.round(progress);
+            document.getElementById('current-question').textContent = currentQuestion + 1;
+        }
+
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            
+            prevBtn.disabled = currentQuestion === 0;
+            const hasAnswer = answers.hasOwnProperty(currentQuestion);
+            nextBtn.disabled = !hasAnswer;
+            
+            if (currentQuestion === questions[selectedPetType].length - 1) {
+                nextBtn.textContent = 'See Results';
+            } else {
+                nextBtn.textContent = 'Next';
+            }
+        }
+
+        function calculateBreedResult() {
+            const breeds = breedProfiles[selectedPetType];
+            const breedScores = {};
+            
+            Object.keys(breeds).forEach(breed => {
+                breedScores[breed] = 0;
+            });
+            
+            const answerValues = Object.values(answers);
+            
+            if (selectedPetType === 'dog') {
+                answerValues.forEach((answer, index) => {
+                    switch(answer) {
+                        case 'small':
+                            breedScores['Pug'] += 3;
+                            breedScores['French Bulldog'] += 3;
+                            break;
+                        case 'medium':
+                            breedScores['Golden Retriever'] += 2;
+                            breedScores['Labrador'] += 2;
+                            break;
+                        case 'large':
+                        case 'xlarge':
+                            breedScores['German Shepherd'] += 3;
+                            breedScores['Labrador'] += 2;
+                            break;
+                        case 'very_active':
+                            breedScores['Border Collie'] += 3;
+                            breedScores['German Shepherd'] += 2;
+                            break;
+                        case 'inactive':
+                            breedScores['Pug'] += 3;
+                            breedScores['French Bulldog'] += 3;
+                            break;
+                        case 'high_trainability':
+                            breedScores['Border Collie'] += 3;
+                            breedScores['German Shepherd'] += 2;
+                            breedScores['Golden Retriever'] += 2;
+                            break;
+                        case 'beginner':
+                            breedScores['Golden Retriever'] += 3;
+                            breedScores['Labrador'] += 3;
+                            break;
+                    }
+                });
+            } else if (selectedPetType === 'cat') {
+                answerValues.forEach((answer, index) => {
+                    switch(answer) {
+                        case 'affectionate':
+                            breedScores['Ragdoll'] += 3;
+                            breedScores['Persian'] += 2;
+                            break;
+                        case 'playful':
+                            breedScores['Abyssinian'] += 3;
+                            breedScores['Siamese'] += 2;
+                            break;
+                        case 'independent':
+                            breedScores['British Shorthair'] += 3;
+                            breedScores['Persian'] += 2;
+                            break;
+                        case 'social':
+                            breedScores['Siamese'] += 3;
+                            breedScores['Maine Coon'] += 2;
+                            break;
+                        case 'long_hair':
+                            breedScores['Persian'] += 3;
+                            breedScores['Maine Coon'] += 2;
+                            break;
+                        case 'short_hair':
+                            breedScores['British Shorthair'] += 3;
+                            breedScores['Siamese'] += 2;
+                            break;
+                    }
+                });
+            } else if (selectedPetType === 'bird') {
+                answerValues.forEach((answer, index) => {
+                    switch(answer) {
+                        case 'small':
+                            breedScores['Budgerigar'] += 3;
+                            breedScores['Canary'] += 3;
+                            break;
+                        case 'medium':
+                            breedScores['Cockatiel'] += 3;
+                            breedScores['Lovebird'] += 2;
+                            break;
+                        case 'talking_required':
+                            breedScores['African Grey'] += 3;
+                            breedScores['Cockatiel'] += 2;
+                            break;
+                        case 'quiet_preferred':
+                            breedScores['Canary'] += 3;
+                            break;
+                        case 'beginner':
+                            breedScores['Cockatiel'] += 3;
+                            breedScores['Budgerigar'] += 3;
+                            break;
+                    }
+                });
+            } else if (selectedPetType === 'rabbit') {
+                answerValues.forEach((answer, index) => {
+                    switch(answer) {
+                        case 'small':
+                            breedScores['Netherland Dwarf'] += 3;
+                            breedScores['Mini Rex'] += 2;
+                            break;
+                        case 'giant':
+                            breedScores['Flemish Giant'] += 3;
+                            break;
+                        case 'high_grooming':
+                            breedScores['Angora'] += 3;
+                            breedScores['Lionhead'] += 2;
+                            break;
+                        case 'very_low_grooming':
+                            breedScores['Mini Rex'] += 3;
+                            breedScores['Netherland Dwarf'] += 2;
+                            break;
+                        case 'very_social':
+                            breedScores['Holland Lop'] += 3;
+                            breedScores['Flemish Giant'] += 2;
+                            break;
+                        case 'beginner':
+                            breedScores['Holland Lop'] += 3;
+                            breedScores['Mini Rex'] += 2;
+                            break;
+                    }
+                });
+            }
+            
+            let bestBreed = Object.keys(breeds)[0];
+            let highestScore = 0;
+            
+            for (let breed in breedScores) {
+                if (breedScores[breed] > highestScore) {
+                    highestScore = breedScores[breed];
+                    bestBreed = breed;
+                }
+            }
+            
+            return bestBreed;
+        }
+
+        function showResults() {
+            try {
+                const resultBreed = calculateBreedResult();
+                const breed = breedProfiles[selectedPetType][resultBreed];
+                
+                document.getElementById('quiz-container').style.display = 'none';
+                document.getElementById('navigation').style.display = 'none';
+                document.getElementById('progress-section').style.display = 'none';
+                
+                const resultsDiv = document.getElementById('results');
+                resultsDiv.style.display = 'block';
+                resultsDiv.style.opacity = '0';
+                
+                document.getElementById('result-icon').textContent = breed.icon;
+                document.getElementById('result-breed').textContent = resultBreed;
+                document.getElementById('result-description').textContent = breed.description;
+                
+                setTimeout(() => {
+                    document.getElementById('energy-level').style.width = breed.energy + '%';
+                    document.getElementById('energy-level').textContent = breed.energy + '%';
+                    
+                    document.getElementById('trainability').style.width = breed.trainability + '%';
+                    document.getElementById('trainability').textContent = breed.trainability + '%';
+                    
+                    document.getElementById('grooming-needs').style.width = breed.grooming + '%';
+                    document.getElementById('grooming-needs').textContent = breed.grooming + '%';
+                    
+                    document.getElementById('kid-friendly').style.width = breed.kidFriendly + '%';
+                    document.getElementById('kid-friendly').textContent = breed.kidFriendly + '%';
+                }, 500);
+                
+                setTimeout(() => {
+                    resultsDiv.style.opacity = '1';
+                }, 100);
+                
+            } catch (error) {
+                console.error('Error showing results:', error);
+                alert('There was an error calculating your results. Please try again.');
+            }
+        }
+
+        function restartQuiz() {
+            selectedPetType = '';
+            currentQuestion = 0;
+            answers = {};
+            
+            document.getElementById('pet-type-selection').style.display = 'block';
+            document.getElementById('progress-section').style.display = 'none';
+            document.getElementById('quiz-container').style.display = 'none';
+            document.getElementById('navigation').style.display = 'none';
+            document.getElementById('results').style.display = 'none';
+            
+            document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
+        }
+
+        function findMates() {
+            window.location.href = '/mate';
+        }
+
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar-custom');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>What size dog do you prefer?",
+                    options: [
+                        { text: "Small (under 25 lbs)", value: "small" },
+                        { text: "Medium (25-60 lbs)", value: "medium" },
+                        { text: "Large (60-90 lbs)", value: "large" },
+                        { text: "Extra Large (90+ lbs)", value: "xlarge" }
+                    ]
+                },
+                {
+                    question: "How active are you?",
+                    options: [
+                        { text: "Very active - daily runs/hikes", value: "very_active" },
+                        { text: "Moderately active - regular walks", value: "moderate" },
+                        { text: "Somewhat active - occasional walks", value: "low_active" },
+                        { text: "Prefer indoor activities", value: "inactive" }
+                    ]
+                },
+                {
+                    question: "How much time can you spend on grooming?",
+                    options: [
+                        { text: "I enjoy daily brushing", value: "high_grooming" },
+                        { text: "Weekly grooming is fine", value: "medium_grooming" },
+                        { text: "Minimal grooming preferred", value: "low_grooming" },
+                        { text: "I want a wash-and-go coat", value: "no_grooming" }
+                    ]
+                },
+                {
+                    question: "How important is trainability?",
+                    options: [
+                        { text: "Very important - I want to teach tricks", value: "high_trainability" },
+                        { text: "Important for basic commands", value: "medium_trainability" },
+                        { text: "Some training is okay", value: "low_trainability" },
+                        { text: "I prefer independent dogs", value: "independent" }
+                    ]
+                },
+                {
+                    question: "Do you have children?",
+                    options: [
+                        { text: "Yes, young children (under 8)", value: "young_kids" },
+                        { text: "Yes, older children (8+)", value: "older_kids" },
+                        { text: "No kids, but want kid-friendly", value: "no_kids_friendly" },
+                        { text: "No kids, not important", value: "no_kids" }
+                    ]
+                },
+                {
+                    question: "What's your experience with dogs?",
+                    options: [
+                        { text: "First-time dog owner", value: "beginner" },
+                        { text: "Some experience", value: "intermediate" },
+                        { text: "Experienced dog owner", value: "experienced" },
+                        { text: "Very experienced/professional", value: "expert" }
+                    ]
+                },
+                {
+                    question: "What personality do you prefer?",
+                    options: [
+                        { text: "Outgoing and social", value: "outgoing" },
+                        { text: "Calm and gentle", value: "calm" },
+                        { text: "Protective and loyal", value: "protective" },
+                        { text: "Independent and aloof", value: "aloof" }
+                    ]
+                }
+            ],
+            cat: [
+                {
+                    question: "What type of cat personality appeals to you?",
+                    options: [
+                        { text: "Affectionate lap cat", value: "affectionate" },
+                        { text: "Playful and energetic", value: "playful" },
+                        { text: "Independent and quiet", value: "independent" },
+                        { text: "Social and talkative", value: "social" }
+                    ]
+                },
+                {
+                    question: "How do you feel about cat hair and shedding?",
+                    options: [
+                        { text: "Don't mind lots of grooming", value: "long_hair" },
+                        { text: "Moderate shedding is okay", value: "medium_hair" },
+                        { text: "Prefer minimal shedding", value: "short_hair" },
+                        { text: "Want a hypoallergenic breed", value: "hypoallergenic" }
+                    ]
+                },
+                {
+                    question: "How active do you want your cat to be?",
+                    options: [
+                        { text: "Very playful and energetic", value: "high_energy" },
+                        { text: "Moderately active", value: "medium_energy" },
+                        { text: "Calm with occasional play", value: "low_energy" },
+                        { text: "Prefer a couch potato", value: "lazy" }
+                    ]
+                },
+                {
+                    question: "Do you want a vocal cat?",
+                    options: [
+                        { text: "Love cats that 'talk'", value: "very_vocal" },
+                        { text: "Some meowing is fine", value: "somewhat_vocal" },
+                        { text: "Prefer quiet cats", value: "quiet" },
+                        { text: "Silent is golden", value: "silent" }
+                    ]
+                },
+                {
+                    question: "How important is it that your cat gets along with others?",
+                    options: [
+                        { text: "Must love everyone", value: "very_social" },
+                        { text: "Good with family", value: "family_social" },
+                        { text: "Okay with some people", value: "selective" },
+                        { text: "One-person cat is fine", value: "antisocial" }
+                    ]
+                },
+                {
+                    question: "What's your experience level with cats?",
+                    options: [
+                        { text: "First-time cat owner", value: "beginner" },
+                        { text: "Some experience", value: "intermediate" },
+                        { text: "Experienced cat owner", value: "experienced" },
+                        { text: "Cat expert/breeder", value: "expert" }
+                    ]
+                },
+                {
+                    question: "What size cat do you prefer?",
+                    options: [
+                        { text: "Small and petite", value: "small" },
+                        { text: "Average size", value: "medium" },
+                        { text: "Large and substantial", value: "large" },
+                        { text: "Size doesn't matter", value: "any_size" }
+                    ]
+                }
+            ],
+            bird: [
+                {
+                    question: "What size bird interests you most?",
+                    options: [
+                        { text: "Small birds (finches, canaries)", value: "small" },
+                        { text: "Medium birds (cockatiels, conures)", value: "medium" },
+                        { text: "Large birds (macaws, cockatoos)", value: "large" },
+                        { text: "I'm open to any size", value: "any_size" }
+                    ]
+                },
+                {
+                    question: "How important is talking ability?",
+                    options: [
+                        { text: "Must be able to talk", value: "talking_required" },
+                        { text: "Talking would be nice", value: "talking_preferred" },
+                        { text: "Don't care about talking", value: "talking_unimportant" },
+                        { text: "Prefer quiet birds", value: "quiet_preferred" }
+                    ]
+                },
+                {
+                    question: "How much time can you spend with your bird daily?",
+                    options: [
+                        { text: "Several hours of interaction", value: "high_interaction" },
+                        { text: "1-2 hours daily", value: "medium_interaction" },
+                        { text: "About 30 minutes", value: "low_interaction" },
+                        { text: "Minimal interaction", value: "very_low_interaction" }
+                    ]
+                },
+                {
+                    question: "What's your noise tolerance?",
+                    options: [
+                        { text: "Don't mind loud calls", value: "high_noise" },
+                        { text: "Moderate noise is okay", value: "medium_noise" },
+                        { text: "Prefer quieter birds", value: "low_noise" },
+                        { text: "Need very quiet birds", value: "very_quiet" }
+                    ]
+                },
+                {
+                    question: "How much space do you have?",
+                    options: [
+                        { text: "Large room for flight", value: "large_space" },
+                        { text: "Decent sized cage area", value: "medium_space" },
+                        { text: "Smaller apartment space", value: "small_space" },
+                        { text: "Very limited space", value: "very_small_space" }
+                    ]
+                },
+                {
+                    question: "What's your experience with birds?",
+                    options: [
+                        { text: "Complete beginner", value: "beginner" },
+                        { text: "Some bird experience", value: "intermediate" },
+                        { text: "Experienced bird keeper", value: "experienced" },
+                        { text: "Avian expert", value: "expert" }
+                    ]
+                },
+                {
+                    question: "What type of bird behavior appeals to you?",
+                    options: [
+                        { text: "Cuddly and affectionate", value: "cuddly" },
+                        { text: "Playful and active", value: "playful" },
+                        { text: "Independent but social", value: "independent" },
+                        { text: "Beautiful to watch", value: "display" }
+                    ]
+                }
+            ],
+            rabbit: [
+                {
+                    question: "What size rabbit do you prefer?",
+                    options: [
+                        { text: "Small (2-4 lbs)", value: "small" },
+                        { text: "Medium (4-8 lbs)", value: "medium" },
+                        { text: "Large (8-12 lbs)", value: "large" },
+                        { text: "Giant (12+ lbs)", value: "giant" }
+                    ]
+                },
+                {
+                    question: "How much space do you have?",
+                    options: [
+                        { text: "Large room or outdoor area", value: "large_space" },
+                        { text: "Medium room", value: "medium_space" },
+                        { text: "Small apartment", value: "small_space" },
+                        { text: "Just cage space", value: "cage_only" }
+                    ]
+                },
+                {
+                    question: "How much grooming are you willing to do?",
+                    options: [
+                        { text: "Daily brushing is fine", value: "high_grooming" },
+                        { text: "Weekly grooming okay", value: "medium_grooming" },
+                        { text: "Minimal grooming preferred", value: "low_grooming" },
+                        { text: "Almost no grooming", value: "very_low_grooming" }
+                    ]
+                },
+                {
+                    question: "What personality do you want?",
+                    options: [
+                        { text: "Very social and cuddly", value: "very_social" },
+                        { text: "Friendly but independent", value: "friendly" },
+                        { text: "Calm and gentle", value: "calm" },
+                        { text: "Active and playful", value: "active" }
+                    ]
+                },
+                {
+                    question: "Do you have other pets?",
+                    options: [
+                        { text: "Yes, cats and/or dogs", value: "other_pets" },
+                        { text: "Yes, other rabbits", value: "other_rabbits" },
+                        { text: "No other pets", value: "no_pets" },
+                        { text: "Planning to get more rabbits", value: "planning_more" }
+                    ]
+                },
+                {
+                    question: "What's your experience level?",
+                    options: [
+                        { text: "First-time rabbit owner", value: "beginner" },
+                        { text: "Some small pet experience", value: "intermediate" },
+                        { text: "Experienced with rabbits", value: "experienced" },
+                        { text: "Rabbit breeding experience", value: "expert" }
+                    ]
+                },
+                {
+                    question: "

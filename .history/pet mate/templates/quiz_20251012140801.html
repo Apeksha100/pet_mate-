@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pet Quiz Hub - Find Your Perfect Match</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Navbar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-brand {
+            color: white !important;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            margin: 0 1rem;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .nav-link:hover {
+            color: white !important;
+            transform: translateY(-2px);
+        }
+        
+        .hero-section {
+            padding: 4rem 0 2rem;
+            color: white;
+            text-align: center;
+        }
+        
+        .hero-section h1 {
+            font-size: 3.5rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            margin-bottom: 1rem;
+            animation: fadeInDown 1s ease;
+        }
+        
+        .hero-section .lead {
+            font-size: 1.3rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .quiz-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .quiz-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
+        
+        .quiz-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .quiz-card:hover .quiz-icon {
+            animation: none;
+            transform: scale(1.1);
+        }
+        
+        .quiz-title {
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .quiz-description {
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+        
+        .btn-quiz {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 1rem 2rem;
+            color: white;
+            font-weight: bold;
+            width: 100%;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn-quiz:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+        
+        .quiz-features {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .feature-item {
+            color: #555;
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .feature-item::before {
+            content: '✓';
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+        
+        .stats-section {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 3rem 0;
+            color: white;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+        }
+        
+        .stat-number {
+            font-size: 2.8rem;
+            font-weight: bold;
+            display: block;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.95;
+            margin-top: 0.5rem;
+        }
+        
+        .floating-elements {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .floating-pet {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.15;
+            animation: float 20s infinite linear;
+        }
+        
+        @keyframes float {
+            from {
+                transform: translateX(-100px) rotate(0deg);
+            }
+            to {
+                transform: translateX(calc(100vw + 100px)) rotate(360deg);
+            }
+        }
+        
+        .quiz-number {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+        
+        .how-it-works {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 3rem 2rem;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+        
+        .work-step {
+            text-align: center;
+            padding: 1rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .work-step:hover {
+            transform: translateY(-10px);
+        }
+        
+        .work-step-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .work-step h5 {
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .work-step p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+        
+        .features-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 3rem 0;
+            color: white;
+        }
+        
+        .feature-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-box:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(10px);
+        }
+        
+        .footer {
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 4rem;
+            text-align: center;
+        }
+        
+        .footer p {
+            margin: 0.5rem 0;
+            opacity: 0.9;
+        }
+        
+        /* Scroll Progress Bar */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            z-index: 9999;
+        }
+        
+        .progress-bar-scroll {
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #fee140);
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+        
+        /* Pulse Animation for Stats */
+        .stat-item:hover .stat-number {
+            animation: pulse 0.5s ease;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        /* Container positioning */
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-section .lead {
+                font-size: 1.1rem;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+            
+            .quiz-icon {
+                font-size: 3rem;
+            }
+            
+            .nav-link {
+                margin: 0.5rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Scroll Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar-scroll" id="progressBar"></div>
+    </div>
+
+    <!-- Floating Elements -->
+    <div class="floating-elements">
+        <div class="floating-pet" style="top: 10%; animation-delay: 0s;">🐕</div>
+        <div class="floating-pet" style="top: 30%; animation-delay: 5s;">🐱</div>
+        <div class="floating-pet" style="top: 50%; animation-delay: 10s;">🦜</div>
+        <div class="floating-pet" style="top: 70%; animation-delay: 15s;">🐰</div>
+        <div class="floating-pet" style="top: 20%; animation-delay: 8s;">🐠</div>
+        <div class="floating-pet" style="top: 80%; animation-delay: 3s;">🦎</div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#">🐾 Pet Quiz Hub</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="background: rgba(255,255,255,0.3);">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#quizzes">Quizzes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#how-it-works">How It Works</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/find_vet">Find Vet</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="content-wrapper">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="container">
+                <h1>🐾 Pet Quiz Hub</h1>
+                <p class="lead mb-5">Discover your perfect pet companion through our comprehensive quiz system</p>
+                
+                <div class="stats-section">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="stat-item">
+                                <span class="stat-number">3</span>
+                                <span class="stat-label">Interactive Quizzes</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-item">
+                                <span class="stat-number">50+</span>
+                                <span class="stat-label">Pet Breeds Covered</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-item">
+                                <span class="stat-number">10+</span>
+                                <span class="stat-label">Verified Vets</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="container" id="features">
+            <div class="features-section">
+                <h2 class="text-center mb-4">✨ Why Choose Our Platform?</h2>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="feature-box">
+                            <h5>🎯 AI-Powered Matching</h5>
+                            <p>Advanced algorithms analyze your lifestyle to find perfect pet matches</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="feature-box">
+                            <h5>📊 Comprehensive Analysis</h5>
+                            <p>Detailed questionnaires covering all aspects of pet ownership</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="feature-box">
+                            <h5>🏥 Vet Recommendations</h5>
+                            <p>Connect with verified veterinarians in your area</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="feature-box">
+                            <h5>💕 Mate Matching</h5>
+                            <p>Find compatible partners for your pet based on personality</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Cards Section -->
+        <div class="container pb-5" id="quizzes">
+            <h2 class="text-center text-white mb-5 mt-5">Take Our Interactive Quizzes</h2>
+            <div class="row">
+                <!-- Quiz 1: Pet Type -->
+                <div class="col-md-4 mb-4">
+                    <div class="quiz-card position-relative">
+                        <div class="quiz-number">1</div>
+                        <div class="quiz-icon">🐾</div>
+                        <h3 class="quiz-title">Which Pet is Right for You?</h3>
+                        <p class="quiz-description">
+                            Not sure if you're a dog person or a cat person? This comprehensive quiz analyzes your lifestyle, 
+                            living situation, and preferences to recommend the perfect pet type for you.
+                        </p>
+                        <div class="quiz-features">
+                            <div class="feature-item">8 comprehensive questions</div>
+                            <div class="feature-item">Lifestyle analysis</div>
+                            <div class="feature-item">Personalized recommendations</div>
+                            <div class="feature-item">Care level assessment</div>
+                        </div>
+                        <a href="/pet_quiz" class="btn-quiz mt-3">
+                            Start Pet Discovery Quiz
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quiz 2: Breed Selection -->
+                <div class="col-md-4 mb-4">
+                    <div class="quiz-card position-relative">
+                        <div class="quiz-number">2</div>
+                        <div class="quiz-icon">🏆</div>
+                        <h3 class="quiz-title">Find Your Ideal Breed</h3>
+                        <p class="quiz-description">
+                            Already know what type of pet you want? Great! Now let's find the perfect breed that matches 
+                            your specific needs, experience level, and living environment.
+                        </p>
+                        <div class="quiz-features">
+                            <div class="feature-item">Breed-specific matching</div>
+                            <div class="feature-item">Temperament analysis</div>
+                            <div class="feature-item">Size & space requirements</div>
+                            <div class="feature-item">Training compatibility</div>
+                        </div>
+                        <a href="/breed_quiz" class="btn-quiz mt-3">
+                            Find Perfect Breed
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quiz 3: Pet Mate Matching -->
+                <div class="col-md-4 mb-4">
+                    <div class="quiz-card position-relative">
+                        <div class="quiz-number">3</div>
+                        <div class="quiz-icon">💕</div>
+                        <h3 class="quiz-title">Find Your Pet's Soulmate</h3>
+                        <p class="quiz-description">
+                            Ready for your pet to find love? This quiz helps match your furry friend with compatible 
+                            partners based on personality, breed characteristics, and compatibility factors.
+                        </p>
+                        <div class="quiz-features">
+                            <div class="feature-item">Personality matching</div>
+                            <div class="feature-item">Breed compatibility</div>
+                            <div class="feature-item">Health considerations</div>
+                            <div class="feature-item">Local area search</div>
+                        </div>
+                        <a href="/mate_quiz" class="btn-quiz mt-3">
+                            Find Pet's Match
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- How it Works Section -->
+        <div class="container mt-5" id="how-it-works">
+            <div class="how-it-works">
+                <h3 class="text-center mb-5">🌟 How Our Quiz System Works</h3>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="work-step">
+                            <div class="work-step-icon">📝</div>
+                            <h5>Answer Questions</h5>
+                            <p>Complete our scientifically designed questionnaires</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="work-step">
+                            <div class="work-step-icon">🧠</div>
+                            <h5>Smart Analysis</h5>
+                            <p>Our algorithm analyzes your responses</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="work-step">
+                            <div class="work-step-icon">🎯</div>
+                            <h5>Get Results</h5>
+                            <p>Receive personalized recommendations</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="work-step">
+                            <div class="work-step-icon">🤝</div>
+                            <h5>Find Matches</h5>
+                            <p>Connect with your perfect pet companion</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="container">
+                <p><strong>🐾 Pet Quiz Hub</strong></p>
+                <p>College Project - Pet Management & Matching System</p>
+                <p>Helping people find their perfect pet companions since 2025</p>
+                <p style="margin-top: 1rem; opacity: 0.7;">© 2025 All Rights Reserved</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Scroll Progress Bar
+        window.addEventListener('scroll', function() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrollPercent = (scrollTop / scrollHeight) * 100;
+            document.getElementById('progressBar').style.width = scrollPercent + '%';
+        });
+
+        // Animate counters function (kept for potential future use)
+        function animateCounter(elementId, finalValue) {
+            const element = document.getElementById(elementId);
+            let currentValue = 0;
+            const increment = finalValue / 100;
+            const duration = 2000;
+            const stepTime = duration / 100;
+            
+            const timer = setInterval(() => {
+                currentValue += increment;
+                if (currentValue >= finalValue) {
+                    currentValue = finalValue;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.floor(currentValue).toLocaleString();
+            }, stepTime);
+        }
+
+        // Start animations when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // No counter animation needed anymore - static numbers displayed
+        });
+
+        // Add smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Interactive card effects
+        document.querySelectorAll('.quiz-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Add parallax effect to floating pets
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const floatingPets = document.querySelectorAll('.floating-pet');
+            floatingPets.forEach((pet, index) => {
+                const speed = 0.5 + (index * 0.1);
+                pet.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+        });
+    </script>
+</body>
+</html>

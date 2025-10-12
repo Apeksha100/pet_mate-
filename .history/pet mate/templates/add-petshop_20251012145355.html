@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add New Pet Shop - PetNova</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .hero-section {
+            padding: 3rem 0;
+            color: white;
+            text-align: center;
+        }
+        
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .form-section {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        .section-title {
+            color: #333;
+            font-weight: bold;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-icon {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.2);
+            outline: none;
+        }
+        
+        .form-label {
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .required {
+            color: #dc3545;
+        }
+        
+        .btn-back {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 0.5rem 2rem;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+        
+        .btn-submit {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 1rem 3rem;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(40, 167, 69, 0.4);
+            color: white;
+        }
+        
+        .btn-preview {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 0.8rem 2rem;
+            color: white;
+            font-weight: bold;
+            margin-right: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .category-checkbox {
+            margin: 0.5rem;
+        }
+        
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .category-item {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .category-item:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        .category-item.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .upload-area {
+            border: 2px dashed #667eea;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            background: rgba(102, 126, 234, 0.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+        
+        .upload-area:hover {
+            border-color: #495057;
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        .upload-area.dragover {
+            border-color: #28a745;
+            background: rgba(40, 167, 69, 0.1);
+        }
+        
+        .preview-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            border: 2px solid #667eea;
+        }
+        
+        .success-message {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            text-align: center;
+            display: none;
+        }
+        
+        .error-message {
+            background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            display: none;
+        }
+        
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            top: 0;
+            left: 0;
+        }
+        
+        .floating-shop {
+            position: absolute;
+            font-size: 1.5rem;
+            opacity: 0.1;
+            animation: float 25s infinite linear;
+        }
+        
+        @keyframes float {
+            from {
+                transform: translateX(-50px) rotate(0deg);
+            }
+            to {
+                transform: translateX(calc(100vw + 50px)) rotate(360deg);
+            }
+        }
+        
+        .map-container {
+            height: 300px;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+        
+        .location-info {
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+        
+        /* Navbar Styles */
+        .navbar-custom {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-custom.scrolled {
+            box-shadow: 0 5px 30px rgba(0,0,0,0.2);
+            padding: 0.5rem 0;
+        }
+        
+        .navbar-brand-custom {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-right: 2rem;
+        }
+        
+        .nav-link-custom {
+            color: #333 !important;
+            font-weight: 600;
+            margin: 0 0.5rem;
+            padding: 0.5rem 1rem !important;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-link-custom:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white !important;
+            transform: translateY(-2px);
+        }
+        
+        .nav-link-custom.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white !important;
+        }
+        
+        .navbar-toggler-custom {
+            border: none;
+            padding: 0.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+        }
+        
+        .navbar-toggler-custom:focus {
+            box-shadow: none;
+        }
+        
+        .navbar-toggler-icon-custom {
+            width: 25px;
+            height: 2px;
+            background: white;
+            display: block;
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+        
+        /* Footer Styles */
+        .footer-custom {
+            background: #000000;
+            color: #ffffff;
+            padding: 3rem 0 1rem;
+            margin-top: 4rem;
+        }
+        
+        .footer-heading {
+            color: #ffffff;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-text {
+            color: #cccccc;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: #cccccc;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: #667eea;
+            padding-left: 5px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-link {
+            font-size: 1.5rem;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+        
+        .social-link:hover {
+            transform: translateY(-5px);
+        }
+        
+        .footer-bottom {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #333333;
+            text-align: center;
+            color: #999999;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand-custom" href="/">
+                🐾 PetNova
+            </a>
+            <button class="navbar-toggler navbar-toggler-custom" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon-custom"></span>
+                <span class="navbar-toggler-icon-custom"></span>
+                <span class="navbar-toggler-icon-custom"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link-custom" href="/">🏠 Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom" href="/pets">👀 Browse</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom" href="/buy">🛒 Buy</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom" href="/add">➕ Add Pet</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom" href="pet_quiz_hub.html">🧩 Quiz</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link-custom dropdown-toggle active" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            🔧 Services
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="servicesDropdown" style="border-radius: 15px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                            <li><a class="dropdown-item" href="/mate" style="border-radius: 10px;">💕 Find Mate</a></li>
+                            <li><a class="dropdown-item" href="/rescue" style="border-radius: 10px;">🏠 Rescue</a></li>
+                            <li><a class="dropdown-item" href="/vet" style="border-radius: 10px;">🏥 Vet Directory</a></li>
+                            <li><a class="dropdown-item" href="/petaccessories" style="border-radius: 10px;">🏪 Pet Shops</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="floating-elements">
+        <div class="floating-shop" style="top: 15%; animation-delay: 0s;">🏪</div>
+        <div class="floating-shop" style="top: 35%; animation-delay: 8s;">➕</div>
+        <div class="floating-shop" style="top: 55%; animation-delay: 16s;">📝</div>
+        <div class="floating-shop" style="top: 75%; animation-delay: 24s;">📍</div>
+    </div>
+
+    <div class="hero-section">
+        <div class="container">
+            <h1 class="display-4 mb-3">➕ Add New Pet Shop</h1>
+            <p class="lead">Help grow our pet community by adding your favorite pet shop</p>
+        </div>
+    </div>
+
+    <div class="container pb-5">
+        <a href="javascript:history.back()" class="btn-back">← Back to Pet Shops</a>
+        
+        <div class="form-container">
+            <form id="petShopForm">
+                <!-- Basic Information Section -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <span class="section-icon">🏪</span>
+                        Basic Information
+                    </h3>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="shopName" class="form-label">Shop Name <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="shopName" required placeholder="e.g., Happy Paws Pet Store">
+                            <div class="error-message" id="shopNameError"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="ownerName" class="form-label">Owner/Manager Name</label>
+                            <input type="text" class="form-control" id="ownerName" placeholder="e.g., John Smith">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="phone" class="form-label">Phone Number <span class="required">*</span></label>
+                            <input type="tel" class="form-control" id="phone" required placeholder="+91 98765 43210">
+                            <div class="error-message" id="phoneError"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="email" placeholder="shop@example.com">
+                        </div>
+                    </div>
+                    
+                    <label for="website" class="form-label">Website URL</label>
+                    <input type="url" class="form-control" id="website" placeholder="https://www.petshop.com">
+                </div>
+
+                <!-- Location Section -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <span class="section-icon">📍</span>
+                        Location Details
+                    </h3>
+                    
+                    <label for="address" class="form-label">Full Address <span class="required">*</span></label>
+                    <textarea class="form-control" id="address" rows="3" required placeholder="Enter complete address with landmark"></textarea>
+                    <div class="error-message" id="addressError"></div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="city" class="form-label">City <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="city" required placeholder="Mumbai">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="state" class="form-label">State <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="state" required placeholder="Maharashtra">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="pincode" class="form-label">PIN Code <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="pincode" required placeholder="400001">
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="btn-preview" id="detectLocation">📍 Detect My Location</button>
+                    <div class="location-info" id="locationInfo" style="display: none;">
+                        <strong>📍 Location Detected:</strong>
+                        <div id="detectedLocation"></div>
+                    </div>
+                    
+                    <div class="map-container" id="shopLocationMap">
+                        <div style="height: 100%; display: flex; align-items: center; justify-content: center; background: #f8f9fa;">
+                            <div class="text-center text-muted">
+                                <div style="font-size: 2rem;">🗺️</div>
+                                <div>Map will show location after entering address</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categories Section -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <span class="section-icon">🛍️</span>
+                        Shop Categories
+                    </h3>
+                    <p class="text-muted mb-3">Select all categories that apply to this pet shop</p>
+                    
+                    <div class="category-grid">
+                        <div class="category-item" data-category="food">
+                            <div style="font-size: 2rem;">🥫</div>
+                            <strong>Pet Food</strong>
+                            <div><small>Dog food, cat food, treats</small></div>
+                        </div>
+                        <div class="category-item" data-category="toys">
+                            <div style="font-size: 2rem;">🧸</div>
+                            <strong>Toys & Accessories</strong>
+                            <div><small>Toys, leashes, collars</small></div>
+                        </div>
+                        <div class="category-item" data-category="medical">
+                            <div style="font-size: 2rem;">💊</div>
+                            <strong>Medical Supplies</strong>
+                            <div><small>Medicines, vitamins, first aid</small></div>
+                        </div>
+                        <div class="category-item" data-category="grooming">
+                            <div style="font-size: 2rem;">✂️</div>
+                            <strong>Grooming Services</strong>
+                            <div><small>Bathing, trimming, nail cutting</small></div>
+                        </div>
+                        <div class="category-item" data-category="boarding">
+                            <div style="font-size: 2rem;">🏠</div>
+                            <strong>Pet Boarding</strong>
+                            <div><small>Day care, overnight stay</small></div>
+                        </div>
+                        <div class="category-item" data-category="training">
+                            <div style="font-size: 2rem;">🎓</div>
+                            <strong>Training Services</strong>
+                            <div><small>Obedience, behavior training</small></div>
+                        </div>
+                    </div>
+                    <div class="error-message" id="categoryError"></div>
+                </div>
+
+                <!-- Hours Section -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <span class="section-icon">🕒</span>
+                        Operating Hours
+                    </h3>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="openTime" class="form-label">Opening Time <span class="required">*</span></label>
+                            <input type="time" class="form-control" id="openTime" required value="09:00">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="closeTime" class="form-label">Closing Time <span class="required">*</span></label>
+                            <input type="time" class="form-control" id="closeTime" required value="21:00">
+                        </div>
+                    </div>
+                    
+                    <label for="closedDays" class="form-label">Closed Days (if any)</label>
+                    <select class="form-select" id="closedDays" multiple>
+                        <option value="monday">Monday</option>
+                        <option value="tuesday">Tuesday</option>
+                        <option value="wednesday">Wednesday</option>
+                        <option value="thursday">Thursday</option>
+                        <option value="friday">Friday</option>
+                        <option value="saturday">Saturday</option>
+                        <option value="sunday">Sunday</option>
+                    </select>
+                    <small class="text-muted">Hold Ctrl (Cmd on Mac) to select multiple days</small>
+                </div>
+
+                <!-- Additional Information -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <span class="section-icon">📝</span>
+                        Additional Information
+                    </h3>
+                    
+                    <label for="description" class="form-label">Shop Description</label>
+                    <textarea class="form-control" id="description" rows="4" placeholder="Tell us about the shop - specialties, services, what makes it special..."></textarea>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="establishedYear" class="form-label">Established Year</label>
+                            <input type="number" class="form-control" id="establishedYear" min="1900" max="2024" placeholder="2010">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="employeeCount" class="form-label">Number of Employees</label>
+                            <select class="form-select" id="employeeCount">
+                                <option value="">Select...</option>
+                                <option value="1-5">1-5 employees</option>
+                                <option value="6-10">6-10 employees</option>
+                                <option value="11-20">11-20 employees</option>
+                                <option value="20+">20+ employees</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Photo Upload -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <span class="section-icon">📸</span>
+                        Shop Photos
+                    </h3>
+                    
+                    <div class="upload-area" id="photoUpload">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">📷</div>
+                        <h5>Upload Shop Photos</h5>
+                        <p class="text-muted">Drag and drop images here or click to browse<br>
+                        <small>Accepted formats: JPG, PNG, GIF (Max 5MB each)</small></p>
+                        <input type="file" id="photoInput" multiple accept="image/*" style="display: none;">
+                    </div>
+                    
+                    <div id="photoPreview" style="display: none;">
+                        <h6 class="mt-3">Selected Photos:</h6>
+                        <div id="photoList" class="d-flex flex-wrap gap-2"></div>
+                    </div>
+                </div>
+
+                <!-- Submit Section -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <span class="section-icon">✅</span>
+                        Review & Submit
+                    </h3>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="submitterName" class="form-label">Your Name <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="submitterName" required placeholder="Your full name">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="submitterEmail" class="form-label">Your Email <span class="required">*</span></label>
+                            <input type="email" class="form-control" id="submitterEmail" required placeholder="your@email.com">
+                        </div>
+                    </div>
+                    
+                    <div class="form-check mt-3">
+                        <input class="form-check-input" type="checkbox" id="verifyInfo" required>
+                        <label class="form-check-label" for="verifyInfo">
+                            I verify that the information provided is accurate to the best of my knowledge <span class="required">*</span>
+                        </label>
+                    </div>
+                    
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                        <label class="form-check-label" for="agreeTerms">
+                            I agree to the Terms of Service and Privacy Policy <span class="required">*</span>
+                        </label>
+                    </div>
+                    
+                    <div class="mt-4 text-center">
+                        <button type="button" class="btn-preview" id="previewBtn">👀 Preview Listing</button>
+                        <button type="submit" class="btn-submit">
+                            🚀 Submit Pet Shop for Review
+                        </button>
+                    </div>
+                </div>
+            </form>
+            
+            <div class="success-message" id="successMessage">
+                <h4>🎉 Thank You!</h4>
+                <p>Your pet shop has been submitted successfully! We'll review it within 24-48 hours and add it to our directory.</p>
+                <p><strong>Reference ID:</strong> <span id="referenceId"></span></p>
+            </div>
+        </div>
+
+        <!-- Preview Modal would go here -->
+        <div class="preview-card" id="previewCard" style="display: none;">
+            <h4>📋 Preview Your Listing</h4>
+            <div id="previewContent"></div>
+            <div class="mt-3 text-center">
+                <button type="button" class="btn-preview" onclick="closePreview()">Edit Details</button>
+                <button type="button" class="btn-submit" style="width: auto; padding: 0.8rem 2rem;" onclick="submitForm()">Looks Good - Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer-custom">
+        <div class="container">
+            <div class="row">
+                <!-- About Section -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h4 class="footer-heading">🐾 PetNova</h4>
+                    <p class="footer-text">
+                        Your complete platform for everything pet-related. Connecting pet lovers, facilitating adoptions, and building a stronger pet community.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">📘</a>
+                        <a href="#" class="social-link">📷</a>
+                        <a href="#" class="social-link">🐦</a>
+                        <a href="#" class="social-link">💼</a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="footer-heading">Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/pets">Browse Pets</a></li>
+                        <li><a href="/add">Add Pet</a></li>
+                        <li><a href="/quiz">Take Quiz</a></li>
+                    </ul>
+                </div>
+
+                <!-- Services -->

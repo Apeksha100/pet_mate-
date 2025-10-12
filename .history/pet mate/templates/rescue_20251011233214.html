@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Rescue Page</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }
+    h2 { color: #333; margin-top: 30px; }
+    form, .card, .emergency, .story { border: 1px solid #ccc; padding: 20px; margin: 20px 0; border-radius: 10px; background: #fff; }
+    input, textarea, select { width: 100%; padding: 10px; margin: 10px 0; }
+    button { background: #28a745; color: white; padding: 10px 20px; border: none; cursor: pointer; }
+    button:hover { background: #218838; }
+    .story, .emergency { background: #e9f5ff; }
+  </style>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+</head>
+<body>
+  <!-- 1. Report Lost or Found Animal -->
+  <h2>Report Lost or Found Animal</h2>
+  <form id="lostFoundForm">
+    <select name="status">
+      <option>Lost</option>
+      <option>Found</option>
+    </select>
+    <input type="text" name="animalType" placeholder="Animal Type (e.g., Dog)" required>
+    <input type="text" name="location" placeholder="Last Seen / Found Location" required>
+    <input type="date" name="date" required>
+    <textarea name="description" placeholder="Description" required></textarea>
+    <input type="file" name="photo">
+    <input type="text" name="contact" placeholder="Your Contact Info" required>
+    <button type="submit">Submit Report</button>
+  </form>
+<!-- Place this div right below your form -->
+<div id="reports" class="reports-container"></div>
+<h2>Live Lost & Found Reports</h2>
+<div id="reportList"></div>
+<style>
+  .reports-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+  }
+  .report-card {
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  }
+  .report-card h3 {
+    margin: 5px 0;
+  }
+</style>
+<script>
+  // Fetch and display reports
+  function loadReports() {
+    db.collection("lost_found_reports")
+      .orderBy("date", "desc") // show latest first
+      .onSnapshot(snapshot => {
+        const reportsContainer = document.getElementById("reports");
+        reportsContainer.innerHTML = ""; // clear old
+        snapshot.forEach(doc => {
+          const r = doc.data();
+          const card = document.createElement("div");
+          card.className = "report-card";
+          card.innerHTML = `
+            <h3>${r.status} - ${r.animalType}</h3>
+            <p><strong>Location:</strong> ${r.location}</p>
+            <p><strong>Date:</strong> ${r.date}</p>
+            <p><strong>Description:</strong> ${r.description}</p>
+            <p><strong>Contact:</strong> ${r.contact}</p>
+          `;
+          reportsContainer.appendChild(card);
+        });
+      });
+  }
+  // Load immediately when page loads
+  loadReports();
+</script>
+  <!-- 3. Rescue Alert Email List -->
+  <h2>Join Rescue Alert Network- Our WhatsApp Group</h2>
+<p>Stay instantly connected with the rescue community.</p>
+<a href="https://chat.whatsapp.com/JeLxJke8abh1vVJLgQz0bq" target="_blank">
+  👉 Click here to join our WhatsApp group
+</a>
+  <!-- 7. Success Stories -->
+  <h2>Success Stories</h2>
+<style>
+  .stories-container {
+    display: flex;
+    gap: 20px; /* space between the stories */
+  }
+  .story {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 12px;
+    width: 250px; /* fix width so they align neatly */
+    text-align: center;
+  }
+  .story img {
+    max-width: 100%;
+    height: auto; 
+    border-radius: 10px;
+  }
+</style>
+<div class="stories-container">
+ <div class="story">
+    <h3>Rocky Reunited!</h3>
+    <img src="{{ url_for('static', filename='images/lab.jpg') }}" alt="Rocky the Labrador">
+    <p>Thanks to our rescue volunteers, Rocky the Labrador found his way back home.</p>
+</div>
+
+<div class="story">
+    <h3>Stray Kitten Saved</h3>
+    <img src="{{ url_for('static', filename='images/kit.jpg') }}" alt="Stray Kitten">
+    <p>This abandoned kitten was rescued and adopted through our community.</p>
+</div>
+
+    <div class="story">
+    <h3>Poor Cat Saved</h3>
+      <img src="{{ url_for('static', filename='images/cat.jpg') }}" alt="Stray Kitten">
+    <p>This bleeding cat was rescued and adopted by a community.</p>
+     </div>
+    <div class="story">
+    <h3>Found Bosco</h3>
+    <img src="{{ url_for('static', filename='images/beagle.jpg') }}" alt="Stray Kitten">
+    <p>This beagle was lost and our website helped to find him and contact his owner.</p>
+  </div>
+</div>
+  <!-- 8. Emergency Contacts -->
+  <h2>Emergency Animal Help Lines</h2>
+  <div class="emergency">
+    <p><strong>Pet Ambulance (24x7):</strong> 1800-112-911</p>
+    <p><strong>Blue Cross of India:</strong> +91-44-2230-0655</p>
+    <p><strong>PETA India:</strong> +91-9820122602</p>
+  </div>
+  <!-- 9. Rescue Centers -->
+<h2>Nearby Rescue Centers</h2>
+<div class="card">
+  <h3>Blue Cross of India</h3>
+  <p>Chennai, Tamil Nadu</p>
+  <p><strong>Contact:</strong> +91-44-2230-0655</p>
+</div>
+<div class="card">
+  <h3>PFA (People For Animals)</h3>
+  <p>Delhi</p>
+  <p><strong>Contact:</strong> +91-11-2542-3441</p>
+</div>
+<div class="card">
+  <h3>The Bombay Society for the Prevention of Cruelty to Animals (BSPCA)</h3>
+  <p>Mumbai, Maharashtra</p>
+  <p><strong>Contact:</strong> +91-22-2413-6437</p>
+</div>
+<div class="card">
+  <h3>Cupaa Animal Hospital</h3>
+  <p>Bangalore, Karnataka</p>
+  <p><strong>Contact:</strong> +91-80-2294-7300</p>
+</div>
+  <!-- Firebase Setup + JavaScript Logic -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBEeMmls96KeVN_pdSnHwFoxmU3oSNrAE0",
+      authDomain: "rescuenet-77c12.firebaseapp.com",
+      projectId: "rescuenet-77c12",
+      storageBucket: "rescuenet-77c12.firebasestorage.app",
+      messagingSenderId: "850784384049",
+      appId: "1:850784384049:web:cc2b3337742a359e789110",
+      measurementId: "G-HDGWZE4FBH"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const rescueHelpers = [];
+    // Lost/Found Report
+    document.getElementById("lostFoundForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const data = new FormData(e.target);
+      const report = {
+        status: data.get("status"),
+        animalType: data.get("animalType"),
+        location: data.get("location"),
+        date: data.get("date"),
+        description: data.get("description"),
+        contact: data.get("contact")
+      };
+      db.collection("lost_found_reports").add(report)
+        .then(() => {
+          alert("Thank you! Your lost/found report has been submitted.");
+          e.target.reset();
+        })
+        .catch(err => {
+          alert("Error submitting report.");
+          console.error(err);
+        });
+    });// Load and display lost/found reports from Firestore
+function loadReports() {
+  const reportList = document.getElementById("reportList");
+  reportList.innerHTML = "Loading...";
+  db.collection("lost_found_reports").orderBy("date", "desc").get()
+    .then(snapshot => {
+      reportList.innerHTML = ""; // clear loading text
+      if (snapshot.empty) {
+        reportList.innerHTML = "<p>No reports found.</p>";
+        return;
+      }
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const div = document.createElement("div");
+        div.className = "card";
+        div.innerHTML = `
+          <h3>${data.status} - ${data.animalType}</h3>
+          <p><strong>Location:</strong> ${data.location}</p>
+          <p><strong>Date:</strong> ${data.date}</p>
+          <p><strong>Description:</strong> ${data.description}</p>
+          <p><strong>Contact:</strong> ${data.contact}</p>
+        `;
+        reportList.appendChild(div);
+      });
+    })
+    .catch(err => {
+      reportList.innerHTML = "<p>Error loading reports.</p>";
+      console.error("Error loading reports:", err);
+    });
+}
+// Call function after page load
+window.addEventListener("load", loadReports);
+  </script>
+</body>

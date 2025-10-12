@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Pets - PetNova</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .hero-section {
+            padding: 3rem 0;
+            color: white;
+            text-align: center;
+        }
+        
+        .filter-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .pet-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 0;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .pet-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
+        
+        .pet-image-container {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+        }
+        
+        .pet-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+        
+        .pet-card:hover .pet-image {
+            transform: scale(1.1);
+        }
+        
+        .no-image {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: #adb5bd;
+            height: 100%;
+        }
+        
+        .pet-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .badge-sale {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+        
+        .badge-adoption {
+            background: linear-gradient(135deg, #e83e8c 0%, #fd7e14 100%);
+            color: white;
+        }
+        
+        .badge-mate {
+            background: linear-gradient(135deg, #dc3545 0%, #e83e24 100%);
+            color: white;
+        }
+        
+        .pet-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+        }
+        
+        .pet-name {
+            color: #333;
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .pet-category {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        
+        .pet-info {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .pet-info-icon {
+            margin-right: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .btn-back {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 0.5rem 2rem;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+        }
+        
+        .btn-back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(108, 117, 125, 0.4);
+            color: white;
+        }
+        
+        .search-box {
+            border-radius: 12px;
+            border: 2px solid #e9ecef;
+            padding: 0.8rem 1.5rem;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .search-box:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.3);
+            outline: none;
+        }
+        
+        .filter-btn {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            color: #333;
+            margin: 0.3rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .filter-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+        
+        .filter-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+        
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            top: 0;
+            left: 0;
+        }
+        
+        .floating-pet {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.1;
+            animation: float 25s infinite linear;
+        }
+        
+        @keyframes float {
+            from {
+                transform: translateX(-100px) rotate(0deg);
+            }
+            to {
+                transform: translateX(calc(100vw + 100px)) rotate(360deg);
+            }
+        }
+        
+        .stats-badge {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 1rem;
+            color: white;
+            text-align: center;
+            margin: 0.5rem;
+        }
+        
+        .stats-number {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .empty-state {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 4rem 2rem;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+        
+        .empty-state-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="floating-pet" style="top: 10%; animation-delay: 0s;">🐕</div>
+        <div class="floating-pet" style="top: 30%; animation-delay: 7s;">🐱</div>
+        <div class="floating-pet" style="top: 50%; animation-delay: 14s;">🦜</div>
+        <div class="floating-pet" style="top: 70%; animation-delay: 21s;">🐰</div>
+        <div class="floating-pet" style="top: 20%; animation-delay: 5s;">🐠</div>
+    </div>
+
+    <div class="hero-section">
+        <div class="container">
+            <h1 class="display-4 mb-3">🐾 Browse All Pets</h1>
+            <p class="lead">Discover amazing pets from our community</p>
+            
+            <div class="d-flex justify-content-center flex-wrap mt-4">
+                <div class="stats-badge">
+                    <span class="stats-number" id="totalPets">0</span>
+                    <small>Total Pets</small>
+                </div>
+                <div class="stats-badge">
+                    <span class="stats-number" id="visiblePets">0</span>
+                    <small>Showing</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container pb-5">
+        <a href="/" class="btn-back">← Back to Home</a>
+        
+        <!-- Search and Filter Section -->
+        <div class="filter-section">
+            <div class="row align-items-center">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <input type="text" class="search-box" id="searchInput" placeholder="🔍 Search by name, breed, or location...">
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex flex-wrap justify-content-md-end">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="Dog">🐕 Dogs</button>
+                        <button class="filter-btn" data-filter="Cat">🐱 Cats</button>
+                        <button class="filter-btn" data-filter="Bird">🦜 Birds</button>
+                        <button class="filter-btn" data-filter="Sale">💰 Sale</button>
+                        <button class="filter-btn" data-filter="Adoption">❤️ Adoption</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pet Cards Grid -->
+        <div class="row" id="petGrid">
+            <!-- Pets will be inserted here -->
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <div class="empty-state-icon">🔍</div>
+            <h3>No Pets Found</h3>
+            <p class="text-muted">Try adjusting your search or filters</p>
+        </div>
+    </div>
+
+    <script>
+        // This will be populated by Flask template
+        const petsData = [];
+        
+        // Render pets function
+        function renderPets() {
+            const grid = document.getElementById('petGrid');
+            grid.innerHTML = '';
+            
+            petsData.forEach((pet, index) => {
+                const card = createPetCard(pet, index);
+                grid.innerHTML += card;
+            });
+            
+            updateStats();
+        }
+        
+        function createPetCard(pet, index) {
+            const purposeBadgeClass = pet.purpose === 'Sale' ? 'badge-sale' : 
+                                     pet.purpose === 'Adoption' ? 'badge-adoption' : 'badge-mate';
+            
+            const categoryIcon = pet.category === 'Dog' ? '🐕' :
+                                pet.category === 'Cat' ? '🐱' :
+                                pet.category === 'Bird' ? '🦜' :
+                                pet.category === 'Fish' ? '🐠' :
+                                pet.category === 'Reptile' ? '🦎' : '🐾';
+            
+            return `
+                <div class="col-lg-4 col-md-6 mb-4 pet-item fade-in" 
+                     data-name="${pet.name}" 
+                     data-breed="${pet.breed}" 
+                     data-location="${pet.location}" 
+                     data-purpose="${pet.purpose}"
+                     data-category="${pet.category}">
+                    <div class="pet-card">
+                        <div class="pet-image-container">
+                            ${pet.image ? 
+                                `<img src="${pet.image}" class="pet-image" alt="${pet.name}">` : 
+                                `<div class="no-image">${categoryIcon}</div>`
+                            }
+                            <div class="pet-badge ${purposeBadgeClass}">
+                                ${pet.purpose === 'Sale' ? '💰 For Sale' : 
+                                  pet.purpose === 'Adoption' ? '❤️ Adoption' : '💕 Find Mate'}
+                            </div>
+                        </div>
+                        
+                        <div class="pet-content">
+                            <h4 class="pet-name">${pet.name}</h4>
+                            <span class="pet-category">${pet.category}</span>
+                            
+                            <div class="pet-info">
+                                <span class="pet-info-icon">🎯</span>
+                                <span><strong>Breed:</strong> ${pet.breed}</span>
+                            </div>
+                            
+                            <div class="pet-info">
+                                <span class="pet-info-icon">📍</span>
+                                <span><strong>Location:</strong> ${pet.location}</span>
+                            </div>
+                            
+                            <div class="pet-info">
+                                <span class="pet-info-icon">🎂</span>
+                                <span><strong>Age:</strong> ${pet.age} years</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function updateStats() {
+            const allPets = document.querySelectorAll('.pet-item');
+            const visiblePets = document.querySelectorAll('.pet-item[style*="display: block"], .pet-item:not([style*="display: none"])');
+            
+            document.getElementById('totalPets').textContent = allPets.length;
+            document.getElementById('visiblePets').textContent = visiblePets.length;
+            
+            // Show/hide empty state
+            if (visiblePets.length === 0 && allPets.length > 0) {
+                document.getElementById('emptyState').style.display = 'block';
+            } else {
+                document.getElementById('emptyState').style.display = 'none';
+            }
+        }
+        
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            filterPets();
+        });
+
+        // Filter functionality
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                filterPets();
+            });
+        });
+
+        function filterPets() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
+            const allPets = document.querySelectorAll('.pet-item');
+
+            allPets.forEach(pet => {
+                const name = pet.dataset.name.toLowerCase();
+                const breed = pet.dataset.breed.toLowerCase();
+                const location = pet.dataset.location.toLowerCase();
+                const purpose = pet.dataset.purpose;
+                const category = pet.dataset.category;
+
+                const matchesSearch = name.includes(searchTerm) || 
+                                    breed.includes(searchTerm) || 
+                                    location.includes(searchTerm);
+                
+                const matchesFilter = activeFilter === 'all' || 
+                                    purpose === activeFilter || 
+                                    category === activeFilter;
+
+                if (matchesSearch && matchesFilter) {
+                    pet.style.display = 'block';
+                } else {
+                    pet.style.display = 'none';
+                }
+            });
+            
+            updateStats();
+        }
+
+        // Add hover effects
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.pet-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
