@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rescue - PetNova</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        /* Navbar Styles */
+        .navbar-custom {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-custom.scrolled {
+            box-shadow: 0 5px 30px rgba(0,0,0,0.2);
+            padding: 0.5rem 0;
+        }
+        
+        .navbar-brand-custom {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-right: 2rem;
+        }
+        
+        .nav-link-custom {
+            color: #333 !important;
+            font-weight: 600;
+            margin: 0 0.5rem;
+            padding: 0.5rem 1rem !important;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-link-custom:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white !important;
+            transform: translateY(-2px);
+        }
+        
+        .nav-link-custom.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white !important;
+        }
+        
+        .navbar-toggler-custom {
+            border: none;
+            padding: 0.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+        }
+        
+        .navbar-toggler-custom:focus {
+            box-shadow: none;
+        }
+        
+        .navbar-toggler-icon-custom {
+            width: 25px;
+            height: 2px;
+            background: white;
+            display: block;
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .hero-section {
+            padding: 3rem 0;
+            color: white;
+            text-align: center;
+        }
+        
+        .section-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .section-title {
+            color: #333;
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-icon {
+            font-size: 2rem;
+            margin-right: 0.8rem;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 12px;
+            border: 2px solid #e9ecef;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.2);
+            outline: none;
+        }
+        
+        .btn-submit {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 0.8rem 2rem;
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(40, 167, 69, 0.4);
+            color: white;
+        }
+        
+        .btn-back {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 0.5rem 2rem;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+        }
+        
+        .btn-back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(108, 117, 125, 0.4);
+            color: white;
+        }
+        
+        .reports-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .report-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .report-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+        
+        .report-card h3 {
+            color: #333;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        
+        .report-status {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .status-lost {
+            background: linear-gradient(135deg, #dc3545 0%, #e83e24 100%);
+            color: white;
+        }
+        
+        .status-found {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+        
+        .stories-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .story-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .story-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .story-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .story-content {
+            padding: 1.5rem;
+        }
+        
+        .story-card h3 {
+            color: #333;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.8rem;
+        }
+        
+        .emergency-card {
+            background: linear-gradient(135deg, #dc3545 0%, #e83e24 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3);
+        }
+        
+        .emergency-card p {
+            margin: 0.5rem 0;
+            font-size: 1rem;
+        }
+        
+        .center-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .center-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+        }
+        
+        .center-card h3 {
+            color: #667eea;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 0.8rem;
+        }
+        
+        .whatsapp-btn {
+            background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 2rem;
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+        
+        .whatsapp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4);
+            color: white;
+        }
+        
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            top: 0;
+            left: 0;
+        }
+        
+        .floating-pet {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.1;
+            animation: float 25s infinite linear;
+        }
+        
+        @keyframes float {
+            from {
+                transform: translateX(-100px) rotate(0deg);
+            }
+            to {
+                transform: translateX(calc(100vw + 100px)) rotate(360deg);
+            }
+        }
+        
+        .info-box {
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 4px solid #667eea;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .reports-container,
+            .stories-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Footer Styles */
+        .footer-custom {
+            background: #000000;
+            color: #ffffff;
+            padding: 3rem 0 1rem;
+            margin-top: 4rem;
+        }
+        
+        .footer-heading {
+            color: #ffffff;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-text {
+            color: #cccccc;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: #cccccc;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: #667eea;
+            padding-left: 5px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-link {
+            font-size: 1.5rem;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+        
+        .social-link:hover {
+            transform: translateY(-5px);
+        }
+        
+        .footer-bottom {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #333333;
+            text-align: center;
+            color: #999999;
+        }
+
+    </style>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand-custom" href="/">
+                🐾 PetNova
+            </a>
+            <button class="navbar-toggler navbar-toggler-custom" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon-custom"></span>
+                <span class="navbar-toggler-icon-custom"></span>
+                <span class="navbar-toggler-icon-custom"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link-custom" href="/">🏠 Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom" href="/buy">🛒 Buy</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom" href="/add">➕ Add Pet</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom" href="/quiz">🧩 Quiz</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link-custom dropdown-toggle active" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            🔧 Services
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="servicesDropdown" style="border-radius: 15px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                            <li><a class="dropdown-item" href="/mate" style="border-radius: 10px;">💕 Find Mate</a></li>
+                            <li><a class="dropdown-item" href="/rescue" style="border-radius: 10px;">🏠 Rescue</a></li>
+                            <li><a class="dropdown-item" href="/vet" style="border-radius: 10px;">🏥 Vet Directory</a></li>
+                            <li><a class="dropdown-item" href="/petaccessories" style="border-radius: 10px;">🏪 Pet Shops</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="floating-elements">
+        <div class="floating-pet" style="top: 10%; animation-delay: 0s;">🆘</div>
+        <div class="floating-pet" style="top: 30%; animation-delay: 7s;">🐕</div>
+        <div class="floating-pet" style="top: 50%; animation-delay: 14s;">🐱</div>
+        <div class="floating-pet" style="top: 70%; animation-delay: 21s;">❤️</div>
+        <div class="floating-pet" style="top: 20%; animation-delay: 5s;">🏥</div>
+    </div>
+
+    <div class="hero-section">
+        <div class="container">
+            <h1 class="display-4 mb-3">🆘 Pet Rescue Network</h1>
+            <p class="lead">Help lost pets find their way home and rescue animals in need</p>
+        </div>
+    </div>
+
+    <div class="container pb-5">
+        <a href="/" class="btn-back">← Back to Home</a>
+        
+        <!-- Report Lost or Found Animal -->
+        <div class="section-container fade-in">
+            <h2 class="section-title">
+                <span class="section-icon">📢</span>
+                Report Lost or Found Animal
+            </h2>
+            
+            <div class="info-box">
+                <strong>💡 Help reunite pets with their families!</strong> Submit a detailed report to help lost animals find their way home.
+            </div>
+
+            <form id="lostFoundForm">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>Status *</strong></label>
+                        <select name="status" class="form-select" required>
+                            <option value="Lost">Lost</option>
+                            <option value="Found">Found</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>Animal Type *</strong></label>
+                        <input type="text" name="animalType" class="form-control" placeholder="e.g., Dog, Cat, Bird" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>Location *</strong></label>
+                        <input type="text" name="location" class="form-control" placeholder="Last seen / Found location" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>Date *</strong></label>
+                        <input type="date" name="date" class="form-control" required>
+                    </div>
+                </div>
+
+                <label class="form-label"><strong>Description *</strong></label>
+                <textarea name="description" class="form-control" rows="4" placeholder="Provide detailed description (color, size, distinctive features, etc.)" required></textarea>
+
+                <label class="form-label"><strong>Photo (Optional)</strong></label>
+                <input type="file" name="photo" class="form-control" accept="image/*">
+
+                <label class="form-label"><strong>Your Contact Info *</strong></label>
+                <input type="text" name="contact" class="form-control" placeholder="Phone number or email" required>
+
+                <button type="submit" class="btn-submit mt-3">
+                    📢 Submit Report
+                </button>
+            </form>
+        </div>
+
+        <!-- Live Reports -->
+        <div class="section-container fade-in">
+            <h2 class="section-title">
+                <span class="section-icon">📋</span>
+                Live Lost & Found Reports
+            </h2>
+            <div class="reports-container" id="reports">
+                <div class="text-center" style="grid-column: 1/-1;">
+                    <p class="text-muted">Loading reports...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- WhatsApp Group -->
+        <div class="section-container fade-in text-center">
+            <h2 class="section-title justify-content-center">
+                <span class="section-icon">💬</span>
+                Join Rescue Alert Network
+            </h2>
+            <p class="mb-4">Stay instantly connected with the rescue community and get real-time alerts about lost and found pets in your area.</p>
+            <a href="https://chat.whatsapp.com/JeLxJke8abh1vVJLgQz0bq" target="_blank" class="whatsapp-btn">
+                📱 Join Our WhatsApp Group
+            </a>
+        </div>
+
+        <!-- Success Stories -->
+        <div class="section-container fade-in">
+            <h2 class="section-title">
+                <span class="section-icon">🎉</span>
+                Success Stories
+            </h2>
+            <div class="stories-container">
+                <div class="story-card">
+                    <img src="{{ url_for('static', filename='images/lab.jpg') }}" alt="Rocky" class="story-image">
+                    <div class="story-content">
+                        <h3>Rocky Reunited!</h3>
+                        <p>Thanks to our rescue volunteers, Rocky the Labrador found his way back home.</p>
+                    </div>
+                </div>
+
+                <div class="story-card">
+                    <img src="{{ url_for('static', filename='images/kit.jpg') }}" alt="Kitten" class="story-image">
+                    <div class="story-content">
+                        <h3>Stray Kitten Saved</h3>
+                        <p>This abandoned kitten was rescued and adopted through our community.</p>
+                    </div>
+                </div>
+
+                <div class="story-card">
+                    <img src="{{ url_for('static', filename='images/cat.jpg') }}" alt="Cat" class="story-image">
+                    <div class="story-content">
+                        <h3>Poor Cat Saved</h3>
+                        <p>This injured cat was rescued and adopted by a loving family.</p>
+                    </div>
+                </div>
+
+                <div class="story-card">
+                    <img src="{{ url_for('static', filename='images/beagle.jpg') }}" alt="Bosco" class="story-image">
+                    <div class="story-content">
+                        <h3>Found Bosco</h3>
+                        <p>This beagle was lost and our website helped find him and contact his owner.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Emergency Contacts -->
+        <div class="section-container fade-in">
+            <h2 class="section-title">
+                <span class="section-icon">🚨</span>
+                Emergency Animal Help Lines
+            </h2>
+            <div class="emergency-card">
+                <p><strong>🚑 Pet Ambulance (24x7):</strong> 1800-112-911</p>
+                <p><strong>🏥 Blue Cross of India:</strong> +91-44-2230-0655</p>
+                <p><strong>🐾 PETA India:</strong> +91-9820122602</p>
+            </div>
+        </div>
+
+        <!-- Rescue Centers -->
+        <div class="section-container fade-in">
+            <h2 class="section-title">
+                <span class="section-icon">🏥</span>
+                Nearby Rescue Centers
+            </h2>
+            
+            <div class="center-card">
+                <h3>Blue Cross of India</h3>
+                <p><strong>📍 Location:</strong> Chennai, Tamil Nadu</p>
+                <p><strong>📞 Contact:</strong> +91-44-2230-0655</p>
+            </div>
+
+            <div class="center-card">
+                <h3>PFA (People For Animals)</h3>
+                <p><strong>📍 Location:</strong> Delhi</p>
+                <p><strong>📞 Contact:</strong> +91-11-2542-3441</p>
+            </div>
+
+            <div class="center-card">
+                <h3>The Bombay Society for the Prevention of Cruelty to Animals (BSPCA)</h3>
+                <p><strong>📍 Location:</strong> Mumbai, Maharashtra</p>
+                <p><strong>📞 Contact:</strong> +91-22-2413-6437</p>
+            </div>
+
+            <div class="center-card">
+                <h3>Cupaa Animal Hospital</h3>
+                <p><strong>📍 Location:</strong> Bangalore, Karnataka</p>
+                <p><strong>📞 Contact:</strong> +91-80-2294-7300</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer-custom">
+        <div class="container">
+            <div class="row">
+                <!-- About Section -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h4 class="footer-heading">🐾 PetNova</h4>
+                    <p class="footer-text">
+                        Your complete platform for everything pet-related. Connecting pet lovers, facilitating adoptions, and building a stronger pet community.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">📘</a>
+                        <a href="#" class="social-link">📷</a>
+                        <a href="#" class="social-link">🐦</a>
+                        <a href="#" class="social-link">💼</a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="footer-heading">Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/pets">Browse Pets</a></li>
+                        <li><a href="/add">Add Pet</a></li>
+                        <li><a href="/quiz">Take Quiz</a></li>
+                    </ul>
+                </div>
+
+                <!-- Services -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-heading">Services</h5>
+                    <ul class="footer-links">
+                        <li><a href="/buy">Buy Pets</a></li>
+                        <li><a href="/sell">Sell Pets</a></li>
+                        <li><a href="/mate">Find Mate</a></li>
+                        <li><a href="/rescue">Pet Rescue</a></li>
+                        <li><a href="/vet">Vet Directory</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-heading">Get in Touch</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">📧 info@petnova.com</a></li>
+                        <li><a href="#">📞 +1 (555) 123-4567</a></li>
+                        <li><a href="#">📍 Mumbai, India</a></li>
+                        <li><a href="#">🕒 24/7 Support</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 PetNova. All rights reserved. | College Project</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase Setup + JavaScript Logic -->
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBEeMmls96KeVN_pdSnHwFoxmU3oSNrAE0",
+            authDomain: "rescuenet-77c12.firebaseapp.com",
+            projectId: "rescuenet-77c12",
+            storageBucket: "rescuenet-77c12.firebasestorage.app",
+            messagingSenderId: "850784384049",
+            appId: "1:850784384049:web:cc2b3337742a359e789110",
+            measurementId: "G-HDGWZE4FBH"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Load and display reports
+        function loadReports() {
+            db.collection("lost_found_reports")
+                .orderBy("date", "desc")
+                .onSnapshot(snapshot => {
+                    const reportsContainer = document.getElementById("reports");
+                    reportsContainer.innerHTML = "";
+                    
+                    if (snapshot.empty) {
+                        reportsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center;"><p class="text-muted">No reports yet. Be the first to submit one!</p></div>';
+                        return;
+                    }
+                    
+                    snapshot.forEach(doc => {
+                        const r = doc.data();
+                        const card = document.createElement("div");
+                        card.className = "report-card fade-in";
+                        card.innerHTML = `
+                            <span class="report-status ${r.status === 'Lost' ? 'status-lost' : 'status-found'}">
+                                ${r.status === 'Lost' ? '🔴 Lost' : '🟢 Found'}
+                            </span>
+                            <h3>${r.animalType}</h3>
+                            <p><strong>📍 Location:</strong> ${r.location}</p>
+                            <p><strong>📅 Date:</strong> ${r.date}</p>
+                            <p><strong>📝 Description:</strong> ${r.description}</p>
+                            <p><strong>📞 Contact:</strong> ${r.contact}</p>
+                        `;
+                        reportsContainer.appendChild(card);
+                    });
+                });
+        }
+
+        // Submit form
+        document.getElementById("lostFoundForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const data = new FormData(e.target);
+            const report = {
+                status: data.get("status"),
+                animalType: data.get("animalType"),
+                location: data.get("location"),
+                date: data.get("date"),
+                description: data.get("description"),
+                contact: data.get("contact"),
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            };
+            
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.innerHTML = '⏳ Submitting...';
+            submitBtn.disabled = true;
+            
+            db.collection("lost_found_reports").add(report)
+                .then(() => {
+                    alert("✅ Thank you! Your report has been submitted successfully.");
+                    e.target.reset();
+                    submitBtn.innerHTML = '📢 Submit Report';
+                    submitBtn.disabled = false;
+                })
+                .catch(err => {
+                    alert("❌ Error submitting report. Please try again.");
+                    console.error(err);
+                    submitBtn.innerHTML = '📢 Submit Report';
+                    submitBtn.disabled = false;
+                });
+        });
+
+        // Load reports on page load
+        loadReports();
+
+        // Add staggered fade-in animation
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.fade-in').forEach((item, index) => {
+                item.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find a Vet Near You - PetNova</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+
+    /* Navbar Styles */
+    .navbar-custom {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+    
+    .navbar-custom.scrolled {
+      box-shadow: 0 5px 30px rgba(0,0,0,0.2);
+      padding: 0.5rem 0;
+    }
+    
+    .navbar-brand-custom {
+      font-size: 1.8rem;
+      font-weight: bold;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-right: 2rem;
+    }
+    
+    .nav-link-custom {
+      color: #333 !important;
+      font-weight: 600;
+      margin: 0 0.5rem;
+      padding: 0.5rem 1rem !important;
+      border-radius: 20px;
+      transition: all 0.3s ease;
+    }
+    
+    .nav-link-custom:hover {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white !important;
+      transform: translateY(-2px);
+    }
+    
+    .nav-link-custom.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white !important;
+    }
+    
+    .navbar-toggler-custom {
+      border: none;
+      padding: 0.5rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 10px;
+    }
+    
+    .navbar-toggler-icon-custom {
+      width: 25px;
+      height: 2px;
+      background: white;
+      display: block;
+      margin: 5px 0;
+    }
+
+    .page-header {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 2rem 0;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .page-header .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      text-align: center;
+    }
+
+    .page-header h1 {
+      color: white;
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .page-header p {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 1.1rem;
+    }
+
+    .search-section {
+      max-width: 1200px;
+      margin: 0 auto 3rem;
+      padding: 0 20px;
+    }
+
+    .search-container {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+    }
+
+    .search-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      align-items: end;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-group label {
+      color: #333;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    select, input {
+      padding: 0.9rem 1.2rem;
+      font-size: 1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      background: white;
+      transition: all 0.3s ease;
+      font-family: inherit;
+    }
+
+    select:focus, input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    }
+
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      background-size: 1.2em;
+      padding-right: 3rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .vet-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));  /* Adjusted for smaller size */
+  gap: 2rem;
+  margin-top: 2rem;
+  padding-bottom: 3rem;
+    }
+
+    .vet-card {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      transition: all 0.4s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .vet-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    }
+
+    .vet-card img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .vet-card:hover img {
+      transform: scale(1.05);
+    }
+
+    .vet-info {
+      padding: 1.5rem;
+    }
+
+    .vet-info h3 {
+      color: #333;
+      font-size: 1.3rem;
+      margin-bottom: 0.8rem;
+      font-weight: 700;
+    }
+
+    .vet-info p {
+      color: #666;
+      margin-bottom: 0.5rem;
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    .contact-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #667eea;
+      font-weight: 600;
+      margin-top: 1rem;
+    }
+
+    .experience-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 2.5rem;
+      border-radius: 25px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      z-index: 9999;
+      width: 90%;
+      max-width: 650px;
+      max-height: 80vh;
+      overflow-y: auto;
+      animation: modalSlideIn 0.3s ease;
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        transform: translate(-50%, -60%);
+        opacity: 0;
+      }
+      to {
+        transform: translate(-50%, -50%);
+        opacity: 1;
+      }
+    }
+
+    .modal h3 {
+      color: #333;
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 3px solid #667eea;
+    }
+
+    .modal p {
+      color: #555;
+      line-height: 1.8;
+      font-size: 1rem;
+    }
+
+    .modal strong {
+      color: #333;
+      font-weight: 600;
+    }
+
+    .modal a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    .modal a:hover {
+      color: #764ba2;
+      text-decoration: underline;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(5px);
+      z-index: 9998;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      cursor: pointer;
+      border-radius: 25px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(255, 107, 107, 0.3);
+    }
+
+    .close-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(255, 107, 107, 0.4);
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 3rem;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .no-results h3 {
+      color: #333;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .no-results p {
+      color: #666;
+      font-size: 1.1rem;
+    }
+
+    .modal::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .modal::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+
+    .modal::-webkit-scrollbar-thumb {
+      background: #667eea;
+      border-radius: 10px;
+    }
+
+    .modal::-webkit-scrollbar-thumb:hover {
+      background: #764ba2;
+    }
+
+    /* Footer Styles */
+    .footer-custom {
+      background: #1a1a1a;
+      color: white;
+      padding: 4rem 0 2rem;
+      margin-top: 5rem;
+      position: relative;
+    }
+    
+    .footer-heading {
+      color: white;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+      font-size: 1.3rem;
+    }
+    
+    .footer-text {
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+    }
+    
+    .footer-links {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .footer-links li {
+      margin-bottom: 0.8rem;
+    }
+    
+    .footer-links a {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
+    
+    .footer-links a:hover {
+      color: #667eea;
+      transform: translateX(5px);
+    }
+    
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .social-link {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    
+    .social-link:hover {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      transform: translateY(-5px);
+    }
+    
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 2rem;
+      margin-top: 3rem;
+      text-align: center;
+    }
+    
+    .footer-bottom p {
+      color: rgba(255, 255, 255, 0.6);
+      margin: 0;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .page-header h1 {
+        font-size: 2rem;
+      }
+
+      .search-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .vet-container {
+        grid-template-columns: 1fr;  /* Remains as single column on mobile */
+      }
+
+      .modal {
+        padding: 2rem;
+        width: 95%;
+      }
+
+      .nav-link-custom {
+        margin: 0.5rem 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container">
+      <a class="navbar-brand-custom" href="/">
+        🐾 PetNova
+      </a>
+      <button class="navbar-toggler navbar-toggler-custom" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false">
+        <span class="navbar-toggler-icon-custom"></span>
+        <span class="navbar-toggler-icon-custom"></span>
+        <span class="navbar-toggler-icon-custom"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link-custom" href="/">🏠 Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link-custom" href="/pets">👀 Browse</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link-custom" href="/buy">🛒 Buy</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link-custom" href="/add">➕ Add Pet</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link-custom" href="/quiz">🧩 Quiz</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link-custom dropdown-toggle active" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown">
+              🔧 Services
+            </a>
+            <ul class="dropdown-menu" style="border-radius: 15px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+              <li><a class="dropdown-item" href="/mate" style="border-radius: 10px;">💕 Find Mate</a></li>
+              <li><a class="dropdown-item" href="/rescue" style="border-radius: 10px;">🏠 Rescue</a></li>
+              <li><a class="dropdown-item" href="/vet" style="border-radius: 10px;">🏥 Vet Directory</a></li>
+              <li><a class="dropdown-item" href="/petaccessories" style="border-radius: 10px;">🏪 Pet Shops</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1>🩺 Find a Vet Near You</h1>
+      <p>Connect with experienced veterinarians in your area</p>
+    </div>
+  </div>
+
+  <div class="search-section">
+    <div class="search-container">
+      <div class="search-grid">
+        <div class="form-group">
+          <label for="location">📍 Choose your city</label>
+          <select id="location" onchange="filterVets()">
+            <option value="">All Cities</option>
+            <option value="Mumbai">Mumbai</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Bangalore">Bangalore</option>
+            <option value="Gujarat">Gujarat</option>
+            <option value="Punjab">Punjab</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="searchInput">🔍 Search by name or qualification</label>
+          <input type="text" id="searchInput" oninput="filterVets()" placeholder="Enter name or qualification...">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="vet-container" id="vetList"></div>
+  </div>
+
+  <!-- Overlay & Modal -->
+  <div class="overlay" id="overlay" onclick="closeModal()"></div>
+  <div class="modal" id="vetModal">
+    <button class="close-btn" onclick="closeModal()">✕ Close</button>
+    <div id="modalContent"></div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer-custom">
+    <div class="container">
+      <div class="row">
+        <!-- About Section -->
+        <div class="col-lg-4 col-md-6 mb-4">
+          <h4 class="footer-heading">🐾 PetNova</h4>
+          <p class="footer-text">
+            Your complete platform for everything pet-related. Connecting pet lovers, facilitating adoptions, and building a stronger pet community.
+          </p>
+          <div class="social-links">
+            <a href="#" class="social-link">📘</a>
+            <a href="#" class="social-link">📷</a>
+            <a href="#" class="social-link">🐦</a>
+            <a href="#" class="social-link">💼</a>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="col-lg-2 col-md-6 mb-4">
+          <h5 class="footer-heading">Quick Links</h5>
+          <ul class="footer-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/pets">Browse Pets</a></li>
+            <li><a href="/add">Add Pet</a></li>
+            <li><a href="/quiz">Take Quiz</a></li>
+          </ul>
+        </div>
+
+        <!-- Services -->
+        <div class="col-lg-3 col-md-6 mb-4">
+          <h5 class="footer-heading">Services</h5>
+          <ul class="footer-links">
+            <li><a href="/buy">Buy Pets</a></li>
+            <li><a href="/sell">Sell Pets</a></li>
+            <li><a href="/mate">Find Mate</a></li>
+            <li><a href="/rescue">Pet Rescue</a></li>
+            <li><a href="/vet">Vet Directory</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="col-lg-3 col-md-6 mb-4">
+          <h5 class="footer-heading">Get in Touch</h5>
+          <ul class="footer-links">
+            <li><a href="#">📧 info@petnova.com</a></li>
+            <li><a href="#">📞 +1 (555) 123-4567</a></li>
+            <li><a href="#">📍 Mumbai, India</a></li>
+            <li><a href="#">🕒 24/7 Support</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2024 PetNova. All rights reserved. | College Project</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const vets = [
+      {
+        name: "Dr. Nilima Paranjpe",
+        city: "Mumbai",
+        qualification: "BVSc & AH, MVSc - Surgery & Radiology",
+        experience: "30+ years",
+        contact: "08045688378",
+        clinic: "https://www.practo.com/mumbai/doctor/dr-nilima-paranjpe?practice_id=1140115&specialization=Veterinarian&referrer=doctor_listing&page_uid=23bfe6ec-5a80-4d22-b93b-cefe8de23a4e",
+        image: "dr1.jpg",
+        details: `
+          <strong>Specializations:</strong> Veterinary Physician, Veterinary Surgeon<br><br>
+          <strong>Experience:</strong> 30 Years Overall (26 years as specialist)<br><br>
+          <strong>Degrees:</strong> Bachelor in Veterinary Science and Animal Husbandry (BVSc & AH), M.V.Sc - Veterinary Surgery & Radiology<br><br>
+          <strong>Registration:</strong> Medical Registration Verified<br><br>
+          <a href="https://www.practo.com/mumbai/doctor/dr-nilima-paranjpe?practice_id=1140115&specialization=Veterinarian&referrer=doctor_listing&page_uid=23bfe6ec-5a80-4d22-b93b-cefe8de23a4e" target="_blank">🔗 View Full Profile</a>
+        `
+      },
+      {
+        name: "Dr. Nihar Jayakar",
+        city: "Mumbai",
+        qualification: "Veterinarian at Pawprints Veterinary Clinic",
+        experience: "24 years",
+        image: "dr2.jpg",
+        contact: "02271873701",
+        details: `
+          <strong>Experience:</strong> 24 Years Overall<br><br>
+          <strong>Clinic:</strong> Pawprints Veterinary Clinic, Goregaon West<br><br>
+          <strong>Consultation Fee:</strong> ₹500<br><br>
+          <strong>About:</strong> Dr. Nihar Jayakar is a Veterinary Surgeon and Veterinary Physician in Goregaon West, Mumbai with extensive experience in animal care.<br><br>
+          <a href="https://www.practo.com/mumbai/doctor/dr-nihar-jayakar-veterinarian?practice_id=742617&specialization=Veterinarian&referrer=doctor_listing&page_uid=23bfe6ec-5a80-4d22-b93b-cefe8de23a4e" target="_blank">🔗 View Full Profile</a>
+        `
+      },
+      {
+        name: "Dr. Krishna Ingole",
+        city: "Mumbai",
+        image: "dr3.jpg",
+        qualification: "B.V.Sc. & A.H., M.V.Sc (Medicine)",
+        experience: "24 years",
+        contact: "02071173199",
+        details: `
+          <strong>Qualification:</strong> B.V.Sc. & A.H., M.V.Sc (Medicine)<br><br>
+          <strong>Experience:</strong> 24 Years Overall<br><br>
+          <strong>Position:</strong> Hospital Registrar at Bombay Veterinary College since April 2008<br><br>
+          <strong>Registration:</strong> Medical Registration Verified<br><br>
+          <a href="https://www.practo.com/mumbai/doctor/dr-krishna-ingole-veterinarian-veterinarian?practice_id=741939&specialization=Veterinarian&referrer=doctor_listing&page_uid=23bfe6ec-5a80-4d22-b93b-cefe8de23a4e" target="_blank">🔗 View Full Profile</a>
+        `
+      },
+      {
+        name: "Dr. Dheeraj Bhardwaj",
+        city: "Delhi",
+        qualification: "Veterinarian at Apollo Vets",
+        experience: "20 years",
+        image: "dr4.jpg",
+        contact: "02071186491",
+        details: `
+          <strong>Experience:</strong> 20 Years Overall<br><br>
+          <strong>Clinic:</strong> Apollo Vets, Dwarka<br><br>
+          <strong>Consultation Fee:</strong> ₹1200<br><br>
+          <strong>Specialization:</strong> Highly experienced in small animal care<br><br>
+          <a href="https://www.practo.com/delhi/doctor/dr-dheeraj-bhardwaj-veterinarian?practice_id=681116&specialization=Veterinarian&referrer=doctor_listing&page_uid=9721af09-0ffa-40db-a2d4-e6c342f51989" target="_blank">🔗 View Full Profile</a>
+        `
+      },
+      {
+        name: "Dr. Aradhana Pandey",
+        city: "Delhi",
+        qualification: "Veterinarian at Doggy World",
+        experience: "27 years",
+        image: "dr5.jpg",
+        contact: "01140849589",
+        details: `
+          <strong>Experience:</strong> 27 Years Overall<br><br>
+          <strong>Clinic:</strong> Doggy World, Rohini<br><br>
+          <strong>Consultation Fee:</strong> ₹750<br><br>
+          <strong>About:</strong> Experienced in general veterinary practice with a focus on comprehensive pet care<br><br>
+          <a href="https://www.practo.com/delhi/doctor/dr-aradhana-pandey-veterinarian-1?practice_id=654002&specialization=Veterinarian&referrer=doctor_listing&page_uid=2516ba16-a74d-4c05-9010-0960dd323b01" target="_blank">🔗 View Full Profile</a>
+        `
+      },
+      {
+        name: "Dr. Ajay Rana",
+        city: "Delhi",
+        qualification: "Bachelor in Veterinary Science and Animal Husbandary (BVSc & AH)",
+        experience: "28 years",
+        image: "dr6.jpg",
+        contact: "01140036724",
+        details: `
+          <strong>Qualification:</strong> BVSc & AH<br><br>
+          <strong>Experience:</strong> 28 Years Overall<br><br>
+          <strong>Specialization:</strong> Veterinary Physician with nearly 3 decades of experience in animal healthcare<br><br>
+          <a href="https://www.practo.com/delhi/doctor/dr-ajay-rana-veterinarian?practice_id=702939&specialization=Veterinarian&referrer=doctor_listing&page_uid=2516ba16-a74d-4c05-9010-0960dd323b01" target="_blank">🔗 View Full Profile</a>
+        `
+      },
+      {
+        name: "Dr. Aishwarya. N",
+        city: "Bangalore",
+        qualification: "Veterinarian at Swapreran Clinic",
+        experience: "8 years",
+        image: "dr7.jpg",
+        contact: "08071966843",
+        details: `
+          <strong>Experience:</strong> 8 Years Overall<br><br>
+          <strong>Clinic:</strong> Swapreran Clinic, BTM Layout<br><br>
+          <strong>Consultation Fee:</strong> ₹200<br><br>
+          <strong>Specialization:</strong> Animal care and wellness support<br><br>
+          <a href="https://www.practo.com/bangalore/doctor/dr-aishwarya-n-veterinarian?practice_id=794863&specialization=Veterinarian&referrer=doctor_listing&page_uid=4a5f4592-382a-4e60-be82-378ca357fbdf" target="_blank">🔗 View Full Profile</a>
+        `
+      },
+      {
+        name: "Dr. Vasanth Shetty",
+        city: "Bangalore",
+        qualification: "Veterinarian at Vaatsalya Veterinary Clinic",
+        experience: "47 years",
+        image: "dr8.jpg",
+        contact: "08068960988",
+        details: `
+          <strong>Experience:</strong> 47 Years Overall<br><br>
+          <strong>Clinic:</strong> Vaatsalya Veterinary Clinic, Malleswaram<br><br>
+          <strong>Consultation Fee:</strong> ₹100<br><br>
+          <strong>About:</strong> Veteran vet with over 4 decades of animal treatment experience<br><br>
+          <a href="https://www.practo.com/bangalore/doctor/dr-vasanth-shetty-veterinary-surgeon?practice_id=1128922&specialization=Veterinarian&referrer=doctor_listing&page_uid=4a5f4592-382a-4e60-be82-378ca357fbdf" target="_blank">🔗 View Full Profile</a>
+        `
+      },
+      {
+        name: "Dr. H. S. Growar",
+        city: "Punjab",
+        qualification: "Veterinarian at The Healing Touch Pet Clinic",
+        experience: "37 years",
+        image: "pn.jpg",
+        contact: "01141193965",
+        details: `
+          <strong>Experience:</strong> 37 Years Overall<br><br>
+          <strong>Clinic:</strong> The Healing Touch Pet Clinic & Surgery, Sector 54<br><br>
+          <strong>Consultation Fee:</strong> ₹400<br><br>
+          <strong>About:</strong> Highly experienced veterinarian providing expert care in Chandigarh<br><br>
+          <a href="https://www.practo.com/chandigarh/doctor/harveer-singh-growar-veterinarian?practice_id=820144&specialization=Veterinary%20doctor&referrer=doctor_listing&page_uid=93383788-8672-417f-bc5b-b1cd7936db2e" target="_blank">🔗 View Full Profile</a>
+        `
+      },
+      {
+        name: "Dr. Chaitanya Solanki",
+        city: "Gujarat",
+        qualification: "Veterinarian at Dr. C.M.S Pet Clinic",
+        experience: "11 years",
+        image: "gj.jpg",
+        contact: "07941058801",
+        details: `
+          <strong>Experience:</strong> 11 Years Overall<br><br>
+          <strong>Clinic:</strong> Dr. C.M.S Pet Clinic, Bopal<br><br>
+          <strong>Consultation Fee:</strong> ₹250<br><br>
+          <strong>About:</strong> Dedicated to providing quality veterinary care for pets in Ahmedabad<br><br>
+          <a href="https://www.practo.com/ahmedabad/doctor/chaitanya-solanki-veterinarian?practice_id=1237318&specialization=Veterinary%20services&referrer=doctor_listing&page_uid=89ebac1f-06d6-44aa-9edf-8335df618769&category_name=service&category_id=102057" target="_blank">🔗 View Full Profile</a>
+        `
+      }
+    ];
+
+    function filterVets() {
+      const selectedCity = document.getElementById("location").value.toLowerCase();
+      const searchInput = document.getElementById("searchInput").value.toLowerCase();
+      const vetListDiv = document.getElementById("vetList");
+      vetListDiv.innerHTML = "";
+
+      const filteredVets = vets.filter(vet =>
+        (selectedCity === "" || vet.city.toLowerCase() === selectedCity) &&
+        (vet.name.toLowerCase().includes(searchInput) || vet.qualification.toLowerCase().includes(searchInput))
+      );
+
+      if (filteredVets.length === 0) {
+        vetListDiv.innerHTML = `
+          <div class="no-results">
+            <h3>🔍 No vets found</h3>
+            <p>Try adjusting your search criteria or selecting a different city</p>
+          </div>
+        `;
+        return;
+      }
+
+      filteredVets.forEach(vet => {
+        const card = document.createElement("div");
+        card.className = "vet-card";
+        card.innerHTML = `
+          <div class="experience-badge">${vet.experience}</div>
+          <img src="/static/images/${vet.image}" alt="${vet.name}" onerror="this.src='https://via.placeholder.com/300x280/667eea/ffffff?text=Vet+Photo'">
+          <div class="vet-info">
+            <h3>${vet.name}</h3>
+            <p>${vet.qualification}</p>
+            <div class="contact-info">
+              <span>📞</span>
+              <span>${vet.contact}</span>
+            </div>
+          </div>
+        `;
+        card.onclick = () => showDetails(vet);
+        vetListDiv.appendChild(card);
+      });
+    }
+
+    function showDetails(vet) {
+      document.getElementById("modalContent").innerHTML = `
+        <h3>${vet.name}</h3>
+        <p>${vet.details}</p>
+        <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid #e0e0e0;">
+          <strong>📞 Contact:</strong> ${vet.contact}<br><br>
+          <strong>📍 Location:</strong> ${vet.city}
+        </div>
+      `;
+      document.getElementById("overlay").style.display = "block";
+      document.getElementById("vetModal").style.display = "block";
+    }
+
+    function closeModal() {
+      document.getElementById("overlay").style.display = "none";
+      document.getElementById("vetModal").style.display = "none";
+    }
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closeModal();
+      }
+    });
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+      const navbar = document.querySelector('.navbar-custom');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // Initialize on page load
+    window.onload = filterVets;
+  </script>
+</body>
+</html>

@@ -118,7 +118,7 @@ def add_pet():
 def list_pets():
     with sqlite3.connect("pets.db") as conn:
         pets = conn.execute("SELECT * FROM pets").fetchall()
-    return render_template('buy_pets.html', pets=pets)
+    return render_template('pets.html', pets=pets)
 
 @app.route('/buy')
 def buy_pets():
