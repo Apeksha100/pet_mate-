@@ -453,13 +453,13 @@
     </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
+      <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-custom">
         <div class="container">
             <a class="navbar-brand-custom" href="/">
                 🐾 PetNova
             </a>
-            <button class="navbar-toggler navbar-toggler-custom" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false">
+            <button class="navbar-toggler navbar-toggler-custom" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon-custom"></span>
                 <span class="navbar-toggler-icon-custom"></span>
                 <span class="navbar-toggler-icon-custom"></span>
@@ -470,19 +470,22 @@
                         <a class="nav-link-custom" href="/">🏠 Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link-custom" href="/buy">🛒 Buy</a>
+                        <a class="nav-link-custom" href="/pets">👀 Browse</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom active" href="/buy">🛒 Buy</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link-custom" href="/add">➕ Add Pet</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link-custom active" href="/quiz">🧩 Quiz</a>
+                        <a class="nav-link-custom" href="/quiz">🧩 Quiz</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link-custom dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown">
+                        <a class="nav-link-custom dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             🔧 Services
                         </a>
-                        <ul class="dropdown-menu" style="border-radius: 15px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                        <ul class="dropdown-menu" aria-labelledby="servicesDropdown" style="border-radius: 15px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
                             <li><a class="dropdown-item" href="/mate" style="border-radius: 10px;">💕 Find Mate</a></li>
                             <li><a class="dropdown-item" href="/rescue" style="border-radius: 10px;">🏠 Rescue</a></li>
                             <li><a class="dropdown-item" href="/vet" style="border-radius: 10px;">🏥 Vet Directory</a></li>
@@ -702,6 +705,7 @@
                     <h5 class="footer-heading">Quick Links</h5>
                     <ul class="footer-links">
                         <li><a href="/">Home</a></li>
+                        <li><a href="/pets">Browse Pets</a></li>
                         <li><a href="/add">Add Pet</a></li>
                         <li><a href="/quiz">Take Quiz</a></li>
                     </ul>
