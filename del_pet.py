@@ -16,18 +16,19 @@ print(f"Pet with id {id} has been deleted")
 
 # Update photo column for specific pets
 
-"""(8, "husky.jpg"),
-(9, "persian_cat.jpg"),
-(10, "beagle 1.jpg"),
-(11, "parrot.jpg"),
-(12, "turtle.jpg")"""   
+"""
 pets_to_update = [
 (1, "puppy.jpg"),
 (6, "beagle2.png")
+(8, "husky.jpg"),
+(9, "persian_cat.jpg"),
+(10, "beagle 1.jpg"),
+(11, "parrot.jpg"),
+(12, "turtle.jpg")
 ]
 
 for pet_id, filename in pets_to_update:
-    cursor.execute("UPDATE pets SET photo=? WHERE id=?", (filename, pet_id))
+    cursor.execute("UPDATE pets SET photo=? WHERE id=?", (filename, pet_id))"""   
 
 # Commit the updates
 

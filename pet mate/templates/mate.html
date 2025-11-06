@@ -467,86 +467,62 @@
                 </form>
             </div>
 
-            <!-- Results Section - Sample Data -->
-            <div id="resultsSection">
-                <!-- Sample Pet Cards -->
-                <div class="row" id="petResults" style="display: none;">
-                    <div class="col-lg-6 mb-4 fade-in">
-                        <div class="pet-card">
-                            <h4 class="pet-name">
-                                Max
-                                <span class="pet-badge">Available for Mating</span>
-                            </h4>
-                            
-                            <div class="pet-info">
-                                <span class="pet-info-icon">🏷️</span>
-                                <span><strong>Category:</strong> Dog</span>
-                            </div>
-                            
-                            <div class="pet-info">
-                                <span class="pet-info-icon">🎯</span>
-                                <span><strong>Breed:</strong> Golden Retriever</span>
-                            </div>
-                            
-                            <div class="pet-info">
-                                <span class="pet-info-icon">📍</span>
-                                <span><strong>Location:</strong> Mumbai, India</span>
-                            </div>
-                            
-                            <div class="pet-info">
-                                <span class="pet-info-icon">🎂</span>
-                                <span><strong>Age:</strong> 3 years</span>
-                            </div>
-                            
-                            <button class="btn-contact">
-                                📞 Contact Owner
-                            </button>
-                        </div>
+        <!-- Results Section - Dynamic -->
+<div id="resultsSection">
+    {% if pets %}
+        <div class="row">
+            {% for pet in pets %}
+            <div class="col-lg-6 mb-4 fade-in">
+                <div class="pet-card">
+                    <h4 class="pet-name">
+                        {{ pet[1] }}  <!-- pet name -->
+                        <span class="pet-badge">Available for Mating</span>
+                    </h4>
+
+                    <div class="pet-info">
+                        <span class="pet-info-icon">🏷️</span>
+                        <span><strong>Category:</strong> {{ pet[7] }}</span>
                     </div>
 
-                    <div class="col-lg-6 mb-4 fade-in">
-                        <div class="pet-card">
-                            <h4 class="pet-name">
-                                Bella
-                                <span class="pet-badge">Available for Mating</span>
-                            </h4>
-                            
-                            <div class="pet-info">
-                                <span class="pet-info-icon">🏷️</span>
-                                <span><strong>Category:</strong> Dog</span>
-                            </div>
-                            
-                            <div class="pet-info">
-                                <span class="pet-info-icon">🎯</span>
-                                <span><strong>Breed:</strong> Labrador</span>
-                            </div>
-                            
-                            <div class="pet-info">
-                                <span class="pet-info-icon">📍</span>
-                                <span><strong>Location:</strong> Delhi, India</span>
-                            </div>
-                            
-                            <div class="pet-info">
-                                <span class="pet-info-icon">🎂</span>
-                                <span><strong>Age:</strong> 2 years</span>
-                            </div>
-                            
-                            <button class="btn-contact">
-                                📞 Contact Owner
-                            </button>
-                        </div>
+                    <div class="pet-info">
+                        <span class="pet-info-icon">🎯</span>
+                        <span><strong>Breed:</strong> {{ pet[2] }}</span>
                     </div>
-                </div>
 
-                <!-- No Results State -->
-                <div id="noResults" style="display: none;">
-                    <div class="empty-state">
-                        <div class="empty-state-icon">😔</div>
-                        <h3>No Pets Found</h3>
-                        <p class="text-muted">We couldn't find any pets matching your criteria. Try adjusting your search filters or check back later.</p>
+                    <div class="pet-info">
+                        <span class="pet-info-icon">📍</span>
+                        <span><strong>Location:</strong> {{ pet[3] }}</span>
                     </div>
+
+                    <div class="pet-info">
+                        <span class="pet-info-icon">🎂</span>
+                        <span><strong>Age:</strong> {{ pet[4] }} years</span>
+                    </div>
+
+                    {% if pet[6] %}
+                    <div class="pet-info">
+                        <img src="{{ url_for('static', filename='uploads/' + pet[6]) }}" alt="{{ pet[1] }}" style="max-width:100%; border-radius:10px; margin-top:10px;">
+                    </div>
+                    {% endif %}
+
+                    <button class="btn-contact">
+                        📞 Contact Owner
+                    </button>
                 </div>
             </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div id="noResults">
+            <div class="empty-state">
+                <div class="empty-state-icon">😔</div>
+                <h3>No Pets Found</h3>
+                <p class="text-muted">We couldn't find any pets matching your criteria. Try adjusting your search filters or check back later.</p>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
 
             <!-- Initial State -->
             <div class="empty-state" id="initialState">
@@ -646,27 +622,12 @@
             }
         }
 
-        // Form submission handler
         document.getElementById('searchForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const category = document.getElementById('category').value;
-            
-            if (!category) {
-                alert('Please select a pet category');
-                return;
-            }
+    // Remove e.preventDefault()
+    // Remove all JS that shows static pet cards
+    // Let the form submit normally to Flask route
+});
 
-            // Hide initial state
-            document.getElementById('initialState').style.display = 'none';
-            
-            // Show results (in real app, this would be dynamic from server)
-            document.getElementById('petResults').style.display = 'flex';
-            document.getElementById('noResults').style.display = 'none';
-            
-            // Scroll to results
-            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
 
         // Add hover effects to cards
         document.querySelectorAll('.pet-card').forEach(card => {

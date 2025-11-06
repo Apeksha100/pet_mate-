@@ -150,6 +150,11 @@ def find_mate():
     with sqlite3.connect("pets.db") as conn:
         categories = [row[0] for row in conn.execute("SELECT DISTINCT category FROM pets").fetchall()]
 
+        # Build breeds dictionary per category
+        breeds_per_category = {}
+        for cat in categories:
+            breeds_per_category[cat] = [row[0] for row in conn.execute("SELECT DISTINCT breed FROM pets WHERE category=?", (cat,)).fetchall()]
+
     if request.method == 'POST':
         selected_category = request.form.get('category')
         selected_breed = request.form.get('breed')
@@ -167,7 +172,8 @@ def find_mate():
         with sqlite3.connect("pets.db") as conn:
             pets = conn.execute(query, params).fetchall()
 
-    return render_template('mate.html', pets=pets, categories=categories,
+    return render_template('mate.html', pets=pets, categories=categories, 
+                           breeds_per_category=breeds_per_category,
                            selected_category=selected_category,
                            selected_breed=selected_breed)
 
