@@ -121,10 +121,12 @@
         
         .pet-image {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.4s ease;
-        }
+            height: auto;        /* preserves original aspect ratio */
+            max-height: 250px;   /* optional, to avoid very tall images */
+            object-fit: contain;  /* shows full image without cropping */
+            display: block;
+            margin: 0 auto;
+            transition: transform 0.4s ease;}
         
         .pet-card:hover .pet-image {
             transform: scale(1.1);
@@ -443,8 +445,8 @@
 
     <div class="hero-section">
         <div class="container">
-            <h1 class="display-4 mb-3">🐾 Browse All Pets and </h1>
-            <p class="lead">Discover amazing pets from our community</p>
+            <h1 class="display-4 mb-3">🐾 Browse All Pets </h1>
+            <p class="lead">And Discover Amazing Pets From Our Community</p>
             
             <div class="d-flex justify-content-center flex-wrap mt-4">
                 <div class="stats-badge">
@@ -471,11 +473,12 @@
                 <div class="col-md-6">
                     <div class="d-flex flex-wrap justify-content-md-end">
                         <button class="filter-btn active" data-filter="all">All</button>
-                        <button class="filter-btn" data-filter="Dog">🐕 Dogs</button>
+                       <!-- <button class="filter-btn" data-filter="Dog">🐕 Dogs</button>
                         <button class="filter-btn" data-filter="Cat">🐱 Cats</button>
-                        <button class="filter-btn" data-filter="Bird">🦜 Birds</button>
+                        <button class="filter-btn" data-filter="Bird">🦜 Birds</button>-->
                         <button class="filter-btn" data-filter="Sale">💰 Sale</button>
                         <button class="filter-btn" data-filter="Adoption">❤️ Adoption</button>
+                        <button class="filter-btn" data-filter="Mate">💕 Mate</button>
                     </div>
                 </div>
             </div>
