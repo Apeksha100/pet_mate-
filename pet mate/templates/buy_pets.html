@@ -524,7 +524,7 @@
                             <button class="filter-btn" data-filter="Adoption">❤️ Adoption</button>
                           <!--  <button class="filter-btn" data-filter="Dog">🐕 Dogs</button>
                             <button class="filter-btn" data-filter="Cat">🐱 Cats</button>
-                            <button class="filter-btn" data-filter="Bird">🦜 Birds</button> -->
+                            <button class="filter-btn" data-filter="Bird">🦜 Birds</button>-->
                         </div>
                     </div>
                 </div>
@@ -535,88 +535,56 @@
                     <span class="visually-hidden">Loading...</span>
                 </div>
             </div>
-
+            
             <!-- Pet Cards Grid -->
-            <div class="row" id="petGrid">
-                <!-- Sample Pet Cards - Replace with dynamic content from Flask -->
-                <div class="col-lg-4 col-md-6 mb-4 pet-item fade-in" data-name="Max" data-breed="Golden Retriever" data-location="Mumbai" data-purpose="Sale" data-category="Dog">
-                    <div class="pet-card">
-                        <div class="pet-image-container">
-                            <div class="no-image">🐕</div>
-                            <div class="pet-badge badge-sale">💰 For Sale</div>
-                        </div>
-                        <div class="pet-content">
-                            <div class="pet-name">Max</div>
-                            <span class="pet-category">🐕 Dog</span>
-                            <div class="pet-info">
-                                <span class="pet-info-icon">🏷️</span>
-                                <span>Golden Retriever</span>
-                            </div>
-                            <div class="pet-info">
-                                <span class="pet-info-icon">📍</span>
-                                <span>Mumbai, India</span>
-                            </div>
-                            <div class="pet-info">
-                                <span class="pet-info-icon">💰</span>
-                                <span>₹25,000</span>
-                            </div>
-                            <button class="btn-action btn-buy">Contact Seller</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 mb-4 pet-item fade-in" data-name="Whiskers" data-breed="Persian Cat" data-location="Delhi" data-purpose="Adoption" data-category="Cat">
-                    <div class="pet-card">
-                        <div class="pet-image-container">
-                            <div class="no-image">🐱</div>
-                            <div class="pet-badge badge-adoption">❤️ Adoption</div>
-                        </div>
-                        <div class="pet-content">
-                            <div class="pet-name">Whiskers</div>
-                            <span class="pet-category">🐱 Cat</span>
-                            <div class="pet-info">
-                                <span class="pet-info-icon">🏷️</span>
-                                <span>Persian Cat</span>
-                            </div>
-                            <div class="pet-info">
-                                <span class="pet-info-icon">📍</span>
-                                <span>Delhi, India</span>
-                            </div>
-                            <div class="pet-info">
-                                <span class="pet-info-icon">⏰</span>
-                                <span>2 years old</span>
-                            </div>
-                            <button class="btn-action btn-adopt">Adopt Me</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 mb-4 pet-item fade-in" data-name="Buddy" data-breed="Labrador" data-location="Bangalore" data-purpose="Sale" data-category="Dog">
-                    <div class="pet-card">
-                        <div class="pet-image-container">
-                            <div class="no-image">🐕</div>
-                            <div class="pet-badge badge-sale">💰 For Sale</div>
-                        </div>
-                        <div class="pet-content">
-                            <div class="pet-name">Buddy</div>
-                            <span class="pet-category">🐕 Dog</span>
-                            <div class="pet-info">
-                                <span class="pet-info-icon">🏷️</span>
-                                <span>Labrador</span>
-                            </div>
-                            <div class="pet-info">
-                                <span class="pet-info-icon">📍</span>
-                                <span>Bangalore, India</span>
-                            </div>
-                            <div class="pet-info">
-                                <span class="pet-info-icon">💰</span>
-                                <span>₹18,000</span>
-                            </div>
-                            <button class="btn-action btn-buy">Contact Seller</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!-- Pet Cards Grid --> 
+             <div class="row" id="petGrid"> 
+                {% for pet in pets %} 
+                <div class="col-lg-4 col-md-6 mb-4 pet-item fade-in" 
+                data-name="{{ pet.name }}" 
+                data-breed="{{ pet.breed }}" 
+                data-location="{{ pet.location }}" 
+                data-purpose="{{ pet.purpose }}" 
+                data-category="{{ pet.category }}"> 
+                <div class="pet-card"> 
+                    <div class="pet-image-container"> 
+                        <img class="pet-image" src="{{ url_for('static', filename='uploads/' ~ pet['photo']) }}" alt="{{ pet.name }}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"> 
+                        <div class="no-image" style="display:none;">🐾</div> 
+                        <div class="pet-badge 
+                            {% if pet.purpose == 'Sale' %}badge-sale{% elif pet.purpose == 'Adoption' %}badge-adoption{% else %}badge-mate{% endif %}"> 
+                            {% if pet.purpose == 'Sale' %}💰 For Sale{% elif pet.purpose == 'Adoption' %}❤️ Adoption{% else %}💕 Mate{% endif %} 
+                        </div> 
+                    </div> 
+                    <div class="pet-content"> 
+                        <div class="pet-name">{{ pet.name }}</div> 
+                        <span class="pet-category">{{ pet.category }}</span> 
+                        <div class="pet-info"> 
+                            <span class="pet-info-icon">🏷️</span> 
+                            <span>{{ pet.breed }}</span> 
+                        </div> 
+                        <div class="pet-info"> 
+                            <span class="pet-info-icon">📍</span> 
+                            <span>{{ pet.location }}</span> 
+                        </div> 
+                        {% if pet.purpose == 'Sale' %} 
+                        <div class="pet-info"> 
+                            <span class="pet-info-icon">💰</span> 
+                            <span>₹{{ pet.price }}</span> 
+                        </div> 
+                        {% elif pet.purpose == 'Adoption' %} 
+                        <div class="pet-info"> 
+                            <span class="pet-info-icon">⏰</span> 
+                            <span>{{ pet.age }} years old</span> 
+                        </div> 
+                        {% endif %} 
+                        <button class="btn-action 
+                        {% if pet.purpose == 'Sale' %}btn-buy{% else %}btn-adopt{% endif %}"> {% if pet.purpose == 'Sale' %}Contact Seller{% else %}Adopt Me{% endif %} 
+                    </button> 
+                </div> 
+            </div> 
+        </div> 
+        {% endfor %} 
+    </div>
 
             <!-- Empty State -->
             <div class="empty-state" id="emptyState" style="display: none;">
@@ -696,114 +664,112 @@
         </div>
     </footer>
 
-    <script>
-        // Initialize stats
-        const allPets = document.querySelectorAll('.pet-item');
-        const forSale = document.querySelectorAll('[data-purpose="Sale"]');
-        const forAdoption = document.querySelectorAll('[data-purpose="Adoption"]');
-        
-        document.getElementById('totalPets').textContent = allPets.length;
-        document.getElementById('forSale').textContent = forSale.length;
-        document.getElementById('forAdoption').textContent = forAdoption.length;
+    <!DOCTYPE html>
 
-        // Search functionality
-        document.getElementById('searchInput').addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
+<html>
+<head>
+    <title>Buy Pets - PetNova</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        /* All your existing CSS stays here, unchanged */
+    </style>
+</head>
+<body>
+    <!-- Navigation, floating pets, hero section, filters, pet grid, footer all stay as in your original file -->
+
+<script>
+    // Initialize stats and cache elements
+    const allPets = document.querySelectorAll('.pet-item');
+    const totalPetsEl = document.getElementById('totalPets');
+    const forSaleEl = document.getElementById('forSale');
+    const forAdoptionEl = document.getElementById('forAdoption');
+    const noResultsEl = document.getElementById('noResults');
+
+    function updateStats() {
+        const forSale = document.querySelectorAll('.pet-item[data-purpose="Sale"]');
+        const forAdoption = document.querySelectorAll('.pet-item[data-purpose="Adoption"]');
+
+        totalPetsEl.textContent = allPets.length;
+        forSaleEl.textContent = forSale.length;
+        forAdoptionEl.textContent = forAdoption.length;
+    }
+
+    updateStats(); // Initial stats
+
+    // Search functionality
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', filterPets);
+
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
             filterPets();
         });
+    });
 
-        // Filter functionality
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                filterPets();
-            });
-        });
+    function filterPets() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const activeFilter = document.querySelector('.filter-btn.active').dataset.filter.toLowerCase();
+        let visibleCount = 0;
 
-        function filterPets() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
-            let visibleCount = 0;
+        allPets.forEach(pet => {
+            const name = pet.dataset.name.toLowerCase();
+            const breed = pet.dataset.breed.toLowerCase();
+            const location = pet.dataset.location.toLowerCase();
+            const purpose = pet.dataset.purpose.toLowerCase();
+            const category = pet.dataset.category.toLowerCase();
 
-            allPets.forEach(pet => {
-                const name = pet.dataset.name.toLowerCase();
-                const breed = pet.dataset.breed.toLowerCase();
-                const location = pet.dataset.location.toLowerCase();
-                const purpose = pet.dataset.purpose;
-                const category = pet.dataset.category;
+            const matchesSearch = name.includes(searchTerm) || breed.includes(searchTerm) || location.includes(searchTerm);
+            const matchesFilter = activeFilter === 'all' || purpose === activeFilter || category === activeFilter;
 
-                const matchesSearch = name.includes(searchTerm) || 
-                                    breed.includes(searchTerm) || 
-                                    location.includes(searchTerm);
-                
-                const matchesFilter = activeFilter === 'all' || 
-                                    purpose === activeFilter || 
-                                    category === activeFilter;
-
-                if (matchesSearch && matchesFilter) {
-                    pet.style.display = 'block';
-                    visibleCount++;
-                } else {
-                    pet.style.display = 'none';
-                }
-            });
-
-            const noResults = document.getElementById('noResults');
-            if (visibleCount === 0 && allPets.length > 0) {
-                noResults.style.display = 'block';
+            if (matchesSearch && matchesFilter) {
+                pet.style.display = 'block';
+                visibleCount++;
             } else {
-                noResults.style.display = 'none';
-            }
-        }
-
-        // Add hover effect to cards
-        document.querySelectorAll('.pet-card').forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-10px) scale(1.02)';
-            });
-            
-            card.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0) scale(1)';
-            });
-        });
-
-        // Animate stats on load
-        function animateValue(element, start, end, duration) {
-            let startTimestamp = null;
-            const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                element.textContent = Math.floor(progress * (end - start) + start);
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
-                }
-            };
-            window.requestAnimationFrame(step);
-        }
-
-        // Animate stats on page load
-        window.addEventListener('load', function() {
-            animateValue(document.getElementById('totalPets'), 0, allPets.length, 1000);
-            animateValue(document.getElementById('forSale'), 0, forSale.length, 1000);
-            animateValue(document.getElementById('forAdoption'), 0, forAdoption.length, 1000);
-        });
-
-        // Add staggered fade-in animation
-        document.querySelectorAll('.pet-item').forEach((item, index) => {
-            item.style.animationDelay = `${index * 0.1}s`;
-        });
-
-        // Navbar scroll effect
-        window.addEventListener('scroll', function() {
-            const navbar = document.querySelector('.navbar-custom');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
+                pet.style.display = 'none';
             }
         });
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+        noResultsEl.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+
+    // Animate stats on page load
+    function animateValue(element, start, end, duration) {
+        let startTimestamp = null;
+        const step = timestamp => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            element.textContent = Math.floor(progress * (end - start) + start);
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            }
+        };
+        window.requestAnimationFrame(step);
+    }
+
+    window.addEventListener('load', () => {
+        const forSale = document.querySelectorAll('.pet-item[data-purpose="Sale"]');
+        const forAdoption = document.querySelectorAll('.pet-item[data-purpose="Adoption"]');
+
+        animateValue(totalPetsEl, 0, allPets.length, 1000);
+        animateValue(forSaleEl, 0, forSale.length, 1000);
+        animateValue(forAdoptionEl, 0, forAdoption.length, 1000);
+    });
+
+    // Add staggered fade-in animation
+    allPets.forEach((item, index) => { item.style.animationDelay = `${index * 0.1}s`; });
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+        const navbar = document.querySelector('.navbar-custom');
+        if (window.scrollY > 50) navbar.classList.add('scrolled');
+        else navbar.classList.remove('scrolled');
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

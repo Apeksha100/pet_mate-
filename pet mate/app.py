@@ -122,12 +122,13 @@ def list_pets():
 
 @app.route('/buy')
 def buy_pets():
-    with sqlite3.connect("pets.db") as conn:
-        pets = conn.execute(
-            "SELECT * FROM pets WHERE purpose IN ('Sale', 'Adoption')"
-        ).fetchall()
+    conn = sqlite3.connect("pets.db")
+    conn.row_factory = sqlite3.Row  # Option A: allows attribute-like access in templates
+    pets = conn.execute(
+        "SELECT * FROM pets WHERE purpose IN ('Sale', 'Adoption')"
+    ).fetchall()
+    conn.close()
     return render_template('buy_pets.html', pets=pets)
-
 
 # New route to handle buying a pet
 @app.route('/buy/<int:pet_id>')
