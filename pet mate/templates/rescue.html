@@ -416,6 +416,29 @@
         }
 
     </style>
+    <style>
+.report-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 15px;
+    text-align: left;
+    transition: transform 0.2s;
+}
+
+.report-card:hover {
+    transform: translateY(-5px);
+}
+
+.report-card img {
+    width: 100%;
+    height: 220px;              /* fix height for all images */
+    object-fit: cover;          /* ensures all images are cropped neatly */
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+</style>
+
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
@@ -536,17 +559,31 @@
         </div>
 
         <!-- Live Reports -->
-        <div class="section-container fade-in">
-            <h2 class="section-title">
-                <span class="section-icon">📋</span>
-                Live Lost & Found Reports
-            </h2>
-            <div class="reports-container" id="reports">
-                <div class="text-center" style="grid-column: 1/-1;">
-                    <p class="text-muted">Loading reports...</p>
-                </div>
+   <!-- Live Reports --><div class="section-container fade-in">
+    <h2 class="section-title">
+        <span class="section-icon">📋</span>
+        Live Lost & Found Reports
+    </h2>
+
+    <div class="reports-container">
+        {% if reports %}
+            {% for r in reports %}
+            <div class="report-card">
+                <img src="{{ url_for('uploaded_file', filename=r['photo']) }}" alt="Animal Photo">
+                <h3>{{ r['status'] }} - {{ r['animalType'] }}</h3>
+                <p><strong>Location:</strong> {{ r['location'] }}</p>
+                <p><strong>Date:</strong> {{ r['date'] }}</p>
+                <p><strong>Description:</strong> {{ r['description'] }}</p>
+                <p><strong>Contact:</strong> {{ r['contact'] }}</p>
             </div>
-        </div>
+            {% endfor %}
+        {% else %}
+            <div class="text-center" style="grid-column: 1/-1;">
+                <p class="text-muted">No reports available.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
 
         <!-- WhatsApp Group -->
         <div class="section-container fade-in text-center">

@@ -246,20 +246,13 @@ def uploaded_file(filename):
 # Route for rescue page
 @app.route("/rescue")
 def rescue():
-    return render_template("rescue.html")
-
-# API to fetch reports
-@app.route("/get_reports")
-def get_reports():
     conn = sqlite3.connect("rescue.db")
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM lost_found_reports ORDER BY timestamp DESC")
-    rows = cursor.fetchall()
+    cursor.execute("SELECT * FROM lost_found_reports ORDER BY date DESC")
+    reports = cursor.fetchall()
     conn.close()
-    return jsonify([dict(row) for row in rows])
-
-
+    return render_template("rescue.html", reports=reports)
 # API to submit report
 @app.route("/add_report", methods=["POST"])
 def add_report():
