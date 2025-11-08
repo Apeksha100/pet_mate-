@@ -6,9 +6,12 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = "static/uploads"
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # make sure folder exists
+UPLOAD_FOLDER = 'uploads'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+# In-memory "database" for simplicity (replace with SQL or JSON)
+reports = []
 
 #allows all the mentioned file formats 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
@@ -37,6 +40,32 @@ def init_db():
             conn.execute("ALTER TABLE pets ADD COLUMN category TEXT")
         except sqlite3.OperationalError:
             pass  # Column already exists
+        
+# Rescue reports table
+    with sqlite3.connect("rescue.db") as conn:
+        conn.execute('''
+            CREATE TABLE IF NOT EXISTS lost_found_reports (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                status TEXT,
+                animalType TEXT,
+                location TEXT,
+                date TEXT,
+                description TEXT,
+                contact TEXT,
+                photo TEXT,
+                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+        # Add photo column if missing
+        try:
+            conn.execute("ALTER TABLE lost_found_reports ADD COLUMN photo TEXT")
+        except sqlite3.OperationalError:
+            pass
+        # Add timestamp column if missing
+        try:
+            conn.execute("ALTER TABLE lost_found_reports ADD COLUMN timestamp DATETIME DEFAULT CURRENT_TIMESTAMP")
+        except sqlite3.OperationalError:
+            pass
 
 @app.route('/')
 def index():
@@ -207,13 +236,60 @@ def search_pets():
             pets = conn.execute(query, params).fetchall()
     selected_purpose = request.form.get('purpose')
     return render_template('search.html', pets=pets, selected_purpose=selected_purpose)
-# Route for rescue page
-@app.route('/rescue')
-def rescue():
-    # Example: Fetch rescue reports from DB if you want
-    # For now, just render the page
-    return render_template('rescue.html')
 
+# Serve uploaded images
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+# Route for rescue page
+@app.route("/rescue")
+def rescue():
+    return render_template("rescue.html")
+
+# API to fetch reports
+@app.route("/get_reports")
+def get_reports():
+    conn = sqlite3.connect("rescue.db")
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM lost_found_reports ORDER BY timestamp DESC")
+    rows = cursor.fetchall()
+    conn.close()
+    return jsonify([dict(row) for row in rows])
+
+# API to submit report
+@app.route("/add_report", methods=["POST"])
+def add_report():
+    # Use request.form for text, request.files for file
+    status = request.form.get("status")
+    animalType = request.form.get("animalType")
+    location = request.form.get("location")
+    date = request.form.get("date")
+    description = request.form.get("description")
+    contact = request.form.get("contact")
+
+    # Handle file upload
+    photo = None
+    if 'photo' in request.files:
+        file = request.files['photo']
+        if file.filename != '' and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(filepath)
+            photo = filename
+
+    # Save to DB
+    conn = sqlite3.connect("rescue.db")
+    cursor = conn.cursor()
+    cursor.execute('''
+        INSERT INTO lost_found_reports (status, animalType, location, date, description, contact, photo)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    ''', (status, animalType, location, date, description, contact, photo))
+    conn.commit()
+    conn.close()
+
+    return jsonify({"message": "Report added successfully!"})
 
 # Route for vet directory page
 @app.route('/vet')
@@ -221,7 +297,6 @@ def vet():
     # Example: Fetch vets from DB if you want
     # For now, just render the page
     return render_template('vet.html')
-
 
 
 

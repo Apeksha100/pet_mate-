@@ -1,4 +1,4 @@
-import sqlite3
+"""import sqlite3
 
 # Connect to the database
 
@@ -7,7 +7,7 @@ cursor = conn.cursor()
 
 # Optional: Delete a pet by id (currently commented out)
 
-"""
+
 id = 5
 cursor.execute("DELETE FROM pets WHERE id = ?", (id,))
 conn.commit()
@@ -28,7 +28,7 @@ pets_to_update = [
 ]
 
 for pet_id, filename in pets_to_update:
-    cursor.execute("UPDATE pets SET photo=? WHERE id=?", (filename, pet_id))"""   
+    cursor.execute("UPDATE pets SET photo=? WHERE id=?", (filename, pet_id))
 
 # Commit the updates
 
@@ -43,4 +43,11 @@ for row in cursor.fetchall():
 
 # Close the connection
 
+conn.close()
+"""
+import sqlite3
+
+conn = sqlite3.connect("rescue.db")
+for row in conn.execute("SELECT * FROM lost_found_reports"):
+    print(row)
 conn.close()
