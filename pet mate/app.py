@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, send_from_directory
+from flask import Flask, render_template, request, redirect, jsonify
 import sqlite3
 import os
 from werkzeug.utils import secure_filename
@@ -6,7 +7,7 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = 'uploads'
+UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -257,6 +258,7 @@ def get_reports():
     rows = cursor.fetchall()
     conn.close()
     return jsonify([dict(row) for row in rows])
+
 
 # API to submit report
 @app.route("/add_report", methods=["POST"])
