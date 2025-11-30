@@ -7,16 +7,15 @@ cursor = conn.cursor()
 
 # Optional: Delete a pet by id (currently commented out)
 
-
-id = 5
+id = 16
 cursor.execute("DELETE FROM pets WHERE id = ?", (id,))
 conn.commit()
 print(f"Pet with id {id} has been deleted")
-"""
+
 
 # Update photo column for specific pets
 
-"""
+
 pets_to_update = [
 (1, "puppy.jpg"),
 (6, "beagle2.png")
@@ -44,10 +43,11 @@ for row in cursor.fetchall():
 # Close the connection
 
 conn.close()
-"""
+
 import sqlite3
 
 conn = sqlite3.connect("rescue.db")
 for row in conn.execute("SELECT * FROM lost_found_reports"):
     print(row)
 conn.close()
+"""
