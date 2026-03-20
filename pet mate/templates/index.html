@@ -3,6 +3,7 @@
 <head>
     <title>PetNova - Your Complete Pet Platform</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/style.css">
     <style>
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -317,11 +318,21 @@
                             🔧 Services
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="servicesDropdown" style="border-radius: 15px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                            <li><a class="dropdown-item" href="/care-tips" style="border-radius: 10px;">🩺 Care Tips</a></li>
                             <li><a class="dropdown-item" href="/mate" style="border-radius: 10px;">💕 Find Mate</a></li>
                             <li><a class="dropdown-item" href="/rescue" style="border-radius: 10px;">🏠 Rescue</a></li>
                             <li><a class="dropdown-item" href="/vet" style="border-radius: 10px;">🏥 Vet Directory</a></li>
                             <li><a class="dropdown-item" href="/petaccessories" style="border-radius: 10px;">🏪 Pet Shops</a></li>
-                        </ul>
+                        
+                    
+
+                    </ul>
+                    </li>
+                    <li class="nav-item ms-3">
+                        <div class="form-check form-switch mb-0">
+                            <input class="form-check-input" type="checkbox" id="darkModeToggle">
+                            <label class="form-check-label" for="darkModeToggle">Dark</label>
+                        </div>
                     </li>
                 </ul>
             </div>
@@ -473,6 +484,20 @@
                     </a>
                 </div>
             </div>
+
+            <!-- Personalized Care Tips -->
+            <div class="col-lg-4 mb-4">
+                <div class="service-card">
+                    <div class="service-icon">🩺</div>
+                    <h3 class="service-title">Personalized Care Tips</h3>
+                    <p class="service-description">
+                        Answer a few questions and get tailored care guidance for your pet's type and life stage.
+                    </p>
+                    <a href="/care-tips" class="btn-service btn-view">
+                        Get Care Tips
+                    </a>
+                </div>
+            </div>
         </div>
 
         <!-- How PetNova Works -->
@@ -600,5 +625,22 @@
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function(){
+    const toggle = document.getElementById('darkModeToggle');
+    const applyMode = enabled => {
+        document.body.classList.toggle('dark-mode', enabled);
+        if (toggle) toggle.checked = enabled;
+    };
+    const saved = localStorage.getItem('darkMode');
+    applyMode(saved === 'true');
+    if (toggle) {
+        toggle.addEventListener('change', function() {
+            applyMode(this.checked);
+            localStorage.setItem('darkMode', this.checked);
+        });
+    }
+})();
+</script>
 </body>
 </html>

@@ -286,13 +286,85 @@ def add_report():
 
     return jsonify({"message": "Report added successfully!"})
 
+def generate_care_tips(category, age_group):
+    tips = []
+
+    # Tailored by species
+    animal_tips = {
+        'Dog': [
+            'Schedule regular vet checkups every 6-12 months.',
+            'Provide daily walks and mental stimulation with puzzles.',
+            'Brush their coat weekly and check for ticks after outdoor time.'
+        ],
+        'Cat': [
+            'Give fresh water daily and use multiple water stations.',
+            'Clean the litter box daily to reduce stress and prevent infection.',
+            'Add vertical spaces and play sessions to satisfy hunting instincts.'
+        ],
+        'Bird': [
+            'Rotate toys weekly to keep them mentally active.',
+            'Offer a balanced diet: pellets, fresh fruits, and greens.',
+            'Ensure cage is cleaned and placed away from drafts.'
+        ],
+        'Reptile': [
+            'Maintain strict temperature and humidity gradients in the enclosure.',
+            'Use UVB lighting on a reliable timer for bone health.',
+            'Feed species-appropriate prey and avoid overfeeding.'
+        ],
+        'Small': [
+            'Provide a spacious enclosure with hiding spots and chew toys.',
+            'Change bedding frequently and keep living area dry.',
+            'Introduce safe fresh vegetables gradually into their diet.'
+        ]
+    }
+
+    tips.extend(animal_tips.get(category, [
+        'Keep your pet comfortable with a safe, clean environment.',
+        'Watch for behavior changes and seek veterinary advice if needed.',
+        'Provide appropriate nutrition, exercise, and love daily.'
+    ]))
+
+    # Add age-group adjustments
+    if age_group == 'Puppy/Kitten':
+        tips.append('Start training early with short positive reinforcement sessions.')
+        tips.append('Schedule vaccinations and deworming as recommended by your vet.')
+    elif age_group == 'Adult':
+        tips.append('Keep up with dental care and regular weight checks.')
+        tips.append('Maintain a consistent feeding schedule to avoid weight gain.')
+    elif age_group == 'Senior':
+        tips.append('Monitor joint health and consider senior-specific diets.')
+        tips.append('Offer softer bedding and easier access to water and food bowls.')
+
+    return tips
+
+
+# Route for personalized care tips
+@app.route('/care-tips', methods=['GET', 'POST'])
+def care_tips():
+    selected_category = ''
+    selected_age = ''
+    pet_name = ''
+    tips = []
+
+    if request.method == 'POST':
+        selected_category = request.form.get('category', '')
+        selected_age = request.form.get('age_group', '')
+        pet_name = request.form.get('pet_name', '').strip()
+        tips = generate_care_tips(selected_category, selected_age)
+
+    return render_template('pet_care_tips.html',
+                           pet_name=pet_name,
+                           selected_category=selected_category,
+                           selected_age=selected_age,
+                           tips=tips)
+
+
 # Route for vet directory page
 @app.route('/vet')
 def vet():
     # Example: Fetch vets from DB if you want
     # For now, just render the page
     return render_template('vet.html')
-
 
 
 if __name__ == '__main__':

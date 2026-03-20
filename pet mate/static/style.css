@@ -1,0 +1,95 @@
+/* Theme variables */
+:root {
+  --bg: #0c4fd3;
+  --surface: #c5f4ec;
+  --surface-alt: #f8f9fc;
+  --text: #2a2d32;
+  --text-muted: #65748b;
+  --border: rgba(0,0,0,0.08);
+  --brand-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --card-bg: rgba(255, 255, 255, 0.94);
+  --card-border: rgba(102, 126, 234, 0.3);
+  --accent: #6f42c1;
+}
+
+/* Dark mode overrides */
+body.dark-mode {
+  --bg: #0a0f1c;
+  --surface: #111b2f;
+  --surface-alt: #16223e;
+  --text: #e8eef8;
+  --text-muted: #9dacd2;
+  --border: rgba(112, 138, 169, 0.4);
+  --brand-bg: linear-gradient(135deg, #5f7beb 0%, #2b6af5 100%);
+  --card-bg: rgba(16, 26, 48, 0.85);
+  --card-border: rgba(95, 123, 175, 0.4);
+  --accent: #6ecff6;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+  background: var(--bg) !important;
+  color: var(--text) !important;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+header, .navbar, .footer-custom, .service-card, .form-card, .form-container, .form-section, .card, .pet-care-card {
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: 0 15px 32px rgba(0,0,0,0.08) !important;
+}
+
+.navbar-custom {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+body.dark-mode .navbar-custom {
+  background: rgba(16, 26, 48, 0.85);
+}
+
+.navbar-brand-custom,
+.nav-link-custom,
+.footer-heading,
+.service-title,
+.form-label,
+.tips-title,
+.card-title,
+.card-text {
+  color: var(--text);
+}
+
+.nav-link-custom {
+  color: var(--text-muted) !important;
+}
+
+.nav-link-custom:hover,
+.nav-link-custom.active {
+  color: #fff !important;
+  background: rgba(95, 123, 235, 0.45) !important;
+}
+
+.form-control, .form-select, .list-group-item {
+  background: var(--surface-alt) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+}
+
+::placeholder {
+  color: var(--text-muted) !important;
+}
+
+.btn-primary, .btn-submit-care, .btn-service {
+  background: var(--brand-bg);
+  color: #fff;
+}
+
+.pet-care-page { padding: 40px 0; }
+.pet-care-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; box-shadow: 0 15px 32px rgba(15, 23, 42, 0.08); padding: 24px; margin-top: 32px; }
+.pet-care-card h3 { color: var(--accent); font-weight: 700; }
+.form-label { color: var(--text); font-weight: 600; }
+.care-tips-result { margin-top: 2rem; }
+.care-tips-result h5 { color: var(--text); font-weight: 700; }
+.list-group-item.care-tip { background: var(--surface-alt); border-color: rgba(113, 128, 150, 0.2); margin-bottom: 0.5rem; }
+.footer-custom { font-size: 0.9rem; }
+
