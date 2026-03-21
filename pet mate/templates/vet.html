@@ -5,540 +5,391 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Find a Vet Near You - PetNova</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/style.css">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    /* ═══════════════════════════════════════════
+       CSS VARIABLES FOR LIGHT / DARK MODE
+    ═══════════════════════════════════════════ */
+    :root {
+      --body-bg-start: #667eea;
+      --body-bg-end: #764ba2;
+      --navbar-bg: rgba(255,255,255,0.97);
+      --navbar-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      --nav-link-color: #333;
+      --dropdown-bg: #fff;
+      --dropdown-item-color: #333;
+      --form-check-label-color: #333;
+      --search-container-bg: rgba(255,255,255,0.95);
+      --search-container-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      --form-label-color: #333;
+      --input-bg: #fff;
+      --input-border: #e0e0e0;
+      --input-color: #222;
+      --input-placeholder: #888;
+      --vet-card-bg: #fff;
+      --vet-card-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      --vet-card-hover-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      --vet-name-color: #333;
+      --vet-info-color: #666;
+      --vet-contact-color: #667eea;
+      --modal-bg: #fff;
+      --modal-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      --modal-title-color: #333;
+      --modal-title-border: #667eea;
+      --modal-text-color: #555;
+      --modal-strong-color: #333;
+      --modal-link-color: #667eea;
+      --modal-divider: #e0e0e0;
+      --modal-scrollbar-track: #f1f1f1;
+      --no-results-bg: rgba(255,255,255,0.9);
+      --no-results-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      --no-results-title: #333;
+      --no-results-text: #666;
+      --footer-bg: #2d1b69;
+      --footer-text: #ddd;
+      --footer-heading: #ffffff;
+      --footer-link: rgba(255,255,255,0.8);
+      --footer-link-hover: #a78bfa;
+      --footer-border: rgba(255,255,255,0.1);
+      --footer-bottom: rgba(255,255,255,0.6);
     }
+
+    body.dark-mode {
+      --body-bg-start: #1a1035;
+      --body-bg-end: #0d0820;
+      --navbar-bg: rgba(15,10,35,0.98);
+      --navbar-shadow: 0 5px 20px rgba(0,0,0,0.5);
+      --nav-link-color: #c8bfee;
+      --dropdown-bg: #1e1937;
+      --dropdown-item-color: #c8bfee;
+      --form-check-label-color: #c8bfee;
+      --search-container-bg: rgba(25,18,50,0.97);
+      --search-container-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      --form-label-color: #c8bfee;
+      --input-bg: rgba(30,20,60,0.9);
+      --input-border: #3d3060;
+      --input-color: #e0d8ff;
+      --input-placeholder: #7a6fa8;
+      --vet-card-bg: rgba(25,18,50,0.97);
+      --vet-card-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      --vet-card-hover-shadow: 0 20px 40px rgba(0,0,0,0.7);
+      --vet-name-color: #e0d8ff;
+      --vet-info-color: #b0a8d0;
+      --vet-contact-color: #a78bfa;
+      --modal-bg: #1e1937;
+      --modal-shadow: 0 20px 60px rgba(0,0,0,0.7);
+      --modal-title-color: #e0d8ff;
+      --modal-title-border: #764ba2;
+      --modal-text-color: #c8bfee;
+      --modal-strong-color: #e0d8ff;
+      --modal-link-color: #a78bfa;
+      --modal-divider: #3d3060;
+      --modal-scrollbar-track: #2a1f4a;
+      --no-results-bg: rgba(25,18,50,0.97);
+      --no-results-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      --no-results-title: #e0d8ff;
+      --no-results-text: #b0a8d0;
+      --footer-bg: #1a0e42;
+      --footer-text: #b0a8d0;
+      --footer-heading: #d4c8ff;
+      --footer-link: #9988cc;
+      --footer-link-hover: #a78bfa;
+      --footer-border: #2a1f4a;
+      --footer-bottom: #6b5f99;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, var(--body-bg-start) 0%, var(--body-bg-end) 100%);
       min-height: 100vh;
+      transition: background 0.4s ease;
     }
 
-    /* Navbar Styles */
+    /* ═══ NAVBAR ═══ */
     .navbar-custom {
-      background: rgba(255, 255, 255, 0.95);
+      background: var(--navbar-bg);
       backdrop-filter: blur(10px);
-      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      box-shadow: var(--navbar-shadow);
       padding: 1rem 0;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
+      position: sticky; top: 0; z-index: 1000;
       transition: all 0.3s ease;
     }
-    
-    .navbar-custom.scrolled {
-      box-shadow: 0 5px 30px rgba(0,0,0,0.2);
-      padding: 0.5rem 0;
-    }
-    
+    .navbar-custom.scrolled { box-shadow: 0 5px 30px rgba(0,0,0,0.3); padding: 0.5rem 0; }
+
     .navbar-brand-custom {
-      font-size: 1.8rem;
-      font-weight: bold;
+      font-size: 1.8rem; font-weight: bold;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-right: 2rem;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; margin-right: 2rem;
     }
-    
+
     .nav-link-custom {
-      color: #333 !important;
-      font-weight: 600;
-      margin: 0 0.5rem;
+      color: var(--nav-link-color) !important;
+      font-weight: 600; margin: 0 0.5rem;
       padding: 0.5rem 1rem !important;
-      border-radius: 20px;
-      transition: all 0.3s ease;
+      border-radius: 20px; transition: all 0.3s ease;
     }
-    
     .nav-link-custom:hover {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white !important;
-      transform: translateY(-2px);
+      color: white !important; transform: translateY(-2px);
     }
-    
     .nav-link-custom.active {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white !important;
     }
-    
+
     .navbar-toggler-custom {
-      border: none;
-      padding: 0.5rem;
+      border: none; padding: 0.5rem;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       border-radius: 10px;
     }
-    
     .navbar-toggler-icon-custom {
-      width: 25px;
-      height: 2px;
-      background: white;
-      display: block;
-      margin: 5px 0;
+      width: 25px; height: 2px; background: white;
+      display: block; margin: 5px 0;
     }
 
+    .dropdown-menu {
+      background: var(--dropdown-bg) !important;
+      border-radius: 15px !important; border: none !important;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+    }
+    .dropdown-item {
+      color: var(--dropdown-item-color) !important;
+      border-radius: 10px; transition: all 0.2s;
+    }
+    .dropdown-item:hover {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+      color: #fff !important;
+    }
+    .form-check-label { color: var(--form-check-label-color); }
+
+    /* ═══ PAGE HEADER ═══ */
     .page-header {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255,255,255,0.1);
       backdrop-filter: blur(10px);
-      padding: 2rem 0;
-      margin-bottom: 2rem;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      padding: 2rem 0; margin-bottom: 2rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     }
+    .page-header .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; text-align: center; }
+    .page-header h1 { color: white; font-size: 2.5rem; margin-bottom: 0.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+    .page-header p  { color: rgba(255,255,255,0.9); font-size: 1.1rem; }
 
-    .page-header .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-      text-align: center;
-    }
-
-    .page-header h1 {
-      color: white;
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-    }
-
-    .page-header p {
-      color: rgba(255, 255, 255, 0.9);
-      font-size: 1.1rem;
-    }
-
-    .search-section {
-      max-width: 1200px;
-      margin: 0 auto 3rem;
-      padding: 0 20px;
-    }
+    /* ═══ SEARCH ═══ */
+    .search-section { max-width: 1200px; margin: 0 auto 3rem; padding: 0 20px; }
 
     .search-container {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 20px;
-      padding: 2rem;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      background: var(--search-container-bg);
+      border-radius: 20px; padding: 2rem;
+      box-shadow: var(--search-container-shadow);
       backdrop-filter: blur(10px);
+      transition: background 0.4s ease;
     }
 
-    .search-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-      align-items: end;
-    }
+    .search-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: end; }
 
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
+    .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+    .form-group label { color: var(--form-label-color); font-weight: 600; font-size: 0.95rem; }
 
-    .form-group label {
-      color: #333;
-      font-weight: 600;
-      font-size: 0.95rem;
-    }
-
-    select, input {
-      padding: 0.9rem 1.2rem;
-      font-size: 1rem;
-      border: 2px solid #e0e0e0;
+    select, input[type="text"] {
+      padding: 0.9rem 1.2rem; font-size: 1rem;
+      border: 2px solid var(--input-border);
       border-radius: 12px;
-      background: white;
-      transition: all 0.3s ease;
-      font-family: inherit;
+      background: var(--input-bg);
+      color: var(--input-color);
+      transition: all 0.3s ease; font-family: inherit;
     }
-
-    select:focus, input:focus {
-      outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    input[type="text"]::placeholder { color: var(--input-placeholder); }
+    select:focus, input[type="text"]:focus {
+      outline: none; border-color: #667eea;
+      box-shadow: 0 0 0 4px rgba(102,126,234,0.1);
+      background: var(--input-bg); color: var(--input-color);
     }
-
     select {
-      cursor: pointer;
-      appearance: none;
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-      background-repeat: no-repeat;
-      background-position: right 1rem center;
-      background-size: 1.2em;
+      cursor: pointer; appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23667eea' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.2em;
       padding-right: 3rem;
     }
+    select option { background: var(--input-bg); color: var(--input-color); }
 
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
+    /* ═══ VET CARDS ═══ */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
     .vet-container {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));  
-      gap: 2rem;
-      margin-top: 2rem;
-      padding-bottom: 3rem;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 2rem; margin-top: 2rem; padding-bottom: 3rem;
     }
 
     .vet-card {
-      background: white;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-      transition: all 0.4s ease;
-      cursor: pointer;
-      position: relative;
+      background: var(--vet-card-bg);
+      border-radius: 20px; overflow: hidden;
+      box-shadow: var(--vet-card-shadow);
+      transition: all 0.4s ease; cursor: pointer; position: relative;
     }
-
-    .vet-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
-    }
+    .vet-card:hover { transform: translateY(-10px); box-shadow: var(--vet-card-hover-shadow); }
 
     .vet-card img {
-      width: 100%;
-      height: 280px;
-      object-fit: cover;
-      transition: transform 0.4s ease;
+      width: 100%; height: 280px; object-fit: cover; transition: transform 0.4s ease;
     }
+    .vet-card:hover img { transform: scale(1.05); }
 
-    .vet-card:hover img {
-      transform: scale(1.05);
-    }
-
-    .vet-info {
-      padding: 1.5rem;
-    }
-
-    .vet-info h3 {
-      color: #333;
-      font-size: 1.3rem;
-      margin-bottom: 0.8rem;
-      font-weight: 700;
-    }
-
-    .vet-info p {
-      color: #666;
-      margin-bottom: 0.5rem;
-      line-height: 1.6;
-      font-size: 0.95rem;
-    }
+    .vet-info { padding: 1.5rem; }
+    .vet-info h3 { color: var(--vet-name-color); font-size: 1.3rem; margin-bottom: 0.8rem; font-weight: 700; }
+    .vet-info p  { color: var(--vet-info-color); margin-bottom: 0.5rem; line-height: 1.6; font-size: 0.95rem; }
 
     .contact-info {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: #667eea;
-      font-weight: 600;
-      margin-top: 1rem;
+      display: flex; align-items: center; gap: 0.5rem;
+      color: var(--vet-contact-color); font-weight: 600; margin-top: 1rem;
     }
 
     .experience-badge {
-      position: absolute;
-      top: 15px;
-      right: 15px;
+      position: absolute; top: 15px; right: 15px;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 0.4rem 0.8rem;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      color: white; padding: 0.4rem 0.8rem; border-radius: 20px;
+      font-size: 0.85rem; font-weight: 600; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
 
+    /* ═══ NO RESULTS ═══ */
+    .no-results {
+      text-align: center; padding: 3rem;
+      background: var(--no-results-bg);
+      border-radius: 20px; box-shadow: var(--no-results-shadow);
+    }
+    .no-results h3 { color: var(--no-results-title); font-size: 1.5rem; margin-bottom: 1rem; }
+    .no-results p  { color: var(--no-results-text); font-size: 1.1rem; }
+
+    /* ═══ MODAL ═══ */
     .modal {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: white;
-      padding: 2.5rem;
-      border-radius: 25px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-      z-index: 9999;
-      width: 90%;
-      max-width: 650px;
-      max-height: 80vh;
-      overflow-y: auto;
+      display: none; position: fixed;
+      top: 50%; left: 50%; transform: translate(-50%, -50%);
+      background: var(--modal-bg);
+      padding: 2.5rem; border-radius: 25px;
+      box-shadow: var(--modal-shadow);
+      z-index: 9999; width: 90%; max-width: 650px;
+      max-height: 80vh; overflow-y: auto;
       animation: modalSlideIn 0.3s ease;
+      transition: background 0.3s ease;
     }
-
     @keyframes modalSlideIn {
-      from {
-        transform: translate(-50%, -60%);
-        opacity: 0;
-      }
-      to {
-        transform: translate(-50%, -50%);
-        opacity: 1;
-      }
+      from { transform: translate(-50%, -60%); opacity: 0; }
+      to   { transform: translate(-50%, -50%); opacity: 1; }
     }
 
     .modal h3 {
-      color: #333;
-      font-size: 1.8rem;
-      margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
-      border-bottom: 3px solid #667eea;
+      color: var(--modal-title-color); font-size: 1.8rem; margin-bottom: 1.5rem;
+      padding-bottom: 1rem; border-bottom: 3px solid var(--modal-title-border);
     }
+    .modal p      { color: var(--modal-text-color); line-height: 1.8; font-size: 1rem; }
+    .modal strong { color: var(--modal-strong-color); font-weight: 600; }
+    .modal a      { color: var(--modal-link-color); text-decoration: none; font-weight: 600; transition: color 0.3s ease; }
+    .modal a:hover { color: #764ba2; text-decoration: underline; }
 
-    .modal p {
-      color: #555;
-      line-height: 1.8;
-      font-size: 1rem;
-    }
-
-    .modal strong {
-      color: #333;
-      font-weight: 600;
-    }
-
-    .modal a {
-      color: #667eea;
-      text-decoration: none;
-      font-weight: 600;
-      transition: color 0.3s ease;
-    }
-
-    .modal a:hover {
-      color: #764ba2;
-      text-decoration: underline;
-    }
+    .modal::-webkit-scrollbar { width: 8px; }
+    .modal::-webkit-scrollbar-track { background: var(--modal-scrollbar-track); border-radius: 10px; }
+    .modal::-webkit-scrollbar-thumb { background: #667eea; border-radius: 10px; }
+    .modal::-webkit-scrollbar-thumb:hover { background: #764ba2; }
 
     .overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(5px);
-      z-index: 9998;
-      animation: fadeIn 0.3s ease;
+      display: none; position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
+      z-index: 9998; animation: fadeInOverlay 0.3s ease;
     }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+    @keyframes fadeInOverlay { from { opacity: 0; } to { opacity: 1; } }
 
     .close-btn {
-      position: absolute;
-      top: 1.5rem;
-      right: 1.5rem;
+      position: absolute; top: 1.5rem; right: 1.5rem;
       background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-      color: white;
-      border: none;
-      padding: 0.6rem 1.2rem;
-      cursor: pointer;
-      border-radius: 25px;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 10px rgba(255, 107, 107, 0.3);
+      color: white; border: none; padding: 0.6rem 1.2rem;
+      cursor: pointer; border-radius: 25px; font-weight: 600;
+      transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(255,107,107,0.3);
     }
+    .close-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(255,107,107,0.4); }
 
-    .close-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(255, 107, 107, 0.4);
-    }
-
-    .no-results {
-      text-align: center;
-      padding: 3rem;
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    }
-
-    .no-results h3 {
-      color: #333;
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .no-results p {
-      color: #666;
-      font-size: 1.1rem;
-    }
-
-    .modal::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    .modal::-webkit-scrollbar-track {
-      background: #f1f1f1;
-      border-radius: 10px;
-    }
-
-    .modal::-webkit-scrollbar-thumb {
-      background: #667eea;
-      border-radius: 10px;
-    }
-
-    .modal::-webkit-scrollbar-thumb:hover {
-      background: #764ba2;
-    }
-
-    /* Footer Styles */
+    /* ═══ FOOTER ═══ */
     .footer-custom {
-      background: #1a1a1a;
-      color: white;
-      padding: 4rem 0 2rem;
-      margin-top: 5rem;
-      position: relative;
+      background: var(--footer-bg) !important;
+      color: var(--footer-text) !important;
+      padding: 4rem 0 2rem; margin-top: 5rem;
+      position: relative; transition: background 0.4s ease;
     }
-    
-    .footer-heading {
-      color: white;
-      font-weight: bold;
-      margin-bottom: 1.5rem;
-      font-size: 1.3rem;
+    .footer-heading { color: var(--footer-heading) !important; font-weight: bold; margin-bottom: 1.5rem; font-size: 1.3rem; }
+    .footer-text    { color: var(--footer-text) !important; line-height: 1.8; margin-bottom: 1.5rem; }
+    .footer-links   { list-style: none; padding: 0; }
+    .footer-links li { margin-bottom: 0.8rem; }
+    .footer-links a  { color: var(--footer-link) !important; text-decoration: none; transition: all 0.3s ease; display: inline-block; }
+    .footer-links a:hover { color: var(--footer-link-hover) !important; transform: translateX(5px); }
+    .social-links  { display: flex; gap: 1rem; margin-top: 1rem; }
+    .social-link   {
+      width: 45px; height: 45px; border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; text-decoration: none; transition: all 0.3s ease;
     }
-    
-    .footer-text {
-      color: rgba(255, 255, 255, 0.8);
-      line-height: 1.8;
-      margin-bottom: 1.5rem;
-    }
-    
-    .footer-links {
-      list-style: none;
-      padding: 0;
-    }
-    
-    .footer-links li {
-      margin-bottom: 0.8rem;
-    }
-    
-    .footer-links a {
-      color: rgba(255, 255, 255, 0.8);
-      text-decoration: none;
-      transition: all 0.3s ease;
-      display: inline-block;
-    }
-    
-    .footer-links a:hover {
-      color: #667eea;
-      transform: translateX(5px);
-    }
-    
-    .social-links {
-      display: flex;
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-    
-    .social-link {
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      text-decoration: none;
-      transition: all 0.3s ease;
-    }
-    
     .social-link:hover {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       transform: translateY(-5px);
     }
-    
     .footer-bottom {
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      padding-top: 2rem;
-      margin-top: 3rem;
-      text-align: center;
+      border-top: 1px solid var(--footer-border);
+      padding-top: 2rem; margin-top: 3rem; text-align: center;
     }
-    
-    .footer-bottom p {
-      color: rgba(255, 255, 255, 0.6);
-      margin: 0;
-    }
+    .footer-bottom p { color: var(--footer-bottom) !important; margin: 0; }
+    .footer-custom p, .footer-custom span, .footer-custom li { color: inherit; }
 
-    /* Responsive design */
+    /* ═══ RESPONSIVE ═══ */
     @media (max-width: 768px) {
-      .page-header h1 {
-        font-size: 2rem;
-      }
-
-      .search-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .vet-container {
-        grid-template-columns: 1fr;  /* Remains as single column on mobile */
-      }
-
-      .modal {
-        padding: 2rem;
-        width: 95%;
-      }
-
-      .nav-link-custom {
-        margin: 0.5rem 0;
-      }
+      .page-header h1 { font-size: 2rem; }
+      .search-grid { grid-template-columns: 1fr; }
+      .vet-container { grid-template-columns: 1fr; }
+      .modal { padding: 2rem; width: 95%; }
+      .nav-link-custom { margin: 0.5rem 0; }
     }
   </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-custom">
-        <div class="container">
-            <a class="navbar-brand-custom" href="/">
-                🐾 PetNova
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container">
+      <a class="navbar-brand-custom" href="/">🐾 PetNova</a>
+      <button class="navbar-toggler navbar-toggler-custom" type="button" data-bs-toggle="collapse"
+              data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon-custom"></span>
+        <span class="navbar-toggler-icon-custom"></span>
+        <span class="navbar-toggler-icon-custom"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link-custom" href="/">🏠 Home</a></li>
+          <li class="nav-item"><a class="nav-link-custom" href="/pets">👀 Browse</a></li>
+          <li class="nav-item"><a class="nav-link-custom" href="/buy">🛒 Buy</a></li>
+          <li class="nav-item"><a class="nav-link-custom" href="/add">➕ Add Pet</a></li>
+          <li class="nav-item"><a class="nav-link-custom" href="/quiz">🧩 Quiz</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link-custom dropdown-toggle" href="#" id="servicesDropdown"
+               role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              🔧 Services
             </a>
-            <button class="navbar-toggler navbar-toggler-custom" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon-custom"></span>
-                <span class="navbar-toggler-icon-custom"></span>
-                <span class="navbar-toggler-icon-custom"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link-custom" href="/">🏠 Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link-custom" href="/pets">👀 Browse</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link-custom active" href="/buy">🛒 Buy</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link-custom" href="/add">➕ Add Pet</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link-custom" href="/quiz">🧩 Quiz</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link-custom dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            🔧 Services
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="servicesDropdown" style="border-radius: 15px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-                            <li><a class="dropdown-item" href="/mate" style="border-radius: 10px;">💕 Find Mate</a></li>
-                            <li><a class="dropdown-item" href="/rescue" style="border-radius: 10px;">🏠 Rescue</a></li>
-                            <li><a class="dropdown-item" href="/vet" style="border-radius: 10px;">🏥 Vet Directory</a></li>
-                            <li><a class="dropdown-item" href="/petaccessories" style="border-radius: 10px;">🏪 Pet Shops</a></li>
-                        
-                    
-
-                    </ul>
-                    </li>
-                    <li class="nav-item ms-3">
-                        <div class="form-check form-switch mb-0">
-                            <input class="form-check-input" type="checkbox" id="darkModeToggle">
-                            <label class="form-check-label" for="darkModeToggle">Dark</label>
-                        </div>
-                    </li>
-                </ul>
+            <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
+              <li><a class="dropdown-item" href="/mate">💕 Find Mate</a></li>
+              <li><a class="dropdown-item" href="/rescue">🏠 Rescue</a></li>
+              <li><a class="dropdown-item" href="/vet">🏥 Vet Directory</a></li>
+              <li><a class="dropdown-item" href="/petaccessories">🏪 Pet Shops</a></li>
+            </ul>
+          </li>
+          <li class="nav-item ms-3">
+            <div class="form-check form-switch mb-0 d-flex align-items-center">
+              <input class="form-check-input me-2" type="checkbox" id="darkModeToggle">
+              <label class="form-check-label" for="darkModeToggle">Dark</label>
             </div>
-        </div>
-    </nav>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
   <div class="page-header">
     <div class="container">
@@ -564,11 +415,9 @@
             <option value="Jaipur">Jaipur</option>
             <option value="Gujarat">Gujarat</option>
             <option value="Lucknow">Lucknow</option>
-            <option value="Bangalore">Bangalore</option>
             <option value="Punjab">Punjab</option>
           </select>
         </div>
-
         <div class="form-group">
           <label for="searchInput">🔍 Search by name or qualification</label>
           <input type="text" id="searchInput" oninput="filterVets()" placeholder="Enter name or qualification...">
@@ -592,12 +441,9 @@
   <footer class="footer-custom">
     <div class="container">
       <div class="row">
-        <!-- About Section -->
         <div class="col-lg-4 col-md-6 mb-4">
           <h4 class="footer-heading">🐾 PetNova</h4>
-          <p class="footer-text">
-            Your complete platform for everything pet-related. Connecting pet lovers, facilitating adoptions, and building a stronger pet community.
-          </p>
+          <p class="footer-text">Your complete platform for everything pet-related. Connecting pet lovers, facilitating adoptions, and building a stronger pet community.</p>
           <div class="social-links">
             <a href="#" class="social-link">📘</a>
             <a href="#" class="social-link">📷</a>
@@ -605,8 +451,6 @@
             <a href="#" class="social-link">💼</a>
           </div>
         </div>
-
-        <!-- Quick Links -->
         <div class="col-lg-2 col-md-6 mb-4">
           <h5 class="footer-heading">Quick Links</h5>
           <ul class="footer-links">
@@ -616,8 +460,6 @@
             <li><a href="/quiz">Take Quiz</a></li>
           </ul>
         </div>
-
-        <!-- Services -->
         <div class="col-lg-3 col-md-6 mb-4">
           <h5 class="footer-heading">Services</h5>
           <ul class="footer-links">
@@ -628,8 +470,6 @@
             <li><a href="/vet">Vet Directory</a></li>
           </ul>
         </div>
-
-        <!-- Contact Info -->
         <div class="col-lg-3 col-md-6 mb-4">
           <h5 class="footer-heading">Get in Touch</h5>
           <ul class="footer-links">
@@ -640,9 +480,8 @@
           </ul>
         </div>
       </div>
-
       <div class="footer-bottom">
-        <p>&copy; 2024 PetNova. All rights reserved. | College Project</p>
+        <p>&copy; 2026 PetNova. All rights reserved. | College Project</p>
       </div>
     </div>
   </footer>
@@ -650,248 +489,27 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     const vets = [
-      {
-        name: "Dr. Nilima Paranjpe",
-        city: "Mumbai",
-        qualification: "BVSc & AH, MVSc - Surgery & Radiology",
-        experience: "30+ years",
-        contact: "08045688378",
-        clinic: "https://www.practo.com/mumbai/doctor/dr-nilima-paranjpe?practice_id=1140115&specialization=Veterinarian&referrer=doctor_listing&page_uid=23bfe6ec-5a80-4d22-b93b-cefe8de23a4e",
-        image: "dr1.jpg",
-        details: `
-          <strong>Specializations:</strong> Veterinary Physician, Veterinary Surgeon<br><br>
-          <strong>Experience:</strong> 30 Years Overall (26 years as specialist)<br><br>
-          <strong>Degrees:</strong> Bachelor in Veterinary Science and Animal Husbandry (BVSc & AH), M.V.Sc - Veterinary Surgery & Radiology<br><br>
-          <strong>Registration:</strong> Medical Registration Verified<br><br>
-          <a href="https://www.practo.com/mumbai/doctor/dr-nilima-paranjpe?practice_id=1140115&specialization=Veterinarian&referrer=doctor_listing&page_uid=23bfe6ec-5a80-4d22-b93b-cefe8de23a4e" target="_blank">🔗 View Full Profile</a>
-        `
-      },
-      {
-        name: "Dr. Nihar Jayakar",
-        city: "Mumbai",
-        qualification: "Veterinarian at Pawprints Veterinary Clinic",
-        experience: "24 years",
-        image: "dr2.jpg",
-        contact: "02271873701",
-        details: `
-          <strong>Experience:</strong> 24 Years Overall<br><br>
-          <strong>Clinic:</strong> Pawprints Veterinary Clinic, Goregaon West<br><br>
-          <strong>Consultation Fee:</strong> ₹500<br><br>
-          <strong>About:</strong> Dr. Nihar Jayakar is a Veterinary Surgeon and Veterinary Physician in Goregaon West, Mumbai with extensive experience in animal care.<br><br>
-          <a href="https://www.practo.com/mumbai/doctor/dr-nihar-jayakar-veterinarian?practice_id=742617&specialization=Veterinarian&referrer=doctor_listing&page_uid=23bfe6ec-5a80-4d22-b93b-cefe8de23a4e" target="_blank">🔗 View Full Profile</a>
-        `
-      },
-      {
-        name: "Dr. Krishna Ingole",
-        city: "Mumbai",
-        image: "dr3.jpg",
-        qualification: "B.V.Sc. & A.H., M.V.Sc (Medicine)",
-        experience: "24 years",
-        contact: "02071173199",
-        details: `
-          <strong>Qualification:</strong> B.V.Sc. & A.H., M.V.Sc (Medicine)<br><br>
-          <strong>Experience:</strong> 24 Years Overall<br><br>
-          <strong>Position:</strong> Hospital Registrar at Bombay Veterinary College since April 2008<br><br>
-          <strong>Registration:</strong> Medical Registration Verified<br><br>
-          <a href="https://www.practo.com/mumbai/doctor/dr-krishna-ingole-veterinarian-veterinarian?practice_id=741939&specialization=Veterinarian&referrer=doctor_listing&page_uid=23bfe6ec-5a80-4d22-b93b-cefe8de23a4e" target="_blank">🔗 View Full Profile</a>
-        `
-      },
-      {
-        name: "Dr. Dheeraj Bhardwaj",
-        city: "Delhi",
-        qualification: "Veterinarian at Apollo Vets",
-        experience: "20 years",
-        image: "dr4.jpg",
-        contact: "02071186491",
-        details: `
-          <strong>Experience:</strong> 20 Years Overall<br><br>
-          <strong>Clinic:</strong> Apollo Vets, Dwarka<br><br>
-          <strong>Consultation Fee:</strong> ₹1200<br><br>
-          <strong>Specialization:</strong> Highly experienced in small animal care<br><br>
-          <a href="https://www.practo.com/delhi/doctor/dr-dheeraj-bhardwaj-veterinarian?practice_id=681116&specialization=Veterinarian&referrer=doctor_listing&page_uid=9721af09-0ffa-40db-a2d4-e6c342f51989" target="_blank">🔗 View Full Profile</a>
-        `
-      },
-      {
-        name: "Dr. Aradhana Pandey",
-        city: "Delhi",
-        qualification: "Veterinarian at Doggy World",
-        experience: "27 years",
-        image: "dr5.jpg",
-        contact: "01140849589",
-        details: `
-          <strong>Experience:</strong> 27 Years Overall<br><br>
-          <strong>Clinic:</strong> Doggy World, Rohini<br><br>
-          <strong>Consultation Fee:</strong> ₹750<br><br>
-          <strong>About:</strong> Experienced in general veterinary practice with a focus on comprehensive pet care<br><br>
-          <a href="https://www.practo.com/delhi/doctor/dr-aradhana-pandey-veterinarian-1?practice_id=654002&specialization=Veterinarian&referrer=doctor_listing&page_uid=2516ba16-a74d-4c05-9010-0960dd323b01" target="_blank">🔗 View Full Profile</a>
-        `
-      },
-      {
-        name: "Dr. Ajay Rana",
-        city: "Delhi",
-        qualification: "Bachelor in Veterinary Science and Animal Husbandary (BVSc & AH)",
-        experience: "28 years",
-        image: "dr6.jpg",
-        contact: "01140036724",
-        details: `
-          <strong>Qualification:</strong> BVSc & AH<br><br>
-          <strong>Experience:</strong> 28 Years Overall<br><br>
-          <strong>Specialization:</strong> Veterinary Physician with nearly 3 decades of experience in animal healthcare<br><br>
-          <a href="https://www.practo.com/delhi/doctor/dr-ajay-rana-veterinarian?practice_id=702939&specialization=Veterinarian&referrer=doctor_listing&page_uid=2516ba16-a74d-4c05-9010-0960dd323b01" target="_blank">🔗 View Full Profile</a>
-        `
-      },
-      {
-        name: "Dr. Aishwarya. N",
-        city: "Bangalore",
-        qualification: "Veterinarian at Swapreran Clinic",
-        experience: "8 years",
-        image: "dr7.jpg",
-        contact: "08071966843",
-        details: `
-          <strong>Experience:</strong> 8 Years Overall<br><br>
-          <strong>Clinic:</strong> Swapreran Clinic, BTM Layout<br><br>
-          <strong>Consultation Fee:</strong> ₹200<br><br>
-          <strong>Specialization:</strong> Animal care and wellness support<br><br>
-          <a href="https://www.practo.com/bangalore/doctor/dr-aishwarya-n-veterinarian?practice_id=794863&specialization=Veterinarian&referrer=doctor_listing&page_uid=4a5f4592-382a-4e60-be82-378ca357fbdf" target="_blank">🔗 View Full Profile</a>
-        `
-      },
-      {
-        name: "Dr. Vasanth Shetty",
-        city: "Bangalore",
-        qualification: "Veterinarian at Vaatsalya Veterinary Clinic",
-        experience: "47 years",
-        image: "dr8.jpg",
-        contact: "08068960988",
-        details: `
-          <strong>Experience:</strong> 47 Years Overall<br><br>
-          <strong>Clinic:</strong> Vaatsalya Veterinary Clinic, Malleswaram<br><br>
-          <strong>Consultation Fee:</strong> ₹100<br><br>
-          <strong>About:</strong> Veteran vet with over 4 decades of animal treatment experience<br><br>
-          <a href="https://www.practo.com/bangalore/doctor/dr-vasanth-shetty-veterinary-surgeon?practice_id=1128922&specialization=Veterinarian&referrer=doctor_listing&page_uid=4a5f4592-382a-4e60-be82-378ca357fbdf" target="_blank">🔗 View Full Profile</a>
-        `
-      },
-      {
-        name: "Dr. H. S. Growar",
-        city: "Punjab",
-        qualification: "Veterinarian at The Healing Touch Pet Clinic",
-        experience: "37 years",
-        image: "pn.jpg",
-        contact: "01141193965",
-        details: `
-          <strong>Experience:</strong> 37 Years Overall<br><br>
-          <strong>Clinic:</strong> The Healing Touch Pet Clinic & Surgery, Sector 54<br><br>
-          <strong>Consultation Fee:</strong> ₹400<br><br>
-          <strong>About:</strong> Highly experienced veterinarian providing expert care in Chandigarh<br><br>
-          <a href="https://www.practo.com/chandigarh/doctor/harveer-singh-growar-veterinarian?practice_id=820144&specialization=Veterinary%20doctor&referrer=doctor_listing&page_uid=93383788-8672-417f-bc5b-b1cd7936db2e" target="_blank">🔗 View Full Profile</a>
-        `
-      },
-      {
-        name: "Dr. Chaitanya Solanki",
-        city: "Gujarat",
-        qualification: "Veterinarian at Dr. C.M.S Pet Clinic",
-        experience: "11 years",
-        image: "gj.jpg",
-        contact: "07941058801",
-        details: `
-          <strong>Experience:</strong> 11 Years Overall<br><br>
-          <strong>Clinic:</strong> Dr. C.M.S Pet Clinic, Bopal<br><br>
-          <strong>Consultation Fee:</strong> ₹250<br><br>
-          <strong>About:</strong> Dedicated to providing quality veterinary care for pets in Ahmedabad<br><br>
-          <a href="https://www.practo.com/ahmedabad/doctor/chaitanya-solanki-veterinarian?practice_id=1237318&specialization=Veterinary%20services&referrer=doctor_listing&page_uid=89ebac1f-06d6-44aa-9edf-8335df618769&category_name=service&category_id=102057" target="_blank">🔗 View Full Profile</a>
-        `
-      },
-      {
-  name: "Dr. Bishakha Nath",
-  city: "Pune",
-  qualification: "Veterinarian at Pet's Heaven",
-  experience: "17 years",
-  image: "dr9.jpg",
-  contact: "02071172687",
-  details: `
-    <strong>Experience:</strong> 17 Years Overall<br><br>
-    <strong>Clinic:</strong> Pet's Heaven, Undri, Pune<br><br>
-    <strong>Consultation Fee:</strong> ₹500<br><br>
-    <strong>About:</strong> Experienced veterinarian providing compassionate care for pets in Pune.<br><br>
-    <a href="https://www.practo.com/pune/doctor/dr-nath-b-veterinarian?practice_id=1242309&specialization=Veterinary%20doctor&referrer=doctor_listing&page_uid=e1519cb8-a4b5-477a-988e-88acde05fd52" target="_blank">🔗 View Full Profile</a>
-  `
-},
-{
-  name: "Dr. M. Madeena Begum",
-  city: "Chennai",
-  qualification: "Veterinarian at AWSM Pet Clinic",
-  experience: "13 years",
-  image: "dr10.jpg",
-  contact: "04461712706",
-  details: `
-    <strong>Experience:</strong> 13 Years Overall<br><br>
-    <strong>Clinic:</strong> AWSM Pet Clinic, Manali, Chennai<br><br>
-    <strong>Consultation Fee:</strong> ₹750<br><br>
-    <strong>About:</strong> Dedicated to providing quality veterinary services and animal wellness support.<br><br>
-    <a href="https://www.practo.com/chennai/doctor/m-madeena-begum-veterinary-surgeon?practice_id=1163696&specialization=Veterinary%20services&referrer=doctor_listing&page_uid=7c1156f6-d9e1-4695-a5f2-655bfc1de746&category_name=service&category_id=102057" target="_blank">🔗 View Full Profile</a>
-  `
-},
-{
-  name: "Dr. Santosh Reddy",
-  city: "Hyderabad",
-  qualification: "Veterinarian at Vety Dog Clinic",
-  experience: "18 years",
-  image: "dr11.jpg",
-  contact: "04048216833",
-  details: `
-    <strong>Experience:</strong> 18 Years Overall<br><br>
-    <strong>Clinic:</strong> Vety Dog Clinic, Kukatpally, Hyderabad<br><br>
-    <strong>Consultation Fee:</strong> ₹400<br><br>
-    <strong>About:</strong> Experienced veterinarian offering trusted pet care and treatment services.<br><br>
-    <a href="https://www.practo.com/search/doctors?results_type=doctor&q=%5B%7B%22word%22%3A%22veterinary%20services%22%2C%22autocompleted%22%3Atrue%2C%22category%22%3A%22service%22%7D%5D&city=Hyderabad" target="_blank">🔗 View Full Profile</a>
-  `
-},
-{
-  name: "Dr. Kallol Kumar Sengupta",
-  city: "Kolkata",
-  qualification: "Veterinarian at BD Pet Clinic",
-  experience: "51 years",
-  image: "dr12.jpg",
-  contact: "03341816947",
-  details: `
-    <strong>Experience:</strong> 51 Years Overall<br><br>
-    <strong>Clinic:</strong> BD Pet Clinic, Ganguly Bagan, Kolkata<br><br>
-    <strong>Consultation Fee:</strong> ₹500<br><br>
-    <strong>About:</strong> Senior veterinarian with decades of experience in animal health and wellness.<br><br>
-    <a href="https://www.practo.com/kolkata/doctor/dr-kallol-kumar-sengupta-veterinarian?practice_id=1266912&specialization=Veterinary%20services&referrer=doctor_listing&page_uid=918c9ce4-aed7-41a8-9872-96d9b3c0f4d5&category_name=service&category_id=102057" target="_blank">🔗 View Full Profile</a>
-  `
-},
-{
-  name: "Dr. Shreeram Soni",
-  city: "Jaipur",
-  qualification: "Veterinarian at Vetcare Clinic",
-  experience: "2 years",
-  image: "dr13.jpg",
-  contact: "07971268678",
-  details: `
-    <strong>Experience:</strong> 2 Years Overall<br><br>
-    <strong>Clinic:</strong> Vetcare Clinic, Malviya Nagar, Jaipur<br><br>
-    <strong>Consultation Fee:</strong> ₹350<br><br>
-    <strong>About:</strong> Young and passionate veterinarian focused on preventive and clinical animal care.<br><br>
-    <a href="https://www.practo.com/jaipur/doctor/dr-shreeram-soni-veterinary-surgeon?practice_id=1459201&specialization=Veterinary%20services&referrer=doctor_listing&page_uid=d433d3ad-d299-4b20-ac30-e16b6b734a1d&category_name=service&category_id=102057" target="_blank">🔗 View Full Profile</a>
-  `
-},
-{
-  name: "Dr. Saurabh Chaturvedi",
-  city: "Lucknow",
-  qualification: "Veterinary Surgeon at Royal Pet Clinic & Surgical Centre",
-  experience: "19 years",
-  image: "dr14.jpg",
-  contact: "01141193997",
-  details: `
-    <strong>Experience:</strong> 19 Years Overall<br><br>
-    <strong>Clinic:</strong> Royal Pet Clinic & Surgical Centre, Gomtinagar, Lucknow<br><br>
-    <strong>Consultation Fee:</strong> ₹300<br><br>
-    <strong>About:</strong> Skilled veterinary surgeon providing comprehensive pet health and surgical services.<br><br>
-    <a href="https://www.practo.com/lucknow/doctor/dr-saurabh-chaturvedi-veterinarian-1?practice_id=826778&specialization=Veterinary%20services&referrer=doctor_listing&page_uid=9a906e28-37a2-4414-82c1-364ff06ab047&category_name=service&category_id=102057" target="_blank">🔗 View Full Profile</a>
-  `
-},
-
+      { name: "Dr. Nilima Paranjpe", city: "Mumbai", qualification: "BVSc & AH, MVSc - Surgery & Radiology", experience: "30+ years", contact: "08045688378", image: "dr1.jpg", details: `<strong>Specializations:</strong> Veterinary Physician, Veterinary Surgeon<br><br><strong>Experience:</strong> 30 Years Overall (26 years as specialist)<br><br><strong>Degrees:</strong> BVSc & AH, M.V.Sc - Veterinary Surgery & Radiology<br><br><strong>Registration:</strong> Medical Registration Verified<br><br><a href="https://www.practo.com/mumbai/doctor/dr-nilima-paranjpe?practice_id=1140115" target="_blank">🔗 View Full Profile</a>` },
+      { name: "Dr. Nihar Jayakar", city: "Mumbai", qualification: "Veterinarian at Pawprints Veterinary Clinic", experience: "24 years", contact: "02271873701", image: "dr2.jpg", details: `<strong>Experience:</strong> 24 Years Overall<br><br><strong>Clinic:</strong> Pawprints Veterinary Clinic, Goregaon West<br><br><strong>Consultation Fee:</strong> ₹500<br><br><a href="https://www.practo.com/mumbai/doctor/dr-nihar-jayakar-veterinarian?practice_id=742617" target="_blank">🔗 View Full Profile</a>` },
+      { name: "Dr. Krishna Ingole", city: "Mumbai", qualification: "B.V.Sc. & A.H., M.V.Sc (Medicine)", experience: "24 years", contact: "02071173199", image: "dr3.jpg", details: `<strong>Qualification:</strong> B.V.Sc. & A.H., M.V.Sc (Medicine)<br><br><strong>Experience:</strong> 24 Years Overall<br><br><strong>Position:</strong> Hospital Registrar at Bombay Veterinary College since April 2008<br><br><a href="https://www.practo.com/mumbai/doctor/dr-krishna-ingole-veterinarian-veterinarian?practice_id=741939" target="_blank">🔗 View Full Profile</a>` },
+      { name: "Dr. Dheeraj Bhardwaj", city: "Delhi", qualification: "Veterinarian at Apollo Vets", experience: "20 years", contact: "02071186491", image: "dr4.jpg", details: `<strong>Experience:</strong> 20 Years Overall<br><br><strong>Clinic:</strong> Apollo Vets, Dwarka<br><br><strong>Consultation Fee:</strong> ₹1200<br><br><a href="https://www.practo.com/delhi/doctor/dr-dheeraj-bhardwaj-veterinarian?practice_id=681116" target="_blank">🔗 View Full Profile</a>` },
+      { name: "Dr. Aradhana Pandey", city: "Delhi", qualification: "Veterinarian at Doggy World", experience: "27 years", contact: "01140849589", image: "dr5.jpg", details: `<strong>Experience:</strong> 27 Years Overall<br><br><strong>Clinic:</strong> Doggy World, Rohini<br><br><strong>Consultation Fee:</strong> ₹750<br><br><a href="https://www.practo.com/delhi/doctor/dr-aradhana-pandey-veterinarian-1?practice_id=654002" target="_blank">🔗 View Full Profile</a>` },
+      { name: "Dr. Ajay Rana", city: "Delhi", qualification: "Bachelor in Veterinary Science and Animal Husbandary (BVSc & AH)", experience: "28 years", contact: "01140036724", image: "dr6.jpg", details: `<strong>Qualification:</strong> BVSc & AH<br><br><strong>Experience:</strong> 28 Years Overall<br><br><a href="https://www.practo.com/delhi/doctor/dr-ajay-rana-veterinarian?practice_id=702939" target="_blank">🔗 View Full Profile</a>` },
+      { name: "Dr. Aishwarya. N", city: "Bangalore", qualification: "Veterinarian at Swapreran Clinic", experience: "8 years", contact: "08071966843", image: "dr7.jpg", details: `<strong>Experience:</strong> 8 Years Overall<br><br><strong>Clinic:</strong> Swapreran Clinic, BTM Layout<br><br><strong>Consultation Fee:</strong> ₹200<br><br><a href="https://www.practo.com/bangalore/doctor/dr-aishwarya-n-veterinarian?practice_id=794863" target="_blank">🔗 View Full Profile</a>` },
+      { name: "Dr. Vasanth Shetty", city: "Bangalore", qualification: "Veterinarian at Vaatsalya Veterinary Clinic", experience: "47 years", contact: "08068960988", image: "dr8.jpg", details: `<strong>Experience:</strong> 47 Years Overall<br><br><strong>Clinic:</strong> Vaatsalya Veterinary Clinic, Malleswaram<br><br><strong>Consultation Fee:</strong> ₹100<br><br><a href="https://www.practo.com/bangalore/doctor/dr-vasanth-shetty-veterinary-surgeon?practice_id=1128922" target="_blank">🔗 View Full Profile</a>` },
+      { name: "Dr. H. S. Growar", city: "Punjab", qualification: "Veterinarian at The Healing Touch Pet Clinic", experience: "37 years", contact: "01141193965", image: "pn.jpg", details: `<strong>Experience:</strong> 37 Years Overall<br><br><strong>Clinic:</strong> The Healing Touch Pet Clinic & Surgery, Sector 54<br><br><strong>Consultation Fee:</strong> ₹400<br><br><a href="https://www.practo.com/chandigarh/doctor/harveer-singh-growar-veterinarian?practice_id=820144" target="_blank">🔗 View Full Profile</a>` },
+      { name: "Dr. Chaitanya Solanki", city: "Gujarat", qualification: "Veterinarian at Dr. C.M.S Pet Clinic", experience: "11 years", contact: "07941058801", image: "gj.jpg", details: `<strong>Experience:</strong> 11 Years Overall<br><br><strong>Clinic:</strong> Dr. C.M.S Pet Clinic, Bopal<br><br><strong>Consultation Fee:</strong> ₹250<br><br><a href="https://www.practo.com/ahmedabad/doctor/chaitanya-solanki-veterinarian?practice_id=1237318" target="_blank">🔗 View Full Profile</a>` },
+      { name: "Dr. Bishakha Nath", city: "Pune", qualification: "Veterinarian at Pet's Heaven", experience: "17 years", contact: "02071172687", image: "dr9.jpg", details: `<strong>Experience:</strong> 17 Years Overall<br><br><strong>Clinic:</strong> Pet's Heaven, Undri, Pune<br><br><strong>Consultation Fee:</strong> ₹500<br><br><a href="https://www.practo.com/pune/doctor/dr-nath-b-veterinarian?practice_id=1242309" target="_blank">🔗 View Full Profile</a>` },
+      { name: "Dr. M. Madeena Begum", city: "Chennai", qualification: "Veterinarian at AWSM Pet Clinic", experience: "13 years", contact: "04461712706", image: "dr10.jpg", details: `<strong>Experience:</strong> 13 Years Overall<br><br><strong>Clinic:</strong> AWSM Pet Clinic, Manali, Chennai<br><br><strong>Consultation Fee:</strong> ₹750<br><br><a href="https://www.practo.com/chennai/doctor/m-madeena-begum-veterinary-surgeon?practice_id=1163696" target="_blank">🔗 View Full Profile</a>` },
+      { name: "Dr. Santosh Reddy", city: "Hyderabad", qualification: "Veterinarian at Vety Dog Clinic", experience: "18 years", contact: "04048216833", image: "dr11.jpg", details: `<strong>Experience:</strong> 18 Years Overall<br><br><strong>Clinic:</strong> Vety Dog Clinic, Kukatpally, Hyderabad<br><br><strong>Consultation Fee:</strong> ₹400<br><br><a href="https://www.practo.com/search/doctors?results_type=doctor&q=%5B%7B%22word%22%3A%22veterinary%20services%22%7D%5D&city=Hyderabad" target="_blank">🔗 View Full Profile</a>` },
+      { name: "Dr. Kallol Kumar Sengupta", city: "Kolkata", qualification: "Veterinarian at BD Pet Clinic", experience: "51 years", contact: "03341816947", image: "dr12.jpg", details: `<strong>Experience:</strong> 51 Years Overall<br><br><strong>Clinic:</strong> BD Pet Clinic, Ganguly Bagan, Kolkata<br><br><strong>Consultation Fee:</strong> ₹500<br><br><a href="https://www.practo.com/kolkata/doctor/dr-kallol-kumar-sengupta-veterinarian?practice_id=1266912" target="_blank">🔗 View Full Profile</a>` },
+      { name: "Dr. Shreeram Soni", city: "Jaipur", qualification: "Veterinarian at Vetcare Clinic", experience: "2 years", contact: "07971268678", image: "dr13.jpg", details: `<strong>Experience:</strong> 2 Years Overall<br><br><strong>Clinic:</strong> Vetcare Clinic, Malviya Nagar, Jaipur<br><br><strong>Consultation Fee:</strong> ₹350<br><br><a href="https://www.practo.com/jaipur/doctor/dr-shreeram-soni-veterinary-surgeon?practice_id=1459201" target="_blank">🔗 View Full Profile</a>` },
+      { name: "Dr. Saurabh Chaturvedi", city: "Lucknow", qualification: "Veterinary Surgeon at Royal Pet Clinic & Surgical Centre", experience: "19 years", contact: "01141193997", image: "dr14.jpg", details: `<strong>Experience:</strong> 19 Years Overall<br><br><strong>Clinic:</strong> Royal Pet Clinic & Surgical Centre, Gomtinagar, Lucknow<br><br><strong>Consultation Fee:</strong> ₹300<br><br><a href="https://www.practo.com/lucknow/doctor/dr-saurabh-chaturvedi-veterinarian-1?practice_id=826778" target="_blank">🔗 View Full Profile</a>` },
     ];
+
+    function getCSSVar(name) {
+      return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    }
 
     function filterVets() {
       const selectedCity = document.getElementById("location").value.toLowerCase();
@@ -899,22 +517,17 @@
       const vetListDiv = document.getElementById("vetList");
       vetListDiv.innerHTML = "";
 
-      const filteredVets = vets.filter(vet =>
-        (selectedCity === "" || vet.city.toLowerCase() === selectedCity) &&
-        (vet.name.toLowerCase().includes(searchInput) || vet.qualification.toLowerCase().includes(searchInput))
+      const filtered = vets.filter(v =>
+        (selectedCity === "" || v.city.toLowerCase() === selectedCity) &&
+        (v.name.toLowerCase().includes(searchInput) || v.qualification.toLowerCase().includes(searchInput))
       );
 
-      if (filteredVets.length === 0) {
-        vetListDiv.innerHTML = `
-          <div class="no-results">
-            <h3>🔍 No vets found</h3>
-            <p>Try adjusting your search criteria or selecting a different city</p>
-          </div>
-        `;
+      if (filtered.length === 0) {
+        vetListDiv.innerHTML = `<div class="no-results"><h3>🔍 No vets found</h3><p>Try adjusting your search criteria or selecting a different city</p></div>`;
         return;
       }
 
-      filteredVets.forEach(vet => {
+      filtered.forEach(vet => {
         const card = document.createElement("div");
         card.className = "vet-card";
         card.innerHTML = `
@@ -923,10 +536,7 @@
           <div class="vet-info">
             <h3>${vet.name}</h3>
             <p>${vet.qualification}</p>
-            <div class="contact-info">
-              <span>📞</span>
-              <span>${vet.contact}</span>
-            </div>
+            <div class="contact-info"><span>📞</span><span>${vet.contact}</span></div>
           </div>
         `;
         card.onclick = () => showDetails(vet);
@@ -938,7 +548,7 @@
       document.getElementById("modalContent").innerHTML = `
         <h3>${vet.name}</h3>
         <p>${vet.details}</p>
-        <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid #e0e0e0;">
+        <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:2px solid var(--modal-divider);">
           <strong>📞 Contact:</strong> ${vet.contact}<br><br>
           <strong>📍 Location:</strong> ${vet.city}
         </div>
@@ -952,42 +562,36 @@
       document.getElementById("vetModal").style.display = "none";
     }
 
-    // Close modal with Escape key
-    document.addEventListener('keydown', function(event) {
-      if (event.key === 'Escape') {
-        closeModal();
-      }
-    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-    // Navbar scroll effect
+    // Navbar scroll
     window.addEventListener('scroll', function() {
-      const navbar = document.querySelector('.navbar-custom');
-      if (window.scrollY > 50) {
-        navbar.classList.add('scrolled');
-      } else {
-        navbar.classList.remove('scrolled');
+      document.querySelector('.navbar-custom').classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // Active nav link
+    document.querySelectorAll('.nav-link-custom').forEach(link => {
+      if (link.getAttribute('href') === window.location.pathname) {
+        document.querySelectorAll('.nav-link-custom').forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
       }
     });
 
-    // Initialize on page load
-    window.onload = filterVets;
-  </script>
-<script>
-(function(){
-    const toggle = document.getElementById('darkModeToggle');
-    const applyMode = enabled => {
+    // Dark mode
+    (function(){
+      const toggle = document.getElementById('darkModeToggle');
+      const applyMode = enabled => {
         document.body.classList.toggle('dark-mode', enabled);
         if (toggle) toggle.checked = enabled;
-    };
-    const saved = localStorage.getItem('darkMode');
-    applyMode(saved === 'true');
-    if (toggle) {
-        toggle.addEventListener('change', function() {
-            applyMode(this.checked);
-            localStorage.setItem('darkMode', this.checked);
-        });
-    }
-})();
-</script>
+      };
+      applyMode(localStorage.getItem('darkMode') === 'true');
+      if (toggle) toggle.addEventListener('change', function() {
+        applyMode(this.checked);
+        localStorage.setItem('darkMode', this.checked);
+      });
+    })();
+
+    window.onload = filterVets;
+  </script>
 </body>
 </html>

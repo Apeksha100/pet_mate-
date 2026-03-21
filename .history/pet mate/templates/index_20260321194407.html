@@ -3,129 +3,33 @@
 <head>
     <title>PetNova - Your Complete Pet Platform</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/style.css">
     <style>
-        /* ═══════════════════════════════════════════
-           CSS VARIABLES FOR LIGHT / DARK MODE
-        ═══════════════════════════════════════════ */
-        :root {
-            --body-bg-start: #667eea;
-            --body-bg-end: #764ba2;
-            --card-bg: rgba(255, 255, 255, 0.97);
-            --card-border: rgba(255,255,255,0.3);
-            --card-shadow: 0 15px 40px rgba(0,0,0,0.15);
-            --card-hover-shadow: 0 25px 50px rgba(0,0,0,0.25);
-            --service-title-color: #222;
-            --service-desc-color: #555;
-            --navbar-bg: rgba(255,255,255,0.97);
-            --navbar-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            --nav-link-color: #333;
-            --section-bg: rgba(255,255,255,0.97);
-            --how-it-works-text: #555;
-            --footer-bg: #2d1b69;
-            --footer-text: #ddd;
-            --footer-heading: #ffffff;
-            --footer-link: #ccc;
-            --footer-link-hover: #a78bfa;
-            --footer-border: #333;
-            --footer-bottom: #aaa;
-            --badge-bg: #fff;
-            --badge-color: #ff6b6b;
-            --quick-btn-bg: #fff;
-            --quick-btn-border: #c4b5fd;
-            --quick-btn-color: #6d4fc2;
-            --pawbot-msg-area-bg: #f7f6ff;
-            --pawbot-msg-bot-bg: #fff;
-            --pawbot-msg-bot-color: #2d2d2d;
-            --pawbot-input-border: #ede9fe;
-            --pawbot-input-bg: #fff;
-            --pawbot-input-color: #222;
-            --pawbot-powered-color: #aaa;
-            --pawbot-window-bg: #fff;
-            --dropdown-bg: #fff;
-            --dropdown-item-color: #333;
-            --hero-text: #fff;
-            --featured-card-bg: linear-gradient(135deg, #ec9292 0%, #f1f1f1 100%);
-            --featured-text: #464545;
-        }
-
-        body.dark-mode {
-            --body-bg-start: #1a1035;
-            --body-bg-end: #0d0820;
-            --card-bg: rgba(30, 25, 55, 0.97);
-            --card-border: rgba(102,126,234,0.2);
-            --card-shadow: 0 15px 40px rgba(0,0,0,0.5);
-            --card-hover-shadow: 0 25px 50px rgba(0,0,0,0.7);
-            --service-title-color: #e8e0ff;
-            --service-desc-color: #b0a8d0;
-            --navbar-bg: rgba(15, 10, 35, 0.98);
-            --navbar-shadow: 0 5px 20px rgba(0,0,0,0.5);
-            --nav-link-color: #c8bfee;
-            --section-bg: rgba(30, 25, 55, 0.97);
-            --how-it-works-text: #b0a8d0;
-            --footer-bg: #1a0e42;
-            --footer-text: #b0a8d0;
-            --footer-heading: #d4c8ff;
-            --footer-link: #9988cc;
-            --footer-link-hover: #a78bfa;
-            --footer-border: #2a1f4a;
-            --footer-bottom: #6b5f99;
-            --badge-bg: #2a1f4a;
-            --badge-color: #ff8fa3;
-            --quick-btn-bg: #2a1f4a;
-            --quick-btn-border: #6d4fc2;
-            --quick-btn-color: #c4b5fd;
-            --pawbot-msg-area-bg: #120d28;
-            --pawbot-msg-bot-bg: #1e1937;
-            --pawbot-msg-bot-color: #e0d8ff;
-            --pawbot-input-border: #3d3060;
-            --pawbot-input-bg: #1e1937;
-            --pawbot-input-color: #e0d8ff;
-            --pawbot-powered-color: #6b5f99;
-            --pawbot-window-bg: #150f2e;
-            --dropdown-bg: #1e1937;
-            --dropdown-item-color: #c8bfee;
-            --hero-text: #e8e0ff;
-            --featured-card-bg: linear-gradient(135deg, #6b2a2a 0%, #2a1f4a 100%);
-            --featured-text: #e0d8ff;
-        }
-
         body {
-            background: linear-gradient(135deg, var(--body-bg-start) 0%, var(--body-bg-end) 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            transition: background 0.4s ease, color 0.4s ease;
         }
-
-        /* ═══════════════════════════════════════════
-           HERO
-        ═══════════════════════════════════════════ */
         .hero-section {
             padding: 4rem 0;
-            color: var(--hero-text);
+            color: white;
             text-align: center;
+            font-family: 'Luckiest Guy', cursive;
         }
-        .hero-section h1,
-        .hero-section p {
-            color: var(--hero-text);
-        }
-
-        /* ═══════════════════════════════════════════
-           SERVICE CARDS
-        ═══════════════════════════════════════════ */
         .service-card {
-            background: var(--card-bg);
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
             padding: 2rem;
             margin-bottom: 2rem;
-            box-shadow: var(--card-shadow);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
             transition: all 0.4s ease;
             backdrop-filter: blur(10px);
-            border: 1px solid var(--card-border);
+            border: 1px solid rgba(255,255,255,0.2);
             height: 100%;
         }
         .service-card:hover {
             transform: translateY(-8px);
-            box-shadow: var(--card-hover-shadow);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
         }
         .service-icon {
             font-size: 3.5rem;
@@ -133,55 +37,17 @@
             display: block;
         }
         .service-title {
-            color: var(--service-title-color);
+            color: #333;
             font-weight: bold;
             margin-bottom: 1rem;
             font-size: 1.3rem;
         }
         .service-description {
-            color: var(--service-desc-color);
+            color: #666;
             margin-bottom: 2rem;
             line-height: 1.6;
             font-size: 0.95rem;
         }
-
-        /* How it works section */
-        .service-card h3.text-center {
-            color: var(--service-title-color);
-        }
-        .service-card h5 {
-            color: var(--service-title-color);
-        }
-        .service-card .text-muted {
-            color: var(--how-it-works-text) !important;
-        }
-
-        /* Featured card */
-        .featured-card {
-            background: var(--featured-card-bg) !important;
-            position: relative;
-            overflow: hidden;
-        }
-        .featured-card .service-title,
-        .featured-card .service-description {
-            color: var(--featured-text);
-        }
-        .featured-badge {
-            position: absolute;
-            top: -9px; right: -1px;
-            background: var(--badge-bg);
-            color: var(--badge-color);
-            border-radius: 50%;
-            width: 50px; height: 50px;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: bold;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            font-size: 1.2rem;
-        }
-
-        /* ═══════════════════════════════════════════
-           BUTTONS
-        ═══════════════════════════════════════════ */
         .btn-service {
             border: none;
             border-radius: 25px;
@@ -210,10 +76,25 @@
         .btn-vet:hover { box-shadow: 0 10px 25px rgba(108,117,125,0.4); }
         .btn-quiz   { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
         .btn-quiz:hover { box-shadow: 0 10px 25px rgba(102,126,234,0.4); }
-
-        /* ═══════════════════════════════════════════
-           FLOATING ELEMENTS
-        ═══════════════════════════════════════════ */
+        .featured-card {
+            background: linear-gradient(135deg, #ec9292 0%, #f1f1f1 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .featured-badge {
+            position: absolute;
+            top: -9px; right: -1px;
+            background: #fff; color: #ff6b6b;
+            border-radius: 50%;
+            width: 50px; height: 50px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            font-size: 1.2rem;
+        }
+        .featured-card .service-title,
+        .featured-card .service-description { color: #464545; }
         .floating-elements {
             position: absolute; width: 100%; height: 100%;
             overflow: hidden; pointer-events: none; top: 0; left: 0;
@@ -227,18 +108,16 @@
             to   { transform: translateX(calc(100vw + 100px)) rotate(360deg); }
         }
 
-        /* ═══════════════════════════════════════════
-           NAVBAR
-        ═══════════════════════════════════════════ */
+        /* Navbar */
         .navbar-custom {
-            background: var(--navbar-bg);
+            background: rgba(255,255,255,0.95);
             backdrop-filter: blur(10px);
-            box-shadow: var(--navbar-shadow);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
             padding: 1rem 0;
             position: sticky; top: 0; z-index: 1000;
             transition: all 0.3s ease;
         }
-        .navbar-custom.scrolled { box-shadow: 0 5px 30px rgba(0,0,0,0.3); padding: 0.5rem 0; }
+        .navbar-custom.scrolled { box-shadow: 0 5px 30px rgba(0,0,0,0.2); padding: 0.5rem 0; }
         .navbar-brand-custom {
             font-size: 1.8rem; font-weight: bold;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -246,8 +125,7 @@
             background-clip: text; margin-right: 2rem;
         }
         .nav-link-custom {
-            color: var(--nav-link-color) !important;
-            font-weight: 600;
+            color: #333 !important; font-weight: 600;
             margin: 0 0.5rem; padding: 0.5rem 1rem !important;
             border-radius: 20px; transition: all 0.3s ease;
         }
@@ -270,83 +148,23 @@
             display: block; margin: 5px 0; transition: all 0.3s ease;
         }
 
-        /* Dropdown */
-        .dropdown-menu {
-            background: var(--dropdown-bg) !important;
-            border-radius: 15px !important;
-            border: none !important;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
-        }
-        .dropdown-item {
-            color: var(--dropdown-item-color) !important;
-            border-radius: 10px;
-            transition: all 0.2s;
-        }
-        .dropdown-item:hover {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-            color: #fff !important;
-        }
-
-        /* Dark mode toggle label */
-        .form-check-label {
-            color: var(--nav-link-color);
-        }
-
-        /* ═══════════════════════════════════════════
-           FOOTER — Fixed visibility for both modes
-        ═══════════════════════════════════════════ */
-        .footer-custom {
-            background: var(--footer-bg) !important;
-            color: var(--footer-text) !important;
-            padding: 3rem 0 1rem;
-            margin-top: 4rem;
-            transition: background 0.4s ease, color 0.4s ease;
-        }
-        .footer-heading {
-            color: var(--footer-heading) !important;
-            font-weight: bold;
-            margin-bottom: 1.5rem;
-        }
-        .footer-text {
-            color: var(--footer-text) !important;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-        }
-        .footer-links {
-            list-style: none;
-            padding: 0;
-        }
+        /* Footer */
+        .footer-custom { background: #000; color: #fff; padding: 3rem 0 1rem; margin-top: 4rem; }
+        .footer-heading { color: #fff; font-weight: bold; margin-bottom: 1.5rem; }
+        .footer-text { color: #ccc; line-height: 1.6; margin-bottom: 1.5rem; }
+        .footer-links { list-style: none; padding: 0; }
         .footer-links li { margin-bottom: 0.8rem; }
-        .footer-links a {
-            color: var(--footer-link) !important;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-        .footer-links a:hover {
-            color: var(--footer-link-hover) !important;
-            padding-left: 5px;
-        }
+        .footer-links a { color: #ccc; text-decoration: none; transition: all 0.3s ease; }
+        .footer-links a:hover { color: #667eea; padding-left: 5px; }
         .social-links { display: flex; gap: 1rem; }
-        .social-link {
-            font-size: 1.5rem;
-            text-decoration: none;
-            transition: transform 0.3s ease;
-        }
+        .social-link { font-size: 1.5rem; text-decoration: none; transition: transform 0.3s ease; }
         .social-link:hover { transform: translateY(-5px); }
         .footer-bottom {
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--footer-border);
-            text-align: center;
-            color: var(--footer-bottom) !important;
+            margin-top: 2rem; padding-top: 1.5rem;
+            border-top: 1px solid #333; text-align: center; color: #999;
         }
-        /* Force all text inside footer to inherit proper colors */
-        .footer-custom p,
-        .footer-custom span,
-        .footer-custom small,
-        .footer-custom li {
-            color: inherit;
-        }
+
+        
 
         /* ═══════════════════════════════════════════
            PAWBOT CHATBOT STYLES
@@ -379,8 +197,7 @@
         #pawbot-window {
             position: fixed; bottom: 106px; right: 28px;
             width: 365px; max-height: 560px;
-            background: var(--pawbot-window-bg);
-            border-radius: 24px;
+            background: #fff; border-radius: 24px;
             box-shadow: 0 20px 65px rgba(0,0,0,.22);
             display: flex; flex-direction: column;
             z-index: 9998; overflow: hidden;
@@ -404,8 +221,8 @@
             display: flex; align-items: center; justify-content: center;
             font-size: 1.45rem; flex-shrink: 0;
         }
-        #pawbot-header-info h6 { margin: 0; font-size: .95rem; font-weight: 700; color: #fff; }
-        #pawbot-header-info small { font-size: .73rem; opacity: .88; color: #fff; }
+        #pawbot-header-info h6 { margin: 0; font-size: .95rem; font-weight: 700; }
+        #pawbot-header-info small { font-size: .73rem; opacity: .88; }
         #pawbot-close {
             margin-left: auto;
             background: rgba(255,255,255,.2); border: none; color: #fff;
@@ -419,8 +236,7 @@
         #pawbot-messages {
             flex: 1; overflow-y: auto; padding: 16px;
             display: flex; flex-direction: column; gap: 10px;
-            background: var(--pawbot-msg-area-bg);
-            scroll-behavior: smooth;
+            background: #f7f6ff; scroll-behavior: smooth;
         }
         #pawbot-messages::-webkit-scrollbar { width: 4px; }
         #pawbot-messages::-webkit-scrollbar-thumb { background: #cfc8ff; border-radius: 4px; }
@@ -435,8 +251,7 @@
             to   { transform: scale(1);  opacity: 1; }
         }
         .pb-msg.bot {
-            background: var(--pawbot-msg-bot-bg);
-            color: var(--pawbot-msg-bot-color);
+            background: #fff; color: #2d2d2d;
             border-bottom-left-radius: 4px;
             box-shadow: 0 2px 8px rgba(0,0,0,.07);
             align-self: flex-start;
@@ -449,8 +264,7 @@
 
         .pb-typing {
             display: flex; gap: 5px; align-items: center;
-            padding: 11px 15px;
-            background: var(--pawbot-msg-bot-bg);
+            padding: 11px 15px; background: #fff;
             border-radius: 18px; border-bottom-left-radius: 4px;
             align-self: flex-start;
             box-shadow: 0 2px 8px rgba(0,0,0,.07);
@@ -468,13 +282,10 @@
 
         #pawbot-quick {
             padding: 8px 14px 4px; display: flex; flex-wrap: wrap; gap: 6px;
-            background: var(--pawbot-msg-area-bg);
-            border-top: 1px solid var(--pawbot-input-border);
+            background: #f7f6ff; border-top: 1px solid #ede9ff;
         }
         .pb-quick-btn {
-            background: var(--quick-btn-bg);
-            border: 1.5px solid var(--quick-btn-border);
-            color: var(--quick-btn-color);
+            background: #fff; border: 1.5px solid #c4b5fd; color: #6d4fc2;
             border-radius: 20px; padding: 5px 11px; font-size: .76rem;
             cursor: pointer; transition: all .2s; white-space: nowrap; font-family: inherit;
         }
@@ -482,22 +293,15 @@
 
         #pawbot-input-area {
             display: flex; align-items: flex-end; gap: 8px;
-            padding: 11px 14px;
-            border-top: 1px solid var(--pawbot-input-border);
-            background: var(--pawbot-input-bg);
-            flex-shrink: 0;
+            padding: 11px 14px; border-top: 1px solid #ede9fe;
+            background: #fff; flex-shrink: 0;
         }
         #pawbot-input {
-            flex: 1;
-            border: 1.5px solid var(--pawbot-input-border);
-            border-radius: 20px;
+            flex: 1; border: 1.5px solid #ede9fe; border-radius: 20px;
             padding: 9px 14px; font-size: .875rem; outline: none;
             transition: border .2s; resize: none; font-family: inherit;
             max-height: 100px; overflow-y: auto; line-height: 1.4;
-            background: var(--pawbot-input-bg);
-            color: var(--pawbot-input-color);
         }
-        #pawbot-input::placeholder { color: var(--service-desc-color); }
         #pawbot-input:focus { border-color: #667eea; }
         #pawbot-send {
             width: 40px; height: 40px; border-radius: 50%;
@@ -511,10 +315,8 @@
         #pawbot-send:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
 
         #pawbot-powered {
-            text-align: center; font-size: .68rem;
-            color: var(--pawbot-powered-color);
-            padding: 4px 0 8px;
-            background: var(--pawbot-input-bg);
+            text-align: center; font-size: .68rem; color: #aaa;
+            padding: 4px 0 8px; background: #fff;
         }
 
         @media (max-width: 420px) {
@@ -547,17 +349,18 @@
                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             🔧 Services
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
-                            <li><a class="dropdown-item" href="/care-tips">🩺 Care Tips</a></li>
-                            <li><a class="dropdown-item" href="/mate">💕 Find Mate</a></li>
-                            <li><a class="dropdown-item" href="/rescue">🏠 Rescue</a></li>
-                            <li><a class="dropdown-item" href="/vet">🏥 Vet Directory</a></li>
-                            <li><a class="dropdown-item" href="/petaccessories">🏪 Pet Shops</a></li>
+                        <ul class="dropdown-menu" aria-labelledby="servicesDropdown"
+                            style="border-radius:15px;border:none;box-shadow:0 10px 30px rgba(0,0,0,0.1);">
+                            <li><a class="dropdown-item" href="/care-tips" style="border-radius:10px;">🩺 Care Tips</a></li>
+                            <li><a class="dropdown-item" href="/mate"      style="border-radius:10px;">💕 Find Mate</a></li>
+                            <li><a class="dropdown-item" href="/rescue"    style="border-radius:10px;">🏠 Rescue</a></li>
+                            <li><a class="dropdown-item" href="/vet"       style="border-radius:10px;">🏥 Vet Directory</a></li>
+                            <li><a class="dropdown-item" href="/petaccessories" style="border-radius:10px;">🏪 Pet Shops</a></li>
                         </ul>
                     </li>
                     <li class="nav-item ms-3">
-                        <div class="form-check form-switch mb-0 d-flex align-items-center">
-                            <input class="form-check-input me-2" type="checkbox" id="darkModeToggle">
+                        <div class="form-check form-switch mb-0">
+                            <input class="form-check-input" type="checkbox" id="darkModeToggle">
                             <label class="form-check-label" for="darkModeToggle">Dark</label>
                         </div>
                     </li>
@@ -759,12 +562,17 @@
         </div>
     </footer>
 
-    <!-- PAWBOT CHATBOT WIDGET -->
+    <!-- ═══════════════════════════════════════════════════════════
+         PAWBOT CHATBOT WIDGET — powered by Google Gemini (free)
+    ═══════════════════════════════════════════════════════════ -->
+
+    <!-- Launcher bubble -->
     <button id="pawbot-launcher" aria-label="Open PawBot chat">
         <span>🐾</span>
         <div id="pawbot-badge">1</div>
     </button>
 
+    <!-- Chat window -->
     <div id="pawbot-window" role="dialog" aria-label="PawBot Chat">
         <div id="pawbot-header">
             <div id="pawbot-avatar">🐾</div>
@@ -792,6 +600,8 @@
         </div>
         <div id="pawbot-powered">✨ Powered by Google Gemini</div>
     </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
 
     <script>
         // Service card hover
@@ -840,7 +650,9 @@
     </script>
 
     <script>
-    // PAWBOT CHATBOT LOGIC
+    // ═══════════════════════════════════════════════════════════
+    //  PAWBOT CHATBOT LOGIC
+    // ═══════════════════════════════════════════════════════════
     (function () {
         const launcher  = document.getElementById('pawbot-launcher');
         const chatWin   = document.getElementById('pawbot-window');
@@ -856,6 +668,7 @@
         let waiting = false;
         let greeted = false;
 
+        /* Toggle */
         function toggleChat() {
             isOpen = !isOpen;
             chatWin.classList.toggle('open', isOpen);
@@ -868,6 +681,7 @@
         launcher.addEventListener('click', toggleChat);
         closeBtn.addEventListener('click', toggleChat);
 
+        /* Greeting */
         function greet() {
             appendMsg('bot',
                 "Hi there! 🐾 I'm **PawBot**, your PetNova assistant!\n\n" +
@@ -876,6 +690,7 @@
             );
         }
 
+        /* Append bubble */
         function appendMsg(role, text) {
             const div = document.createElement('div');
             div.className = 'pb-msg ' + role;
@@ -886,6 +701,7 @@
             msgArea.scrollTop = msgArea.scrollHeight;
         }
 
+        /* Typing indicator */
         function showTyping() {
             const el = document.createElement('div');
             el.className = 'pb-typing'; el.id = 'pb-typing-el';
@@ -898,6 +714,7 @@
             if (el) el.remove();
         }
 
+        /* Send */
         async function sendMessage(text) {
             text = text.trim();
             if (!text || waiting) return;
@@ -933,22 +750,27 @@
             inputEl.focus();
         }
 
+        /* Quick replies */
         document.querySelectorAll('.pb-quick-btn').forEach(btn => {
             btn.addEventListener('click', () => sendMessage(btn.textContent.trim()));
         });
 
+        /* Send button & Enter key */
         sendBtn.addEventListener('click', () => sendMessage(inputEl.value));
         inputEl.addEventListener('keydown', e => {
             if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(inputEl.value); }
         });
 
+        /* Auto-grow textarea */
         inputEl.addEventListener('input', () => {
             inputEl.style.height = 'auto';
             inputEl.style.height = Math.min(inputEl.scrollHeight, 100) + 'px';
         });
 
+        /* Show badge after 2.5s */
         setTimeout(() => { if (!isOpen) badge.style.display = 'flex'; }, 2500);
     })();
+    // ═══════════════════════════════════════════════════════════
     </script>
 
 </body>

@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect, send_from_directory, jsonify
+from flask import Flask, render_template, request, redirect, send_from_directory
+from flask import Flask, render_template, request, redirect, jsonify
 import sqlite3
 import os
 import requests as http_requests
@@ -11,10 +12,12 @@ UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# ── Groq API Key (FREE — no billing needed) ───────────────────────────────────
-# Sign up at https://console.groq.com → API Keys → Create API Key
-# GROQ_API_KEY = ""
+# ── Google Gemini API Key ──────────────────────────────────────────────────────
+# Get your FREE key at: https://aistudio.google.com  →  "Get API Key"
+GEMINI_API_KEY = "YOUR_GEMINI_API_KEY_HERE"
 # ──────────────────────────────────────────────────────────────────────────────
+
+reports = []
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 
@@ -27,8 +30,13 @@ def init_db():
         conn.execute('''
             CREATE TABLE IF NOT EXISTS pets (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT, breed TEXT, location TEXT,
-                age INTEGER, purpose TEXT, photo TEXT, category TEXT
+                name TEXT,
+                breed TEXT,
+                location TEXT,
+                age INTEGER,
+                purpose TEXT,
+                photo TEXT,
+                category TEXT 
             )
         ''')
         try:
@@ -40,8 +48,13 @@ def init_db():
         conn.execute('''
             CREATE TABLE IF NOT EXISTS lost_found_reports (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                status TEXT, animalType TEXT, location TEXT, date TEXT,
-                description TEXT, contact TEXT, photo TEXT,
+                status TEXT,
+                animalType TEXT,
+                location TEXT,
+                date TEXT,
+                description TEXT,
+                contact TEXT,
+                photo TEXT,
                 timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
             )
         ''')
@@ -54,8 +67,6 @@ def init_db():
         except sqlite3.OperationalError:
             pass
 
-
-# ─── Page routes ──────────────────────────────────────────────────────────────
 
 @app.route('/')
 def index():
@@ -88,6 +99,7 @@ def add_petshop():
 @app.route('/add', methods=['GET', 'POST'])
 def add_pet():
     pet = None
+
     if request.method == 'POST':
         name     = request.form.get('name')
         category = request.form.get('category')
@@ -95,6 +107,7 @@ def add_pet():
         location = request.form.get('location')
         age      = request.form.get('age')
         purpose  = request.form.get('purpose')
+
         try:
             age = int(age)
         except (ValueError, TypeError):
@@ -105,7 +118,8 @@ def add_pet():
             file = request.files['photo']
             if file.filename != '' and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(filepath)
                 photo = filename
 
         with sqlite3.connect("pets.db") as conn:
@@ -113,7 +127,9 @@ def add_pet():
                 "INSERT INTO pets (name, breed, location, age, purpose, photo, category) VALUES (?, ?, ?, ?, ?, ?, ?)",
                 (name, breed, location, age, purpose, photo, category)
             )
+
         pet = [None, name, breed, location, age, purpose, photo]
+
     return render_template('add_pet.html', pet=pet)
 
 @app.route('/pets')
@@ -145,6 +161,7 @@ def find_mate():
     pets = []
     selected_category = None
     selected_breed = None
+
     with sqlite3.connect("pets.db") as conn:
         categories = [row[0] for row in conn.execute("SELECT DISTINCT category FROM pets").fetchall()]
         breeds_per_category = {}
@@ -154,17 +171,21 @@ def find_mate():
                     "SELECT DISTINCT breed FROM pets WHERE category=?", (cat,)
                 ).fetchall()
             ]
+
     if request.method == 'POST':
         selected_category = request.form.get('category')
         selected_breed    = request.form.get('breed')
         query  = "SELECT * FROM pets WHERE purpose='Mate'"
         params = []
         if selected_category:
-            query += " AND category=?"; params.append(selected_category)
+            query += " AND category=?"
+            params.append(selected_category)
         if selected_breed:
-            query += " AND breed=?"; params.append(selected_breed)
+            query += " AND breed=?"
+            params.append(selected_breed)
         with sqlite3.connect("pets.db") as conn:
             pets = conn.execute(query, params).fetchall()
+
     return render_template('mate.html', pets=pets, categories=categories,
                            breeds_per_category=breeds_per_category,
                            selected_category=selected_category,
@@ -178,14 +199,17 @@ def search_pets():
         location = request.form.get('location')
         age      = request.form.get('age')
         purpose  = request.form.get('purpose')
+
         query  = "SELECT * FROM pets WHERE 1=1"
         params = []
         if breed:    query += " AND breed = ?";    params.append(breed)
         if location: query += " AND location = ?"; params.append(location)
         if age:      query += " AND age = ?";      params.append(age)
         if purpose:  query += " AND purpose = ?";  params.append(purpose)
+
         with sqlite3.connect("pets.db") as conn:
             pets = conn.execute(query, params).fetchall()
+
     selected_purpose = request.form.get('purpose')
     return render_template('search.html', pets=pets, selected_purpose=selected_purpose)
 
@@ -211,13 +235,16 @@ def add_report():
     date        = request.form.get("date")
     description = request.form.get("description")
     contact     = request.form.get("contact")
+
     photo = None
     if 'photo' in request.files:
         file = request.files['photo']
         if file.filename != '' and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(filepath)
             photo = filename
+
     conn = sqlite3.connect("rescue.db")
     cursor = conn.cursor()
     cursor.execute('''
@@ -228,24 +255,35 @@ def add_report():
     conn.close()
     return jsonify({"message": "Report added successfully!"})
 
+
 def generate_care_tips(category, age_group):
     tips = []
     animal_tips = {
-        'Dog':     ['Schedule regular vet checkups every 6-12 months.',
-                    'Provide daily walks and mental stimulation with puzzles.',
-                    'Brush their coat weekly and check for ticks after outdoor time.'],
-        'Cat':     ['Give fresh water daily and use multiple water stations.',
-                    'Clean the litter box daily to reduce stress and prevent infection.',
-                    'Add vertical spaces and play sessions to satisfy hunting instincts.'],
-        'Bird':    ['Rotate toys weekly to keep them mentally active.',
-                    'Offer a balanced diet: pellets, fresh fruits, and greens.',
-                    'Ensure cage is cleaned and placed away from drafts.'],
-        'Reptile': ['Maintain strict temperature and humidity gradients in the enclosure.',
-                    'Use UVB lighting on a reliable timer for bone health.',
-                    'Feed species-appropriate prey and avoid overfeeding.'],
-        'Small':   ['Provide a spacious enclosure with hiding spots and chew toys.',
-                    'Change bedding frequently and keep living area dry.',
-                    'Introduce safe fresh vegetables gradually into their diet.']
+        'Dog': [
+            'Schedule regular vet checkups every 6-12 months.',
+            'Provide daily walks and mental stimulation with puzzles.',
+            'Brush their coat weekly and check for ticks after outdoor time.'
+        ],
+        'Cat': [
+            'Give fresh water daily and use multiple water stations.',
+            'Clean the litter box daily to reduce stress and prevent infection.',
+            'Add vertical spaces and play sessions to satisfy hunting instincts.'
+        ],
+        'Bird': [
+            'Rotate toys weekly to keep them mentally active.',
+            'Offer a balanced diet: pellets, fresh fruits, and greens.',
+            'Ensure cage is cleaned and placed away from drafts.'
+        ],
+        'Reptile': [
+            'Maintain strict temperature and humidity gradients in the enclosure.',
+            'Use UVB lighting on a reliable timer for bone health.',
+            'Feed species-appropriate prey and avoid overfeeding.'
+        ],
+        'Small': [
+            'Provide a spacious enclosure with hiding spots and chew toys.',
+            'Change bedding frequently and keep living area dry.',
+            'Introduce safe fresh vegetables gradually into their diet.'
+        ]
     }
     tips.extend(animal_tips.get(category, [
         'Keep your pet comfortable with a safe, clean environment.',
@@ -269,11 +307,13 @@ def care_tips():
     selected_age      = ''
     pet_name          = ''
     tips              = []
+
     if request.method == 'POST':
         selected_category = request.form.get('category', '')
         selected_age      = request.form.get('age_group', '')
         pet_name          = request.form.get('pet_name', '').strip()
         tips              = generate_care_tips(selected_category, selected_age)
+
     return render_template('pet_care_tips.html',
                            pet_name=pet_name,
                            selected_category=selected_category,
@@ -286,10 +326,8 @@ def vet():
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  PAWBOT CHATBOT — Groq (FREE, no billing, very fast)
-#  Free limits: 14,400 requests/day, 500,000 tokens/day on llama-3.3-70b
+#  PAWBOT CHATBOT — Google Gemini 1.5 Flash (FREE)
 # ══════════════════════════════════════════════════════════════════════════════
-
 SYSTEM_PROMPT = (
     "You are PawBot, the friendly AI assistant for PetNova — a complete pet platform. "
     "You help users find pets, understand the platform's services (buying, selling, rescue, "
@@ -304,57 +342,46 @@ SYSTEM_PROMPT = (
 
 @app.route('/chat', methods=['POST'])
 def chat():
-    try:
-        data    = request.get_json(force=True)
-        history = data.get("messages", [])
+    """
+    Receives: { "messages": [ {"role": "user"|"assistant", "content": "..."}, ... ] }
+    Returns:  { "reply": "..." }
+    """
+    data    = request.get_json(force=True)
+    history = data.get("messages", [])
 
-        # Groq uses the same format as OpenAI — simple and clean
-        messages = [{"role": "system", "content": SYSTEM_PROMPT}]
-        for msg in history:
-            messages.append({
-                "role": msg["role"],   # "user" or "assistant" — no conversion needed
-                "content": msg["content"]
-            })
+    # Gemini uses role "model" instead of "assistant"
+    gemini_contents = []
+    for msg in history:
+        role = "model" if msg["role"] == "assistant" else "user"
+        gemini_contents.append({
+            "role": role,
+            "parts": [{"text": msg["content"]}]
+        })
 
-        payload = {
-            "model": "llama-3.3-70b-versatile",   # free, fast, very capable
-            "messages": messages,
-            "max_tokens": 512,
-            "temperature": 0.7
+    payload = {
+        "system_instruction": {
+            "parts": [{"text": SYSTEM_PROMPT}]
+        },
+        "contents": gemini_contents,
+        "generationConfig": {
+            "maxOutputTokens": 512,
+            "temperature": 0.7,
         }
+    }
 
-        resp = http_requests.post(
-            "https://api.groq.com/openai/v1/chat/completions",
-            json=payload,
-            headers={
-                "Content-Type": "application/json",
-                "Authorization": f"Bearer {GROQ_API_KEY}"
-            },
-            timeout=30
-        )
+    url = (
+        f"https://generativelanguage.googleapis.com/v1beta/"
+        f"models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
+    )
 
-        print(f"[PawBot] Groq status: {resp.status_code}")
-
-        if resp.status_code != 200:
-            err_msg = resp.json().get('error', {}).get('message', resp.text)
-            print(f"[PawBot] Groq error: {err_msg}")
-            return jsonify({"reply": f"⚠️ API error: {err_msg}"}), 500
-
-        reply = resp.json()["choices"][0]["message"]["content"]
+    try:
+        resp = http_requests.post(url, json=payload, timeout=30)
+        resp.raise_for_status()
+        reply = resp.json()["candidates"][0]["content"]["parts"][0]["text"]
         return jsonify({"reply": reply})
-
-    except http_requests.exceptions.Timeout:
-        print("[PawBot] Timeout")
-        return jsonify({"reply": "Request timed out. Please try again! 🐾"}), 504
-
-    except http_requests.exceptions.ConnectionError as e:
-        print(f"[PawBot] Connection error: {e}")
-        return jsonify({"reply": "Cannot connect to server. Check your internet. 🐾"}), 503
-
     except Exception as e:
-        print(f"[PawBot] Error: {type(e).__name__}: {e}")
-        return jsonify({"reply": f"⚠️ Error: {str(e)}"}), 500
-
+        print(f"Gemini error: {e}")
+        return jsonify({"reply": "Sorry, I'm having trouble right now. Please try again! 🐾"}), 500
 # ══════════════════════════════════════════════════════════════════════════════
 
 

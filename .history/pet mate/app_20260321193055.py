@@ -13,7 +13,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # ── Groq API Key (FREE — no billing needed) ───────────────────────────────────
 # Sign up at https://console.groq.com → API Keys → Create API Key
-# GROQ_API_KEY = ""
+GROQ_API_KEY = "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"
 # ──────────────────────────────────────────────────────────────────────────────
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}

@@ -11,9 +11,9 @@ UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# ── Groq API Key (FREE — no billing needed) ───────────────────────────────────
-# Sign up at https://console.groq.com → API Keys → Create API Key
-# GROQ_API_KEY = ""
+# ── Google Gemini API Key ──────────────────────────────────────────────────────
+# Get your FREE key at: https://aistudio.google.com  →  "Get API Key"
+GEMINI_API_KEY = "YOUR_GEMINI_API_KEY_HERE"
 # ──────────────────────────────────────────────────────────────────────────────
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
@@ -286,8 +286,7 @@ def vet():
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  PAWBOT CHATBOT — Groq (FREE, no billing, very fast)
-#  Free limits: 14,400 requests/day, 500,000 tokens/day on llama-3.3-70b
+#  PAWBOT CHATBOT — Google Gemini 2.0 Flash (FREE)
 # ══════════════════════════════════════════════════════════════════════════════
 
 SYSTEM_PROMPT = (
@@ -302,45 +301,61 @@ SYSTEM_PROMPT = (
     "If asked about something unrelated to pets or PetNova, politely redirect back to pets."
 )
 
+# Try these model names in order if one fails:
+#   gemini-2.0-flash
+#   gemini-2.0-flash-lite
+#   gemini-1.5-flash-latest
+GEMINI_MODEL = "gemini-2.0-flash"
+
 @app.route('/chat', methods=['POST'])
 def chat():
     try:
         data    = request.get_json(force=True)
         history = data.get("messages", [])
 
-        # Groq uses the same format as OpenAI — simple and clean
-        messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+        # Convert to Gemini format (role must be "user" or "model")
+        gemini_contents = []
         for msg in history:
-            messages.append({
-                "role": msg["role"],   # "user" or "assistant" — no conversion needed
-                "content": msg["content"]
+            role = "model" if msg["role"] == "assistant" else "user"
+            gemini_contents.append({
+                "role": role,
+                "parts": [{"text": msg["content"]}]
             })
 
         payload = {
-            "model": "llama-3.3-70b-versatile",   # free, fast, very capable
-            "messages": messages,
-            "max_tokens": 512,
-            "temperature": 0.7
+            "system_instruction": {
+                "parts": [{"text": SYSTEM_PROMPT}]
+            },
+            "contents": gemini_contents,
+            "generationConfig": {
+                "maxOutputTokens": 512,
+                "temperature": 0.7
+            }
         }
 
+        url = (
+            f"https://generativelanguage.googleapis.com/v1beta/"
+            f"models/{GEMINI_MODEL}:generateContent?key={GEMINI_API_KEY}"
+        )
+
+        print(f"[PawBot] POST {url.split('?')[0]}")
+
         resp = http_requests.post(
-            "https://api.groq.com/openai/v1/chat/completions",
+            url,
             json=payload,
-            headers={
-                "Content-Type": "application/json",
-                "Authorization": f"Bearer {GROQ_API_KEY}"
-            },
+            headers={"Content-Type": "application/json"},
             timeout=30
         )
 
-        print(f"[PawBot] Groq status: {resp.status_code}")
+        print(f"[PawBot] Status: {resp.status_code}")
 
         if resp.status_code != 200:
             err_msg = resp.json().get('error', {}).get('message', resp.text)
-            print(f"[PawBot] Groq error: {err_msg}")
+            print(f"[PawBot] Error: {err_msg}")
             return jsonify({"reply": f"⚠️ API error: {err_msg}"}), 500
 
-        reply = resp.json()["choices"][0]["message"]["content"]
+        result = resp.json()
+        reply  = result["candidates"][0]["content"]["parts"][0]["text"]
         return jsonify({"reply": reply})
 
     except http_requests.exceptions.Timeout:
@@ -349,7 +364,7 @@ def chat():
 
     except http_requests.exceptions.ConnectionError as e:
         print(f"[PawBot] Connection error: {e}")
-        return jsonify({"reply": "Cannot connect to server. Check your internet. 🐾"}), 503
+        return jsonify({"reply": "Cannot connect to Gemini. Check your internet. 🐾"}), 503
 
     except Exception as e:
         print(f"[PawBot] Error: {type(e).__name__}: {e}")

@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PetNova - Your Complete Pet Platform</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+    /* Floating Button */
+    #chat-trigger {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        border: none;
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        z-index: 1001;
+        transition: transform 0.3s ease;
+    }
+    #chat-trigger:hover { transform: scale(1.1); }
+
+    /* Chat Window */
+    #chat-window {
+        position: fixed;
+        bottom: 90px;
+        right: 20px;
+        width: 320px;
+        height: 450px;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        display: none; /* Hidden by default */
+        flex-direction: column;
+        overflow: hidden;
+        z-index: 1001;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    #chat-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 15px;
+        font-weight: bold;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    #chat-messages {
+        flex: 1;
+        padding: 15px;
+        overflow-y: auto;
+        background: #f8f9fa;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .msg { padding: 8px 12px; border-radius: 15px; font-size: 14px; max-width: 85%; }
+    .bot-msg { background: #e9ecef; align-self: flex-start; border-bottom-left-radius: 2px; color: #333; }
+    .user-msg { background: #667eea; color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+
+    #chat-input-container {
+        display: flex;
+        padding: 10px;
+        border-top: 1px solid #eee;
+        background: white;
+    }
+
+    #chat-input-container input {
+        flex: 1;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        padding: 8px 15px;
+        outline: none;
+    }
+
+    #chat-send {
+        background: none;
+        border: none;
+        color: #764ba2;
+        font-weight: bold;
+        margin-left: 5px;
+        cursor: pointer;
+    }
+</style>
+
+<div id="chat-window">
+    <div id="chat-header">
+        <span>🐾 PetNova Assistant</span>
+        <button onclick="toggleChat()" style="background:none; border:none; color:white; cursor:pointer;">✕</button>
+    </div>
+    <div id="chat-messages" id="chat-content">
+        <div class="msg bot-msg">Hi! I'm the PetNova bot. How can I help you today?</div>
+    </div>
+    <div id="chat-input-container">
+        <input type="text" id="chat-user-input" placeholder="Type a message...">
+        <button id="chat-send" onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<button id="chat-trigger" onclick="toggleChat()">💬</button>
+
+<script>
+    function toggleChat() {
+        const win = document.getElementById('chat-window');
+        win.style.display = (win.style.display === 'flex') ? 'none' : 'flex';
+    }
+
+    async function sendMessage() {
+        const inputField = document.getElementById('chat-user-input');
+        const messageContainer = document.getElementById('chat-messages');
+        const message = inputField.value.trim();
+
+        if (!message) return;
+
+        // 1. Display User Message
+        const userDiv = document.createElement('div');
+        userDiv.className = 'msg user-msg';
+        userDiv.innerText = message;
+        messageContainer.appendChild(userDiv);
+        inputField.value = '';
+
+        // Scroll to bottom
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+
+        // 2. Fetch Response from Flask
+        try {
+            const response = await fetch('/chatbot', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: message })
+            });
+            const data = await response.json();
+
+            // 3. Display Bot Message
+            const botDiv = document.createElement('div');
+            botDiv.className = 'msg bot-msg';
+            botDiv.innerHTML = data.reply; // Using innerHTML to allow links
+            messageContainer.appendChild(botDiv);
+            messageContainer.scrollTop = messageContainer.scrollHeight;
+
+        } catch (error) {
+            console.error("Chatbot Error:", error);
+        }
+    }
+
+    // Allow "Enter" key to send message
+    document.getElementById('chat-user-input').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') sendMessage();
+    });
+</script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand-custom" href="/">
+                🐾 PetNova
+            </a>
+            <button class="navbar-toggler navbar-toggler-custom" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon-custom"></span>
+                <span class="navbar-toggler-icon-custom"></span>
+                <span class="navbar-toggler-icon-custom"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link-custom" href="/">🏠 Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom" href="/pets">👀 Browse</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom active" href="/buy">🛒 Buy</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom" href="/add">➕ Add Pet</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom" href="/quiz">🧩 Quiz</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link-custom dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            🔧 Services
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="servicesDropdown" style="border-radius: 15px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                            <li><a class="dropdown-item" href="/care-tips" style="border-radius: 10px;">🩺 Care Tips</a></li>
+                            <li><a class="dropdown-item" href="/mate" style="border-radius: 10px;">💕 Find Mate</a></li>
+                            <li><a class="dropdown-item" href="/rescue" style="border-radius: 10px;">🏠 Rescue</a></li>
+                            <li><a class="dropdown-item" href="/vet" style="border-radius: 10px;">🏥 Vet Directory</a></li>
+                            <li><a class="dropdown-item" href="/petaccessories" style="border-radius: 10px;">🏪 Pet Shops</a></li>
+                        
+                    
+
+                    </ul>
+                    </li>
+                    <li class="nav-item ms-3">
+                        <div class="form-check form-switch mb-0">
+                            <input class="form-check-input" type="checkbox" id="darkModeToggle">
+                            <label class="form-check-label" for="darkModeToggle">Dark</label>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="floating-elements">
+        <div class="floating-pet" style="top: 10%; animation-delay: 0s;">🐕</div>
+        <div class="floating-pet" style="top: 30%; animation-delay: 7s;">🐱</div>
+        <div class="floating-pet" style="top: 50%; animation-delay: 14s;">🦜</div>
+        <div class="floating-pet" style="top: 70%; animation-delay: 21s;">🐰</div>
+        <div class="floating-pet" style="top: 20%; animation-delay: 5s;">🐠</div>
+        <div class="floating-pet" style="top: 80%; animation-delay: 12s;">🦎</div>
+        <div class="floating-pet" style="top: 45%; animation-delay: 18s;">🐹</div>
+    </div>
+
+    <div class="hero-section">
+        <div class="container">
+            <h1 class="display-3 mb-4">🐾 Welcome to PetNova 🐾</h1>
+            <p class="lead mb-5">Your complete platform for everything pet-related - from finding your perfect companion to connecting with other pet lovers</p>
+        </div>
+    </div>
+
+    <div class="container pb-5">
+        <div class="row">
+            <!-- Pet Quiz Hub - Featured -->
+            <div class="col-lg-4 mb-4">
+                <div class="service-card featured-card position-relative">
+                    <div class="featured-badge">NEW</div>
+                    <div class="service-icon">🧩</div>
+                    <h3 class="service-title">Pet Quiz Hub</h3>
+                    <p class="service-description">
+                        Discover your perfect pet match with our comprehensive quiz system! Take personalized quizzes to find the ideal pet type, breed, or even help your pet find their perfect companion.
+                    </p>
+                    <a href="/quiz" class="btn-service btn-quiz">
+                        Take Pet Quizzes
+                    </a>
+                </div>
+            </div>
+
+            <!-- Add a Pet -->
+            <div class="col-lg-4 mb-4">
+                <div class="service-card">
+                    <div class="service-icon">➕</div>
+                    <h3 class="service-title">Add a Pet</h3>
+                    <p class="service-description">
+                        Share your beloved pet with the PetNova community. Create a detailed profile with photos, personality traits, and fun facts about your furry friend.
+                    </p>
+                    <a href="/add" class="btn-service btn-add">
+                        Add Your Pet
+                    </a>
+                </div>
+            </div>
+
+            <!-- View All Pets -->
+            <div class="col-lg-4 mb-4">
+                <div class="service-card">
+                    <div class="service-icon">👀</div>
+                    <h3 class="service-title">Browse Pets</h3>
+                    <p class="service-description">
+                        Explore our amazing collection of pets from the community. Filter by type, breed, age, and location to find exactly what you're looking for.
+                    </p>
+                    <a href="/pets" class="btn-service btn-view">
+                        View All Pets
+                    </a>
+                </div>
+            </div>
+
+            <!-- Buy a Pet -->
+            <div class="col-lg-4 mb-4">
+                <div class="service-card">
+                    <div class="service-icon">🛒</div>
+                    <h3 class="service-title">Buy a Pet</h3>
+                    <p class="service-description">
+                        Find your perfect companion from trusted sellers. Browse available pets with detailed health records and meet before you commit.
+                    </p>
+                    <a href="/buy" class="btn-service btn-buy">
+                        Shop for Pets
+                    </a>
+                </div>
+            </div>
+
+            <!-- Sell a Pet -->
+            <div class="col-lg-4 mb-4">
+                <div class="service-card">
+                    <div class="service-icon">💰</div>
+                    <h3 class="service-title">Sell a Pet</h3>
+                    <p class="service-description">
+                        Responsibly rehome your pet or sell from your breeding program. Create listings with health certificates and detailed information.
+                    </p>
+                    <a href="/sell" class="btn-service btn-sell">
+                        List Your Pet
+                    </a>
+                </div>
+            </div>
+
+            <!-- Find a Mate -->
+            <div class="col-lg-4 mb-4">
+                <div class="service-card">
+                    <div class="service-icon">💕</div>
+                    <h3 class="service-title">Find a Mate</h3>
+                    <p class="service-description">
+                        Help your pet find their perfect breeding partner. Connect with compatible pets in your area for healthy, happy offspring.
+                    </p>
+                    <a href="/mate" class="btn-service btn-mate">
+                        Find Pet Mates
+                    </a>
+                </div>
+            </div>
+
+            <!-- Rescue -->
+            <div class="col-lg-4 mb-4">
+                <div class="service-card">
+                    <div class="service-icon">🏠</div>
+                    <h3 class="service-title">Pet Rescue</h3>
+                    <p class="service-description">
+                        Give a loving home to pets in need. Browse rescue animals and connect with local shelters to save a life and gain a friend.
+                    </p>
+                    <a href="/rescue" class="btn-service btn-rescue">
+                        Rescue a Pet
+                    </a>
+                </div>
+            </div>
+
+            <!-- Vet Directory -->
+            <div class="col-lg-4 mb-4">
+                <div class="service-card">
+                    <div class="service-icon">🏥</div>
+                    <h3 class="service-title">Vet Directory</h3>
+                    <p class="service-description">
+                        Find trusted veterinarians in your area. Read reviews, compare services, and book appointments for your pet's health needs.
+                    </p>
+                    <a href="/vet" class="btn-service btn-vet">
+                        Find Vets
+                    </a>
+                </div>
+            </div>
+
+            <!-- Pet Shops Directory -->
+            <div class="col-lg-4 mb-4">
+                <div class="service-card">
+                    <div class="service-icon">🏪</div>
+                    <h3 class="service-title">Pet Shops Directory</h3>
+                    <p class="service-description">
+                        Discover pet supply stores near you. Find food, toys, accessories, medical supplies, and grooming services for your pets.
+                    </p>
+                    <a href="/petaccessories" class="btn-service btn-view">
+                        Find Pet Shops
+                    </a>
+                </div>
+            </div>
+
+            <!-- Personalized Care Tips -->
+            <div class="col-lg-4 mb-4">
+                <div class="service-card">
+                    <div class="service-icon">🩺</div>
+                    <h3 class="service-title">Personalized Care Tips</h3>
+                    <p class="service-description">
+                        Answer a few questions and get tailored care guidance for your pet's type and life stage.
+                    </p>
+                    <a href="/care-tips" class="btn-service btn-view">
+                        Get Care Tips
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- How PetNova Works -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="service-card">
+                    <h3 class="text-center mb-4">🌟 How PetNova Works</h3>
+                    <div class="row">
+                        <div class="col-md-3 text-center">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
+                            <h5>Discover</h5>
+                            <p class="text-muted">Take our quiz or browse to find your perfect pet</p>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🤝</div>
+                            <h5>Connect</h5>
+                            <p class="text-muted">Meet with sellers, rescues, or other pet owners</p>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">❤️</div>
+                            <h5>Adopt</h5>
+                            <p class="text-muted">Welcome your new companion home</p>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🎉</div>
+                            <h5>Enjoy</h5>
+                            <p class="text-muted">Build lasting memories with your pet</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer-custom">
+        <div class="container">
+            <div class="row">
+                <!-- About Section -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h4 class="footer-heading">🐾 PetNova</h4>
+                    <p class="footer-text">
+                        Your complete platform for everything pet-related. Connecting pet lovers, facilitating adoptions, and building a stronger pet community.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">📘</a>
+                        <a href="#" class="social-link">📷</a>
+                        <a href="#" class="social-link">🐦</a>
+                        <a href="#" class="social-link">💼</a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="footer-heading">Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/pets">Browse Pets</a></li>
+                        <li><a href="/add">Add Pet</a></li>
+                        <li><a href="/quiz">Take Quiz</a></li>
+                    </ul>
+                </div>
+
+                <!-- Services -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-heading">Services</h5>
+                    <ul class="footer-links">
+                        <li><a href="/buy">Buy Pets</a></li>
+                        <li><a href="/sell">Sell Pets</a></li>
+                        <li><a href="/mate">Find Mate</a></li>
+                        <li><a href="/rescue">Pet Rescue</a></li>
+                        <li><a href="/vet">Vet Directory</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-heading">Get in Touch</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">📧 info@petnova.com</a></li>
+                        <li><a href="#">📞 +1 (555) 123-4567</a></li>
+                        <li><a href="#">📍 Mumbai, India</a></li>
+                        <li><a href="#">🕒 24/7 Support</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 PetNova. All rights reserved. | College Project</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Add interactive hover effects
+        document.querySelectorAll('.service-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                if (!this.classList.contains('featured-card')) {
+                    this.style.transform = 'translateY(-8px) scale(1.02)';
+                }
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+        
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar-custom');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // Set active nav link based on current page
+        const currentPage = window.location.pathname;
+        document.querySelectorAll('.nav-link-custom').forEach(link => {
+            if (link.getAttribute('href') === currentPage) {
+                document.querySelectorAll('.nav-link-custom').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function(){
+    const toggle = document.getElementById('darkModeToggle');
+    const applyMode = enabled => {
+        document.body.classList.toggle('dark-mode', enabled);
+        if (toggle) toggle.checked = enabled;
+    };
+    const saved = localStorage.getItem('darkMode');
+    applyMode(saved === 'true');
+    if (toggle) {
+        toggle.addEventListener('change', function() {
+            applyMode(this.checked);
+            localStorage.setItem('darkMode', this.checked);
+        });
+    }
+})();
+</script>
+</body>
+</html>

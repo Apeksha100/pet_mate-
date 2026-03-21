@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Care Tips - PetNova</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+        }
+
+        .navbar-custom {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+            padding: 1rem;
+        }
+
+        .navbar-brand-custom {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-right: 2rem;
+        }
+
+        .nav-link-custom {
+            color: #333 !important;
+            font-weight: 600;
+            margin: 0 0.5rem;
+            padding: 0.5rem 1rem !important;
+            border-radius: 20px;
+        }
+
+        .nav-link-custom:hover,
+        .nav-link-custom.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white !important;
+            text-decoration: none;
+        }
+
+        .form-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 900px;
+            margin: 4rem auto;
+            color: #2a2d32;
+            box-shadow: 0 20px 45px rgba(0,0,0,0.25);
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+
+        .form-label { color: #333; font-weight: 600; }
+
+        .form-control, .form-select {
+            border-radius: 12px;
+            border: 2px solid #e9ecef;
+            padding: 0.8rem 1rem;
+            background: #fff;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 15px rgba(102,126,234,0.25);
+            outline: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 0.75rem 1.5rem;
+            font-weight: bold;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(40,167,69,0.3);
+        }
+
+        .tips-title { color: #333; font-weight: 700; margin-top: 1.5rem; }
+        .tips-list .list-group-item {
+            border-radius: 8px;
+            border: 1px solid rgba(113,128,150,0.2);
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .footer-custom {
+            background: #000;
+            color: #fff;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand-custom" href="/">🐾 PetNova</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="#navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link-custom" href="/">🏠 Home</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="/pets">👀 Browse</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="/buy">🛒 Buy</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="/add">➕ Add Pet</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="/quiz">🧩 Quiz</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link-custom dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            🔧 Services
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="servicesDropdown" style="border-radius: 15px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                            <li><a class="dropdown-item" href="/care-tips" style="border-radius: 10px;">🩺 Care Tips</a></li>
+                            <li><a class="dropdown-item" href="/mate" style="border-radius: 10px;">💕 Find Mate</a></li>
+                            <li><a class="dropdown-item" href="/rescue" style="border-radius: 10px;">🏠 Rescue</a></li>
+                            <li><a class="dropdown-item" href="/vet" style="border-radius: 10px;">🏥 Vet Directory</a></li>
+                            <li><a class="dropdown-item" href="/petaccessories" style="border-radius: 10px;">🏪 Pet Shops</a></li>
+                        
+                    
+
+                    </ul>
+                    </li>
+                    <li class="nav-item ms-3">
+                        <div class="form-check form-switch mb-0">
+                            <input class="form-check-input" type="checkbox" id="darkModeToggle">
+                            <label class="form-check-label" for="darkModeToggle">Dark</label>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="form-card">
+        <h3>Personalized Pet Care Tips</h3>
+        <p>Get tailored care suggestions for your pet based on species and life stage.</p>
+        <form method="post">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label" for="pet_name">Pet Name (optional)</label>
+                    <input type="text" class="form-control" id="pet_name" name="pet_name" value="{{ pet_name }}" placeholder="e.g. Buddy">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="category">Pet Type</label>
+                    <select class="form-select" id="category" name="category" required>
+                        <option value="" disabled selected>Select type</option>
+                        <option value="Dog" {% if selected_category == 'Dog' %}selected{% endif %}>Dog</option>
+                        <option value="Cat" {% if selected_category == 'Cat' %}selected{% endif %}>Cat</option>
+                        <option value="Bird" {% if selected_category == 'Bird' %}selected{% endif %}>Bird</option>
+                        <option value="Reptile" {% if selected_category == 'Reptile' %}selected{% endif %}>Reptile</option>
+                        <option value="Small" {% if selected_category == 'Small' %}selected{% endif %}>Small Animal</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="age_group">Age Group</label>
+                    <select class="form-select" id="age_group" name="age_group" required>
+                        <option value="" disabled selected>Select stage</option>
+                        <option value="Puppy/Kitten" {% if selected_age == 'Puppy/Kitten' %}selected{% endif %}>Puppy/Kitten</option>
+                        <option value="Adult" {% if selected_age == 'Adult' %}selected{% endif %}>Adult</option>
+                        <option value="Senior" {% if selected_age == 'Senior' %}selected{% endif %}>Senior</option>
+                    </select>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Get Personalized Tips</button>
+                </div>
+            </div>
+        </form>
+
+        {% if tips %}
+        <div class="tips-result">
+            <h5 class="tips-title">Care Tips for {{ pet_name if pet_name else selected_category }} ({{ selected_age }})</h5>
+            <ul class="list-group tips-list">
+                {% for tip in tips %}
+                <li class="list-group-item">{{ tip }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </section>
+
+    <footer class="footer-custom text-center">
+        <p>� 2026 PetNova. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function(){
+    const toggle = document.getElementById('darkModeToggle');
+    const applyMode = enabled => {
+        document.body.classList.toggle('dark-mode', enabled);
+        if (toggle) toggle.checked = enabled;
+    };
+    const saved = localStorage.getItem('darkMode');
+    applyMode(saved === 'true');
+    if (toggle) {
+        toggle.addEventListener('change', function() {
+            applyMode(this.checked);
+            localStorage.setItem('darkMode', this.checked);
+        });
+    }
+})();
+</script>
+</body>
+</html>
