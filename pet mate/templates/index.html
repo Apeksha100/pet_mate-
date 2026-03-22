@@ -555,6 +555,26 @@
                             <li><a class="dropdown-item" href="/petaccessories">🏪 Pet Shops</a></li>
                         </ul>
                     </li>
+                    <!-- LOGIN / USER DROPDOWN -->
+                    {% if session.get('user') %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link-custom dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                👤 {{ session['user']['name'] }}
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/dashboard">📊 Dashboard</a></li>
+                                <li><a class="dropdown-item" href="/logout">🚪 Logout</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item ms-3">
+                            <a href="/login/google" class="btn btn-light rounded-pill px-3">
+                                🔐 Login with Google
+                            </a>
+                        </li>
+                    {% endif %}
+                    
+                    <!-- DARK MODE (keep this BELOW login) -->
                     <li class="nav-item ms-3">
                         <div class="form-check form-switch mb-0 d-flex align-items-center">
                             <input class="form-check-input me-2" type="checkbox" id="darkModeToggle">

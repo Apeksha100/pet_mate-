@@ -1,11 +1,66 @@
-from flask import Flask, render_template, request, redirect, send_from_directory, jsonify
-import sqlite3
 import os
-import requests as http_requests
+from flask import Flask, render_template, request, redirect, send_from_directory, jsonify, session, url_for
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from authlib.integrations.flask_client import OAuth
 from werkzeug.utils import secure_filename
+import sqlite3
+from dotenv import load_dotenv
+import requests as http_requests
 
 
+
+# ─── Load env and app ─────────────────────────────
+load_dotenv()
 app = Flask(__name__)
+app.config.update(
+    SESSION_COOKIE_NAME="petnova_session",
+    SESSION_COOKIE_SECURE=False,
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax"
+)
+#app.secret_key = os.getenv("FLASK_SECRET", "super_secret_key_change_this")
+app.secret_key = "THIS_IS_A_FIXED_SECRET_123456789"
+
+#app.config['SERVER_NAME'] = 'localhost:5000'
+#app.config['SESSION_COOKIE_DOMAIN'] = 'localhost'
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "index"
+
+# ─── Google OAuth setup ──────────────────────────
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
+
+print("client id :",GOOGLE_CLIENT_ID)
+print("client secret:",GOOGLE_CLIENT_SECRET)
+
+oauth = OAuth(app)
+google = oauth.register(
+    name='google',
+    client_id=GOOGLE_CLIENT_ID,
+    client_secret=GOOGLE_CLIENT_SECRET,
+    authorize_url='https://accounts.google.com/o/oauth2/auth',
+    access_token_url='https://oauth2.googleapis.com/token',
+    api_base_url='https://openidconnect.googleapis.com/v1/',
+    client_kwargs={'scope': 'openid email profile'}
+)
+
+
+# ─── User Model ──────────────────────────────────
+class User(UserMixin):
+    def __init__(self, id, name):
+        self.id = id
+        self.name = name
+
+@login_manager.user_loader
+def load_user(user_id):
+    with sqlite3.connect("users.db") as conn:
+        user = conn.execute("SELECT * FROM users WHERE id=?", (user_id,)).fetchone()
+        if user:
+            return User(user[0], user[2])
+    return None
+
 
 UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -13,7 +68,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # ── Groq API Key (FREE — no billing needed) ───────────────────────────────────
 # Sign up at https://console.groq.com → API Keys → Create API Key
-# GROQ_API_KEY = "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"
+GROQ_API_KEY = "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"
 # ──────────────────────────────────────────────────────────────────────────────
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
@@ -53,6 +108,15 @@ def init_db():
             conn.execute("ALTER TABLE lost_found_reports ADD COLUMN timestamp DATETIME DEFAULT CURRENT_TIMESTAMP")
         except sqlite3.OperationalError:
             pass
+    with sqlite3.connect("users.db") as conn:   #db login
+        conn.execute('''
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                email TEXT UNIQUE,
+                name TEXT
+            )
+        ''')
+
 
 
 # ─── Page routes ──────────────────────────────────────────────────────────────
@@ -60,6 +124,49 @@ def init_db():
 @app.route('/')
 def index():
     return render_template('index.html')
+
+"""@app.route("/login/google")
+def login():
+    redirect_uri = "http://localhost:5000/callback"
+    return google.authorize_redirect(redirect_uri)
+"""
+
+@app.route("/login/google")
+def login():
+    redirect_uri = "http://localhost:5000/callback"
+    print("SESSION BEFORE LOGIN:", dict(session))  # DEBUG
+    return google.authorize_redirect(redirect_uri)
+
+
+@app.route("/callback")
+def callback():
+    print("SESSION IN CALLBACK:", dict(session))  # DEBUG
+    token = google.authorize_access_token()
+
+    resp = google.get('userinfo')
+    user_info = resp.json()
+
+    email = user_info['email']
+    name = user_info['name']
+
+    with sqlite3.connect("users.db") as conn:
+        user = conn.execute("SELECT * FROM users WHERE email=?", (email,)).fetchone()
+        if not user:
+            conn.execute("INSERT INTO users (email, name) VALUES (?, ?)", (email, name))
+            conn.commit()
+            user = conn.execute("SELECT * FROM users WHERE email=?", (email,)).fetchone()
+
+    login_user(User(user[0], user[2]))
+    return redirect("/")
+
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect("/")
+
+
 
 @app.route('/quiz')
 def quiz():
@@ -360,4 +467,4 @@ def chat():
 
 if __name__ == '__main__':
     init_db()
-    app.run(debug=True)
+    app.run(debug=True, use_reloader=False)
