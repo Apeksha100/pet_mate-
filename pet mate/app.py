@@ -69,6 +69,19 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
+# ══════════════════════════════════════════════════════════════════════════════
+#  SYSTEM PROMPT — defined at top so all functions can use it
+# ══════════════════════════════════════════════════════════════════════════════
+
+SYSTEM_PROMPT = (
+    "You are PawBot, the friendly AI assistant for PetNova — a complete pet platform. "
+    "You help users find pets, understand the platform's services (buying, selling, rescue, "
+    "finding mates for breeding, vet directory, pet shops directory, personalized care tips, "
+    "and pet quizzes), and answer general pet-care questions. "
+    "Keep answers concise, warm, and helpful. Use pet-related emojis occasionally."
+)
+
+
 def init_db():
     with sqlite3.connect("pets.db") as conn:
         conn.execute('''
@@ -316,9 +329,14 @@ def add_report():
     return jsonify({"message": "Report added successfully!"})
 
 
-
+# ══════════════════════════════════════════════════════════════════════════════
+#  GROQ — Care Tips
+# ══════════════════════════════════════════════════════════════════════════════
 
 def get_groq_care_tips(selected_category, selected_age, pet_name):
+    if not selected_category or not selected_age:
+        raise ValueError("Pet type and age group are required")
+
     prompt = (
         f"You are an experienced Vet, a friendly pet care assistant for PetNova. "
         f"Generate 4-6 concise practical care tips for a {selected_age} {selected_category}. "
@@ -327,13 +345,9 @@ def get_groq_care_tips(selected_category, selected_age, pet_name):
         "Return each tip on a new line, without numbering."
     )
 
-    if selected_category == '' or selected_age == '':
-        raise ValueError("Pet type and age group are required")
-
-    to_bearer = SYSTEM_PROMPT
     messages = [
-        {"role": "system", "content": to_bearer},
-        {"role": "user", "content": prompt}
+        {"role": "system", "content": SYSTEM_PROMPT},
+        {"role": "user",   "content": prompt}
     ]
 
     payload = {
@@ -383,8 +397,7 @@ def care_tips():
         try:
             tips = get_groq_care_tips(selected_category, selected_age, pet_name)
         except Exception as e:
-            warning = f"Groq service unavailable, showing fallback tips: {e}"
-            tips = get_groq_care_tips(selected_category, selected_age, pet_name)
+            warning = f"Could not fetch tips: {e}"
 
     return render_template('pet_care_tips.html',
                            pet_name=pet_name,
@@ -411,14 +424,6 @@ def pawbot():
 # ══════════════════════════════════════════════════════════════════════════════
 #  PAWBOT — Chat API endpoint (used by chatbot.html)
 # ══════════════════════════════════════════════════════════════════════════════
-
-SYSTEM_PROMPT = (
-    "You are PawBot, the friendly AI assistant for PetNova — a complete pet platform. "
-    "You help users find pets, understand the platform's services (buying, selling, rescue, "
-    "finding mates for breeding, vet directory, pet shops directory, personalized care tips, "
-    "and pet quizzes), and answer general pet-care questions. "
-    "Keep answers concise, warm, and helpful. Use pet-related emojis occasionally."
-)
 
 @app.route('/chat', methods=['POST'])
 def chat():
