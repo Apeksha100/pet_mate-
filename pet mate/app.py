@@ -18,8 +18,8 @@ app.config.update(
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SAMESITE="Lax"
 )
-#app.secret_key = os.getenv("FLASK_SECRET", "super_secret_key_change_this")
-app.secret_key = "THIS_IS_A_FIXED_SECRET_123456789"
+
+FLASK_SECRET = os.getenv("FLASK_SECRET")
 
 #app.config['SERVER_NAME'] = 'localhost:5000'
 #app.config['SESSION_COOKIE_DOMAIN'] = 'localhost'
@@ -67,8 +67,8 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # ── Groq API Key (FREE — no billing needed) ───────────────────────────────────
-# Sign up at https://console.groq.com → API Keys → Create API Key
-GROQ_API_KEY = "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"
+
+GROQ_API_KEY= os.getenv("GROQ_API_KEY")
 # ──────────────────────────────────────────────────────────────────────────────
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
