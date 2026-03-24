@@ -18,8 +18,8 @@ app.config.update(
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SAMESITE="Lax"
 )
-
 FLASK_SECRET = os.getenv("FLASK_SECRET")
+app.secret_key = FLASK_SECRET
 
 #app.config['SERVER_NAME'] = 'localhost:5000'
 #app.config['SESSION_COOKIE_DOMAIN'] = 'localhost'
@@ -133,7 +133,9 @@ def login():
 
 @app.route("/login/google")
 def login():
-    redirect_uri = "http://localhost:5000/callback"
+    redirect_uri = url_for('callback', _external=True)
+    print("REDIRECT URI:", redirect_uri)
+    return google.authorize_redirect(redirect_uri)
     print("SESSION BEFORE LOGIN:", dict(session))  # DEBUG
     return google.authorize_redirect(redirect_uri)
 
