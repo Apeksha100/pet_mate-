@@ -7,7 +7,10 @@ __pycache__/
 *.so
 
 #.env file 
-cred.env
+.history/
+.env
+__pycache__/
+*.pyc
 
 # Distribution / packaging
 .Python

@@ -2,98 +2,304 @@
 <html>
 <head>
     <title>PetNova - Your Complete Pet Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
         /* ═══════════════════════════════════════════
            CSS VARIABLES FOR LIGHT / DARK MODE
         ═══════════════════════════════════════════ */
         :root {
-            --body-bg-start: #667eea;
-            --body-bg-end: #764ba2;
-            --card-bg: rgba(255, 255, 255, 0.97);
-            --card-border: rgba(255,255,255,0.3);
-            --card-shadow: 0 15px 40px rgba(0,0,0,0.15);
-            --card-hover-shadow: 0 25px 50px rgba(0,0,0,0.25);
+            --brand-from:       #667eea;
+            --brand-to:         #764ba2;
+            --body-bg-start:    #667eea;
+            --body-bg-end:      #764ba2;
+            --card-bg:          rgba(255,255,255,0.97);
+            --card-border:      rgba(255,255,255,0.3);
+            --card-shadow:      0 15px 40px rgba(0,0,0,0.15);
+            --card-hover-shadow:0 25px 50px rgba(0,0,0,0.25);
             --service-title-color: #222;
-            --service-desc-color: #555;
-            --navbar-bg: rgba(255,255,255,0.97);
-            --navbar-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            --nav-link-color: #333;
-            --section-bg: rgba(255,255,255,0.97);
-            --how-it-works-text: #555;
-            --footer-bg: #2d1b69;
-            --footer-text: #ddd;
-            --footer-heading: #ffffff;
-            --footer-link: #ccc;
-            --footer-link-hover: #a78bfa;
-            --footer-border: #333;
-            --footer-bottom: #aaa;
-            --badge-bg: #fff;
-            --badge-color: #ff6b6b;
-            --quick-btn-bg: #fff;
-            --quick-btn-border: #c4b5fd;
-            --quick-btn-color: #6d4fc2;
-            --pawbot-msg-area-bg: #f7f6ff;
-            --pawbot-msg-bot-bg: #fff;
-            --pawbot-msg-bot-color: #2d2d2d;
-            --pawbot-input-border: #ede9fe;
-            --pawbot-input-bg: #fff;
-            --pawbot-input-color: #222;
-            --pawbot-powered-color: #aaa;
-            --pawbot-window-bg: #fff;
-            --dropdown-bg: #fff;
-            --dropdown-item-color: #333;
-            --hero-text: #fff;
-            --featured-card-bg: linear-gradient(135deg, #ec9292 0%, #f1f1f1 100%);
-            --featured-text: #464545;
+            --service-desc-color:  #555;
+            --nav-bg:           rgba(255,255,255,0.85);
+            --nav-border:       rgba(102,126,234,0.18);
+            --link-color:       #3d3558;
+            --link-hover-bg:    rgba(102,126,234,0.1);
+            --drop-bg:          #ffffff;
+            --drop-shadow:      0 16px 40px rgba(102,126,234,0.18);
+            --section-bg:       rgba(255,255,255,0.97);
+            --how-it-works-text:#555;
+            --footer-bg:        #2d1b69;
+            --footer-text:      #ddd;
+            --footer-heading:   #ffffff;
+            --footer-link:      #ccc;
+            --footer-link-hover:#a78bfa;
+            --footer-border:    #333;
+            --footer-bottom:    #aaa;
+            --badge-bg:         #fff;
+            --badge-color:      #ff6b6b;
+            --hero-text:        #fff;
+            --featured-card-bg: linear-gradient(135deg,#ec9292 0%,#f1f1f1 100%);
+            --featured-text:    #464545;
         }
 
         body.dark-mode {
-            --body-bg-start: #1a1035;
-            --body-bg-end: #0d0820;
-            --card-bg: rgba(30, 25, 55, 0.97);
-            --card-border: rgba(102,126,234,0.2);
-            --card-shadow: 0 15px 40px rgba(0,0,0,0.5);
-            --card-hover-shadow: 0 25px 50px rgba(0,0,0,0.7);
+            --body-bg-start:    #1a1035;
+            --body-bg-end:      #0d0820;
+            --card-bg:          rgba(30,25,55,0.97);
+            --card-border:      rgba(102,126,234,0.2);
+            --card-shadow:      0 15px 40px rgba(0,0,0,0.5);
+            --card-hover-shadow:0 25px 50px rgba(0,0,0,0.7);
             --service-title-color: #e8e0ff;
-            --service-desc-color: #b0a8d0;
-            --navbar-bg: rgba(15, 10, 35, 0.98);
-            --navbar-shadow: 0 5px 20px rgba(0,0,0,0.5);
-            --nav-link-color: #c8bfee;
-            --section-bg: rgba(30, 25, 55, 0.97);
-            --how-it-works-text: #b0a8d0;
-            --footer-bg: #1a0e42;
-            --footer-text: #b0a8d0;
-            --footer-heading: #d4c8ff;
-            --footer-link: #9988cc;
-            --footer-link-hover: #a78bfa;
-            --footer-border: #2a1f4a;
-            --footer-bottom: #6b5f99;
-            --badge-bg: #2a1f4a;
-            --badge-color: #ff8fa3;
-            --quick-btn-bg: #2a1f4a;
-            --quick-btn-border: #6d4fc2;
-            --quick-btn-color: #c4b5fd;
-            --pawbot-msg-area-bg: #120d28;
-            --pawbot-msg-bot-bg: #1e1937;
-            --pawbot-msg-bot-color: #e0d8ff;
-            --pawbot-input-border: #3d3060;
-            --pawbot-input-bg: #1e1937;
-            --pawbot-input-color: #e0d8ff;
-            --pawbot-powered-color: #6b5f99;
-            --pawbot-window-bg: #150f2e;
-            --dropdown-bg: #1e1937;
-            --dropdown-item-color: #c8bfee;
-            --hero-text: #e8e0ff;
-            --featured-card-bg: linear-gradient(135deg, #6b2a2a 0%, #2a1f4a 100%);
-            --featured-text: #e0d8ff;
+            --service-desc-color:  #b0a8d0;
+            --nav-bg:           rgba(14,10,32,0.94);
+            --nav-border:       rgba(102,126,234,0.25);
+            --link-color:       #c5bbee;
+            --link-hover-bg:    rgba(102,126,234,0.15);
+            --drop-bg:          #1a1535;
+            --drop-shadow:      0 16px 40px rgba(0,0,0,0.6);
+            --section-bg:       rgba(30,25,55,0.97);
+            --how-it-works-text:#b0a8d0;
+            --footer-bg:        #1a0e42;
+            --footer-text:      #b0a8d0;
+            --footer-heading:   #d4c8ff;
+            --footer-link:      #9988cc;
+            --footer-link-hover:#a78bfa;
+            --footer-border:    #2a1f4a;
+            --footer-bottom:    #6b5f99;
+            --badge-bg:         #2a1f4a;
+            --badge-color:      #ff8fa3;
+            --hero-text:        #e8e0ff;
+            --featured-card-bg: linear-gradient(135deg,#6b2a2a 0%,#2a1f4a 100%);
+            --featured-text:    #e0d8ff;
         }
+
+        * { font-family: 'Plus Jakarta Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 
         body {
             background: linear-gradient(135deg, var(--body-bg-start) 0%, var(--body-bg-end) 100%);
             min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             transition: background 0.4s ease, color 0.4s ease;
+        }
+
+        /* ═══════════════════════════════════════════
+           NAVBAR
+        ═══════════════════════════════════════════ */
+        .pn-nav {
+            background: var(--nav-bg);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid var(--nav-border);
+            box-shadow: 0 4px 24px rgba(102,126,234,0.10);
+            padding: 0;
+            position: sticky; top: 0; z-index: 1000;
+            transition: background .35s, box-shadow .35s;
+        }
+        .pn-nav.scrolled {
+            box-shadow: 0 6px 32px rgba(102,126,234,0.22);
+        }
+        .pn-nav .container {
+            height: 64px;
+            display: flex; align-items: center;
+        }
+
+        /* Brand */
+        .pn-brand {
+            display: flex; align-items: center; gap: 10px;
+            text-decoration: none;
+            font-size: 1.45rem; font-weight: 800; letter-spacing: -.5px;
+            background: linear-gradient(135deg, var(--brand-from), var(--brand-to));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+            white-space: nowrap;
+            transition: opacity .2s;
+            margin-right: 1.5rem;
+        }
+        .pn-brand:hover { opacity: .82; }
+        .pn-brand-icon {
+            width: 36px; height: 36px; border-radius: 10px;
+            background: linear-gradient(135deg, var(--brand-from), var(--brand-to));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.05rem; flex-shrink: 0;
+            box-shadow: 0 4px 14px rgba(102,126,234,0.4);
+        }
+
+        /* Nav links list */
+        .pn-links {
+            display: flex; align-items: center;
+            gap: 2px; list-style: none; margin: 0; padding: 0;
+            margin-left: auto;
+        }
+        .pn-link { position: relative; }
+
+        .pn-link > a,
+        .pn-link > .pn-drop-toggle {
+            display: flex; align-items: center; gap: 6px;
+            padding: 7px 11px;
+            border-radius: 10px;
+            font-size: .85rem; font-weight: 600;
+            color: var(--link-color);
+            text-decoration: none;
+            white-space: nowrap;
+            transition: background .2s, color .2s, transform .15s;
+            border: none; background: transparent; cursor: pointer;
+        }
+        .pn-link > a:hover,
+        .pn-link > .pn-drop-toggle:hover {
+            background: var(--link-hover-bg);
+            color: #667eea;
+            transform: translateY(-1px);
+        }
+
+        /* Icon pill */
+        .pn-link-icon {
+            width: 26px; height: 26px; border-radius: 7px;
+            background: var(--link-hover-bg);
+            display: flex; align-items: center; justify-content: center;
+            font-size: .8rem;
+            transition: background .2s;
+            flex-shrink: 0;
+        }
+        .pn-link > a:hover .pn-link-icon,
+        .pn-link > .pn-drop-toggle:hover .pn-link-icon {
+            background: linear-gradient(135deg, rgba(102,126,234,.22), rgba(118,75,162,.22));
+        }
+
+        /* Active */
+        .pn-link.active > a,
+        .pn-link.active > .pn-drop-toggle {
+            background: linear-gradient(135deg, var(--brand-from), var(--brand-to));
+            color: #fff;
+        }
+        .pn-link.active .pn-link-icon { background: rgba(255,255,255,.22); }
+        .pn-link.active > a:hover,
+        .pn-link.active > .pn-drop-toggle:hover { color: #fff; }
+
+        /* Dropdown */
+        .pn-dropdown {
+            position: absolute; top: calc(100% + 10px); right: 0;
+            min-width: 200px;
+            background: var(--drop-bg);
+            border-radius: 14px;
+            box-shadow: var(--drop-shadow);
+            border: 1px solid var(--nav-border);
+            padding: 8px;
+            opacity: 0; pointer-events: none;
+            transform: translateY(6px) scale(.97);
+            transform-origin: top right;
+            transition: opacity .2s, transform .2s;
+            z-index: 999;
+        }
+        .pn-link:hover .pn-dropdown,
+        .pn-link:focus-within .pn-dropdown {
+            opacity: 1; pointer-events: all;
+            transform: translateY(0) scale(1);
+        }
+        .pn-dropdown a {
+            display: flex; align-items: center; gap: 9px;
+            padding: 9px 12px; border-radius: 9px;
+            font-size: .855rem; font-weight: 600;
+            color: var(--link-color);
+            text-decoration: none;
+            transition: background .18s, color .18s;
+        }
+        .pn-dropdown a:hover {
+            background: linear-gradient(135deg, rgba(102,126,234,.12), rgba(118,75,162,.12));
+            color: #667eea;
+        }
+        .pn-drop-caret {
+            font-size: .58rem; opacity: .55; margin-left: 1px;
+            transition: transform .2s;
+        }
+        .pn-link:hover .pn-drop-caret { transform: rotate(180deg); }
+
+        /* Divider */
+        .pn-divider {
+            width: 1px; height: 28px;
+            background: var(--nav-border);
+            margin: 0 5px; flex-shrink: 0;
+        }
+
+        /* Login button */
+        .pn-login-btn {
+            display: flex; align-items: center; gap: 7px;
+            padding: 8px 15px; border-radius: 10px;
+            font-size: .85rem; font-weight: 700;
+            background: linear-gradient(135deg, var(--brand-from), var(--brand-to));
+            color: #fff; text-decoration: none;
+            box-shadow: 0 4px 14px rgba(102,126,234,0.35);
+            transition: transform .2s, box-shadow .2s;
+            white-space: nowrap;
+        }
+        .pn-login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(102,126,234,0.5);
+            color: #fff;
+        }
+
+        /* Dark mode toggle */
+        .pn-toggle { display: flex; align-items: center; gap: 7px; }
+        .pn-toggle input[type=checkbox] {
+            width: 36px; height: 20px;
+            appearance: none;
+            background: rgba(102,126,234,0.22);
+            border-radius: 20px; cursor: pointer;
+            position: relative; transition: background .3s; flex-shrink: 0;
+        }
+        .pn-toggle input[type=checkbox]:checked {
+            background: linear-gradient(135deg, var(--brand-from), var(--brand-to));
+        }
+        .pn-toggle input[type=checkbox]::after {
+            content:''; position: absolute; top: 2px; left: 2px;
+            width: 16px; height: 16px; border-radius: 50%;
+            background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.25);
+            transition: left .25s;
+        }
+        .pn-toggle input[type=checkbox]:checked::after { left: 18px; }
+        .pn-toggle-label {
+            font-size: .76rem; font-weight: 700;
+            color: var(--link-color); text-transform: uppercase; letter-spacing: .5px;
+        }
+
+        /* Hamburger */
+        .pn-toggler {
+            display: none; flex-direction: column; gap: 5px;
+            background: linear-gradient(135deg, var(--brand-from), var(--brand-to));
+            border: none; border-radius: 10px;
+            padding: 10px; cursor: pointer; margin-left: auto;
+        }
+        .pn-toggler span {
+            display: block; width: 20px; height: 2px;
+            background: #fff; border-radius: 2px; transition: all .3s;
+        }
+
+        /* Responsive */
+        @media (max-width: 1100px) {
+            .pn-link-label { display: none; }
+            .pn-link > a, .pn-link > .pn-drop-toggle { padding: 7px 8px; }
+            .pn-link-icon { width: 30px; height: 30px; font-size: .95rem; }
+        }
+        @media (max-width: 768px) {
+            .pn-toggler { display: flex; }
+            .pn-links {
+                display: none; flex-direction: column; align-items: stretch;
+                position: fixed; top: 64px; left: 0; right: 0;
+                background: var(--drop-bg);
+                border-bottom: 1px solid var(--nav-border);
+                padding: 12px 16px;
+                box-shadow: 0 12px 30px rgba(0,0,0,.15);
+                gap: 4px; max-height: calc(100vh - 64px); overflow-y: auto;
+            }
+            .pn-links.open { display: flex; }
+            .pn-link > a, .pn-link > .pn-drop-toggle { width: 100%; padding: 10px 14px; }
+            .pn-link-label { display: block !important; }
+            .pn-dropdown {
+                position: static; opacity: 1; pointer-events: all;
+                transform: none; box-shadow: none;
+                border: none; background: var(--link-hover-bg);
+                display: none;
+            }
+            .pn-link.drop-open .pn-dropdown { display: block; }
+            .pn-divider { display: none; }
         }
 
         /* ═══════════════════════════════════════════
@@ -105,9 +311,7 @@
             text-align: center;
         }
         .hero-section h1,
-        .hero-section p {
-            color: var(--hero-text);
-        }
+        .hero-section p { color: var(--hero-text); }
 
         /* ═══════════════════════════════════════════
            SERVICE CARDS
@@ -128,54 +332,33 @@
             box-shadow: var(--card-hover-shadow);
         }
         .service-icon {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            display: block;
+            font-size: 3.5rem; margin-bottom: 1rem; display: block;
         }
         .service-title {
-            color: var(--service-title-color);
-            font-weight: bold;
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
+            color: var(--service-title-color); font-weight: bold;
+            margin-bottom: 1rem; font-size: 1.3rem;
         }
         .service-description {
-            color: var(--service-desc-color);
-            margin-bottom: 2rem;
-            line-height: 1.6;
-            font-size: 0.95rem;
+            color: var(--service-desc-color); margin-bottom: 2rem;
+            line-height: 1.6; font-size: 0.95rem;
         }
-
-        /* How it works section */
-        .service-card h3.text-center {
-            color: var(--service-title-color);
-        }
-        .service-card h5 {
-            color: var(--service-title-color);
-        }
-        .service-card .text-muted {
-            color: var(--how-it-works-text) !important;
-        }
+        .service-card h3.text-center { color: var(--service-title-color); }
+        .service-card h5             { color: var(--service-title-color); }
+        .service-card .text-muted    { color: var(--how-it-works-text) !important; }
 
         /* Featured card */
         .featured-card {
             background: var(--featured-card-bg) !important;
-            position: relative;
-            overflow: hidden;
+            position: relative; overflow: hidden;
         }
         .featured-card .service-title,
-        .featured-card .service-description {
-            color: var(--featured-text);
-        }
+        .featured-card .service-description { color: var(--featured-text); }
         .featured-badge {
-            position: absolute;
-            top: -9px; right: -1px;
-            background: var(--badge-bg);
-            color: var(--badge-color);
-            border-radius: 50%;
-            width: 50px; height: 50px;
+            position: absolute; top: -9px; right: -1px;
+            background: var(--badge-bg); color: var(--badge-color);
+            border-radius: 50%; width: 50px; height: 50px;
             display: flex; align-items: center; justify-content: center;
-            font-weight: bold;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             font-size: 1.2rem;
         }
 
@@ -183,33 +366,31 @@
            BUTTONS
         ═══════════════════════════════════════════ */
         .btn-service {
-            border: none;
-            border-radius: 25px;
-            padding: 1rem 1.5rem;
-            color: white;
-            font-weight: bold;
-            width: 100%;
+            border: none; border-radius: 25px;
+            padding: 1rem 1.5rem; color: white;
+            font-weight: bold; width: 100%;
             transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
+            text-decoration: none; display: inline-block;
         }
         .btn-service:hover { transform: translateY(-2px); color: white; text-decoration: none; }
-        .btn-add    { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); }
-        .btn-add:hover { box-shadow: 0 10px 25px rgba(40,167,69,0.4); }
-        .btn-view   { background: linear-gradient(135deg, #007bff 0%, #6610f2 100%); }
+        .btn-add    { background: linear-gradient(135deg,#28a745 0%,#20c997 100%); }
+        .btn-add:hover  { box-shadow: 0 10px 25px rgba(40,167,69,0.4); }
+        .btn-view   { background: linear-gradient(135deg,#007bff 0%,#6610f2 100%); }
         .btn-view:hover { box-shadow: 0 10px 25px rgba(0,123,255,0.4); }
-        .btn-buy    { background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%); }
-        .btn-buy:hover { box-shadow: 0 10px 25px rgba(255,193,7,0.4); }
-        .btn-sell   { background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%); }
+        .btn-buy    { background: linear-gradient(135deg,#ffc107 0%,#fd7e14 100%); }
+        .btn-buy:hover  { box-shadow: 0 10px 25px rgba(255,193,7,0.4); }
+        .btn-sell   { background: linear-gradient(135deg,#17a2b8 0%,#6f42c1 100%); }
         .btn-sell:hover { box-shadow: 0 10px 25px rgba(23,162,184,0.4); }
-        .btn-mate   { background: linear-gradient(135deg, #e83e8c 0%, #fd7e14 100%); }
+        .btn-mate   { background: linear-gradient(135deg,#e83e8c 0%,#fd7e14 100%); }
         .btn-mate:hover { box-shadow: 0 10px 25px rgba(232,62,140,0.4); }
-        .btn-rescue { background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%); }
+        .btn-rescue { background: linear-gradient(135deg,#dc3545 0%,#e83e8c 100%); }
         .btn-rescue:hover { box-shadow: 0 10px 25px rgba(220,53,69,0.4); }
-        .btn-vet    { background: linear-gradient(135deg, #6c757d 0%, #495057 100%); }
-        .btn-vet:hover { box-shadow: 0 10px 25px rgba(108,117,125,0.4); }
-        .btn-quiz   { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .btn-vet    { background: linear-gradient(135deg,#6c757d 0%,#495057 100%); }
+        .btn-vet:hover  { box-shadow: 0 10px 25px rgba(108,117,125,0.4); }
+        .btn-quiz   { background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); }
         .btn-quiz:hover { box-shadow: 0 10px 25px rgba(102,126,234,0.4); }
+        .btn-chat   { background: linear-gradient(135deg,#7c5cfc 0%,#b06aff 100%); }
+        .btn-chat:hover { box-shadow: 0 10px 25px rgba(124,92,252,0.4); }
 
         /* ═══════════════════════════════════════════
            FLOATING ELEMENTS
@@ -228,72 +409,7 @@
         }
 
         /* ═══════════════════════════════════════════
-           NAVBAR
-        ═══════════════════════════════════════════ */
-        .navbar-custom {
-            background: var(--navbar-bg);
-            backdrop-filter: blur(10px);
-            box-shadow: var(--navbar-shadow);
-            padding: 1rem 0;
-            position: sticky; top: 0; z-index: 1000;
-            transition: all 0.3s ease;
-        }
-        .navbar-custom.scrolled { box-shadow: 0 5px 30px rgba(0,0,0,0.3); padding: 0.5rem 0; }
-        .navbar-brand-custom {
-            font-size: 1.8rem; font-weight: bold;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-clip: text; margin-right: 2rem;
-        }
-        .nav-link-custom {
-            color: var(--nav-link-color) !important;
-            font-weight: 600;
-            margin: 0 0.5rem; padding: 0.5rem 1rem !important;
-            border-radius: 20px; transition: all 0.3s ease;
-        }
-        .nav-link-custom:hover {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white !important; transform: translateY(-2px);
-        }
-        .nav-link-custom.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white !important;
-        }
-        .navbar-toggler-custom {
-            border: none; padding: 0.5rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 10px;
-        }
-        .navbar-toggler-custom:focus { box-shadow: none; }
-        .navbar-toggler-icon-custom {
-            width: 25px; height: 2px; background: white;
-            display: block; margin: 5px 0; transition: all 0.3s ease;
-        }
-
-        /* Dropdown */
-        .dropdown-menu {
-            background: var(--dropdown-bg) !important;
-            border-radius: 15px !important;
-            border: none !important;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
-        }
-        .dropdown-item {
-            color: var(--dropdown-item-color) !important;
-            border-radius: 10px;
-            transition: all 0.2s;
-        }
-        .dropdown-item:hover {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-            color: #fff !important;
-        }
-
-        /* Dark mode toggle label */
-        .form-check-label {
-            color: var(--nav-link-color);
-        }
-
-        /* ═══════════════════════════════════════════
-           FOOTER — Fixed visibility for both modes
+           FOOTER
         ═══════════════════════════════════════════ */
         .footer-custom {
             background: var(--footer-bg) !important;
@@ -304,288 +420,199 @@
         }
         .footer-heading {
             color: var(--footer-heading) !important;
-            font-weight: bold;
-            margin-bottom: 1.5rem;
+            font-weight: bold; margin-bottom: 1.5rem;
         }
         .footer-text {
             color: var(--footer-text) !important;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
+            line-height: 1.6; margin-bottom: 1.5rem;
         }
-        .footer-links {
-            list-style: none;
-            padding: 0;
-        }
+        .footer-links { list-style: none; padding: 0; }
         .footer-links li { margin-bottom: 0.8rem; }
         .footer-links a {
             color: var(--footer-link) !important;
-            text-decoration: none;
-            transition: all 0.3s ease;
+            text-decoration: none; transition: all 0.3s ease;
         }
-        .footer-links a:hover {
-            color: var(--footer-link-hover) !important;
-            padding-left: 5px;
-        }
+        .footer-links a:hover { color: var(--footer-link-hover) !important; padding-left: 5px; }
         .social-links { display: flex; gap: 1rem; }
-        .social-link {
-            font-size: 1.5rem;
-            text-decoration: none;
-            transition: transform 0.3s ease;
-        }
+        .social-link { font-size: 1.5rem; text-decoration: none; transition: transform 0.3s ease; }
         .social-link:hover { transform: translateY(-5px); }
         .footer-bottom {
-            margin-top: 2rem;
-            padding-top: 1.5rem;
+            margin-top: 2rem; padding-top: 1.5rem;
             border-top: 1px solid var(--footer-border);
-            text-align: center;
-            color: var(--footer-bottom) !important;
+            text-align: center; color: var(--footer-bottom) !important;
         }
-        /* Force all text inside footer to inherit proper colors */
-        .footer-custom p,
-        .footer-custom span,
-        .footer-custom small,
-        .footer-custom li {
-            color: inherit;
-        }
+        .footer-custom p, .footer-custom span,
+        .footer-custom small, .footer-custom li { color: inherit; }
 
         /* ═══════════════════════════════════════════
-           PAWBOT CHATBOT STYLES
+           PAWBOT FLOATING BUTTON
         ═══════════════════════════════════════════ */
         #pawbot-launcher {
             position: fixed; bottom: 28px; right: 28px;
             width: 64px; height: 64px; border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            box-shadow: 0 8px 28px rgba(102,126,234,.6);
+            background: linear-gradient(135deg,#7c5cfc 0%,#b06aff 100%);
+            box-shadow: 0 8px 28px rgba(124,92,252,.6);
             display: flex; align-items: center; justify-content: center;
-            cursor: pointer; z-index: 9999;
-            border: none; outline: none;
+            cursor: pointer; z-index: 9999; text-decoration: none;
             transition: transform .25s ease, box-shadow .25s ease;
+            animation: launcher-pulse 3s ease-in-out infinite;
         }
         #pawbot-launcher:hover {
             transform: scale(1.12);
-            box-shadow: 0 14px 38px rgba(102,126,234,.75);
+            box-shadow: 0 14px 38px rgba(124,92,252,.75);
+            animation: none;
         }
         #pawbot-launcher span { font-size: 1.9rem; line-height: 1; }
-
+        @keyframes launcher-pulse {
+            0%,100% { box-shadow: 0 8px 28px rgba(124,92,252,.6); }
+            50%      { box-shadow: 0 8px 40px rgba(124,92,252,.9), 0 0 0 8px rgba(124,92,252,.1); }
+        }
         #pawbot-badge {
             position: absolute; top: -4px; right: -4px;
             background: #ff4757; color: #fff;
             font-size: .65rem; font-weight: 700;
             width: 20px; height: 20px; border-radius: 50%;
-            display: none; align-items: center; justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             border: 2px solid #fff;
+            animation: badge-pop 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
         }
-
-        #pawbot-window {
-            position: fixed; bottom: 106px; right: 28px;
-            width: 365px; max-height: 560px;
-            background: var(--pawbot-window-bg);
-            border-radius: 24px;
-            box-shadow: 0 20px 65px rgba(0,0,0,.22);
-            display: flex; flex-direction: column;
-            z-index: 9998; overflow: hidden;
-            transform: scale(.85) translateY(20px);
-            opacity: 0; pointer-events: none;
-            transition: transform .32s cubic-bezier(.34,1.56,.64,1), opacity .25s ease;
+        @keyframes badge-pop {
+            from { transform: scale(0); opacity: 0; }
+            to   { transform: scale(1); opacity: 1; }
         }
-        #pawbot-window.open {
-            transform: scale(1) translateY(0);
-            opacity: 1; pointer-events: all;
+        #pawbot-launcher::before {
+            content: 'Chat with PawBot';
+            position: absolute; right: 74px; top: 50%;
+            transform: translateY(-50%);
+            background: rgba(30,24,52,0.95); color: #e8e0ff;
+            font-size: 0.78rem; font-weight: 600;
+            white-space: nowrap; padding: 6px 12px; border-radius: 20px;
+            border: 1px solid rgba(124,92,252,.3);
+            opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
         }
-
-        #pawbot-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #fff; padding: 15px 18px;
-            display: flex; align-items: center; gap: 12px; flex-shrink: 0;
-        }
-        #pawbot-avatar {
-            width: 44px; height: 44px;
-            background: rgba(255,255,255,.2); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.45rem; flex-shrink: 0;
-        }
-        #pawbot-header-info h6 { margin: 0; font-size: .95rem; font-weight: 700; color: #fff; }
-        #pawbot-header-info small { font-size: .73rem; opacity: .88; color: #fff; }
-        #pawbot-close {
-            margin-left: auto;
-            background: rgba(255,255,255,.2); border: none; color: #fff;
-            width: 30px; height: 30px; border-radius: 50%;
-            font-size: 1rem; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            transition: background .2s; flex-shrink: 0;
-        }
-        #pawbot-close:hover { background: rgba(255,255,255,.35); }
-
-        #pawbot-messages {
-            flex: 1; overflow-y: auto; padding: 16px;
-            display: flex; flex-direction: column; gap: 10px;
-            background: var(--pawbot-msg-area-bg);
-            scroll-behavior: smooth;
-        }
-        #pawbot-messages::-webkit-scrollbar { width: 4px; }
-        #pawbot-messages::-webkit-scrollbar-thumb { background: #cfc8ff; border-radius: 4px; }
-
-        .pb-msg {
-            max-width: 83%; padding: 10px 14px; border-radius: 18px;
-            font-size: .875rem; line-height: 1.55; word-break: break-word;
-            animation: pbPop .2s ease;
-        }
-        @keyframes pbPop {
-            from { transform: scale(.9); opacity: 0; }
-            to   { transform: scale(1);  opacity: 1; }
-        }
-        .pb-msg.bot {
-            background: var(--pawbot-msg-bot-bg);
-            color: var(--pawbot-msg-bot-color);
-            border-bottom-left-radius: 4px;
-            box-shadow: 0 2px 8px rgba(0,0,0,.07);
-            align-self: flex-start;
-        }
-        .pb-msg.user {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: #fff; border-bottom-right-radius: 4px;
-            align-self: flex-end;
-        }
-
-        .pb-typing {
-            display: flex; gap: 5px; align-items: center;
-            padding: 11px 15px;
-            background: var(--pawbot-msg-bot-bg);
-            border-radius: 18px; border-bottom-left-radius: 4px;
-            align-self: flex-start;
-            box-shadow: 0 2px 8px rgba(0,0,0,.07);
-        }
-        .pb-typing span {
-            width: 7px; height: 7px; border-radius: 50%;
-            background: #667eea; animation: pbBounce 1.2s infinite;
-        }
-        .pb-typing span:nth-child(2) { animation-delay: .2s; }
-        .pb-typing span:nth-child(3) { animation-delay: .4s; }
-        @keyframes pbBounce {
-            0%,60%,100% { transform: translateY(0); }
-            30%          { transform: translateY(-7px); }
-        }
-
-        #pawbot-quick {
-            padding: 8px 14px 4px; display: flex; flex-wrap: wrap; gap: 6px;
-            background: var(--pawbot-msg-area-bg);
-            border-top: 1px solid var(--pawbot-input-border);
-        }
-        .pb-quick-btn {
-            background: var(--quick-btn-bg);
-            border: 1.5px solid var(--quick-btn-border);
-            color: var(--quick-btn-color);
-            border-radius: 20px; padding: 5px 11px; font-size: .76rem;
-            cursor: pointer; transition: all .2s; white-space: nowrap; font-family: inherit;
-        }
-        .pb-quick-btn:hover { background: #667eea; border-color: #667eea; color: #fff; }
-
-        #pawbot-input-area {
-            display: flex; align-items: flex-end; gap: 8px;
-            padding: 11px 14px;
-            border-top: 1px solid var(--pawbot-input-border);
-            background: var(--pawbot-input-bg);
-            flex-shrink: 0;
-        }
-        #pawbot-input {
-            flex: 1;
-            border: 1.5px solid var(--pawbot-input-border);
-            border-radius: 20px;
-            padding: 9px 14px; font-size: .875rem; outline: none;
-            transition: border .2s; resize: none; font-family: inherit;
-            max-height: 100px; overflow-y: auto; line-height: 1.4;
-            background: var(--pawbot-input-bg);
-            color: var(--pawbot-input-color);
-        }
-        #pawbot-input::placeholder { color: var(--service-desc-color); }
-        #pawbot-input:focus { border-color: #667eea; }
-        #pawbot-send {
-            width: 40px; height: 40px; border-radius: 50%;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border: none; color: #fff; font-size: 1rem; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0; transition: transform .2s, box-shadow .2s;
-            margin-bottom: 1px;
-        }
-        #pawbot-send:hover { transform: scale(1.1); box-shadow: 0 4px 14px rgba(102,126,234,.5); }
-        #pawbot-send:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
-
-        #pawbot-powered {
-            text-align: center; font-size: .68rem;
-            color: var(--pawbot-powered-color);
-            padding: 4px 0 8px;
-            background: var(--pawbot-input-bg);
-        }
-
-        @media (max-width: 420px) {
-            #pawbot-window { width: calc(100vw - 20px); right: 10px; bottom: 95px; }
+        #pawbot-launcher:hover::before { opacity: 1; }
+        @media (max-width:420px) {
             #pawbot-launcher { bottom: 16px; right: 16px; }
+            #pawbot-launcher::before { display: none; }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-custom">
+
+    <!-- ═══════════════════════════════════════════
+         NAVBAR
+    ═══════════════════════════════════════════ -->
+    <nav class="pn-nav" id="pnNav">
         <div class="container">
-            <a class="navbar-brand-custom" href="/">🐾 PetNova</a>
-            <button class="navbar-toggler navbar-toggler-custom" type="button"
-                    data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon-custom"></span>
-                <span class="navbar-toggler-icon-custom"></span>
-                <span class="navbar-toggler-icon-custom"></span>
+            <!-- Brand -->
+            <a class="pn-brand" href="/">
+                <div class="pn-brand-icon">🐾</div>
+                PetNova
+            </a>
+
+            <!-- Hamburger (mobile) -->
+            <button class="pn-toggler" id="pnToggler" aria-label="Menu">
+                <span></span><span></span><span></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link-custom" href="/">🏠 Home</a></li>
-                    <li class="nav-item"><a class="nav-link-custom" href="/pets">👀 Browse</a></li>
-                    <li class="nav-item"><a class="nav-link-custom active" href="/buy">🛒 Buy</a></li>
-                    <li class="nav-item"><a class="nav-link-custom" href="/add">➕ Add Pet</a></li>
-                    <li class="nav-item"><a class="nav-link-custom" href="/quiz">🧩 Quiz</a></li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link-custom dropdown-toggle" href="#" id="servicesDropdown"
-                           role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            🔧 Services
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
-                            <li><a class="dropdown-item" href="/care-tips">🩺 Care Tips</a></li>
-                            <li><a class="dropdown-item" href="/mate">💕 Find Mate</a></li>
-                            <li><a class="dropdown-item" href="/rescue">🏠 Rescue</a></li>
-                            <li><a class="dropdown-item" href="/vet">🏥 Vet Directory</a></li>
-                            <li><a class="dropdown-item" href="/petaccessories">🏪 Pet Shops</a></li>
-                        </ul>
-                    </li>
-                    <!-- LOGIN / USER DROPDOWN -->
-                    {% if session.get('user') %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link-custom dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                                👤 {{ session['user']['name'] }}
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/dashboard">📊 Dashboard</a></li>
-                                <li><a class="dropdown-item" href="/logout">🚪 Logout</a></li>
-                            </ul>
-                        </li>
-                    {% else %}
-                        <li class="nav-item ms-3">
-                            <a href="/login/google" class="btn btn-light rounded-pill px-3">
-                                🔐 Login with Google
-                            </a>
-                        </li>
-                    {% endif %}
-                    
-                    <!-- DARK MODE (keep this BELOW login) -->
-                    <li class="nav-item ms-3">
-                        <div class="form-check form-switch mb-0 d-flex align-items-center">
-                            <input class="form-check-input me-2" type="checkbox" id="darkModeToggle">
-                            <label class="form-check-label" for="darkModeToggle">Dark</label>
-                        </div>
-                    </li>
-                </ul>
-            </div>
+
+            <!-- Links -->
+            <ul class="pn-links" id="pnLinks">
+
+                <li class="pn-link active">
+                    <a href="/">
+                        <span class="pn-link-icon">🏠</span>
+                        <span class="pn-link-label">Home</span>
+                    </a>
+                </li>
+
+                <li class="pn-link">
+                    <a href="/pets">
+                        <span class="pn-link-icon">👀</span>
+                        <span class="pn-link-label">Browse</span>
+                    </a>
+                </li>
+
+                <li class="pn-link">
+                    <a href="/buy">
+                        <span class="pn-link-icon">🛒</span>
+                        <span class="pn-link-label">Buy</span>
+                    </a>
+                </li>
+
+                <li class="pn-link">
+                    <a href="/add">
+                        <span class="pn-link-icon">➕</span>
+                        <span class="pn-link-label">Add Pet</span>
+                    </a>
+                </li>
+
+                <li class="pn-link">
+                    <a href="/quiz">
+                        <span class="pn-link-icon">🧩</span>
+                        <span class="pn-link-label">Quiz</span>
+                    </a>
+                </li>
+
+                <li class="pn-link">
+                    <a href="/pawbot">
+                        <span class="pn-link-icon">🤖</span>
+                        <span class="pn-link-label">PawBot</span>
+                    </a>
+                </li>
+
+                <!-- Services dropdown -->
+                <li class="pn-link" id="servicesItem">
+                    <button class="pn-drop-toggle" id="servicesToggle">
+                        <span class="pn-link-icon">🔧</span>
+                        <span class="pn-link-label">Services</span>
+                        <span class="pn-drop-caret">▼</span>
+                    </button>
+                    <div class="pn-dropdown">
+                        <a href="/care-tips"><span>🩺</span> Care Tips</a>
+                        <a href="/mate"><span>💕</span> Find Mate</a>
+                        <a href="/rescue"><span>🏠</span> Rescue</a>
+                        <a href="/vet"><span>🏥</span> Vet Directory</a>
+                        <a href="/petaccessories"><span>🏪</span> Pet Shops</a>
+                    </div>
+                </li>
+
+                <li class="pn-divider"></li>
+
+                <!-- LOGIN / USER — Jinja2 block -->
+                {% if session.get('user') %}
+                <li class="pn-link" id="userItem">
+                    <button class="pn-drop-toggle">
+                        <span class="pn-link-icon">👤</span>
+                        <span class="pn-link-label">{{ session['user']['name'] }}</span>
+                        <span class="pn-drop-caret">▼</span>
+                    </button>
+                    <div class="pn-dropdown">
+                        <a href="/dashboard"><span>📊</span> Dashboard</a>
+                        <a href="/logout"><span>🚪</span> Logout</a>
+                    </div>
+                </li>
+                {% else %}
+                <li class="pn-link">
+                    <a href="/login/google" class="pn-login-btn">
+                        <span>🔐</span>
+                        <span class="pn-link-label">Login with Google</span>
+                    </a>
+                </li>
+                {% endif %}
+
+                <!-- Dark mode toggle -->
+                <li class="pn-link" style="padding: 0 4px;">
+                    <label class="pn-toggle">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span class="pn-toggle-label">Dark</span>
+                    </label>
+                </li>
+
+            </ul>
         </div>
     </nav>
 
+    <!-- Floating background pets -->
     <div class="floating-elements">
         <div class="floating-pet" style="top:10%;animation-delay:0s;">🐕</div>
         <div class="floating-pet" style="top:30%;animation-delay:7s;">🐱</div>
@@ -596,6 +623,7 @@
         <div class="floating-pet" style="top:45%;animation-delay:18s;">🐹</div>
     </div>
 
+    <!-- Hero -->
     <div class="hero-section">
         <div class="container">
             <h1 class="display-3 mb-4">🐾 Welcome to PetNova 🐾</h1>
@@ -603,6 +631,7 @@
         </div>
     </div>
 
+    <!-- Service Cards -->
     <div class="container pb-5">
         <div class="row">
             <!-- Pet Quiz Hub - Featured -->
@@ -624,7 +653,7 @@
                     <a href="/add" class="btn-service btn-add">Add Your Pet</a>
                 </div>
             </div>
-            <!-- View All Pets -->
+            <!-- Browse Pets -->
             <div class="col-lg-4 mb-4">
                 <div class="service-card">
                     <div class="service-icon">👀</div>
@@ -678,7 +707,7 @@
                     <a href="/vet" class="btn-service btn-vet">Find Vets</a>
                 </div>
             </div>
-            <!-- Pet Shops Directory -->
+            <!-- Pet Shops -->
             <div class="col-lg-4 mb-4">
                 <div class="service-card">
                     <div class="service-icon">🏪</div>
@@ -687,13 +716,22 @@
                     <a href="/petaccessories" class="btn-service btn-view">Find Pet Shops</a>
                 </div>
             </div>
-            <!-- Personalized Care Tips -->
+            <!-- Care Tips -->
             <div class="col-lg-4 mb-4">
                 <div class="service-card">
                     <div class="service-icon">🩺</div>
                     <h3 class="service-title">Personalized Care Tips</h3>
                     <p class="service-description">Answer a few questions and get tailored care guidance for your pet's type and life stage.</p>
                     <a href="/care-tips" class="btn-service btn-view">Get Care Tips</a>
+                </div>
+            </div>
+            <!-- PawBot -->
+            <div class="col-lg-4 mb-4">
+                <div class="service-card" style="border: 1px solid rgba(124,92,252,0.35);">
+                    <div class="service-icon">🤖</div>
+                    <h3 class="service-title">PawBot AI Chat</h3>
+                    <p class="service-description">Chat with PawBot, our AI assistant powered by Groq LLaMA. Ask anything — pet advice, platform help, breed info, care routines, and more.</p>
+                    <a href="/pawbot" class="btn-service btn-chat">Chat with PawBot</a>
                 </div>
             </div>
         </div>
@@ -751,6 +789,7 @@
                         <li><a href="/pets">Browse Pets</a></li>
                         <li><a href="/add">Add Pet</a></li>
                         <li><a href="/quiz">Take Quiz</a></li>
+                        <li><a href="/pawbot">🤖 PawBot Chat</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-3 col-md-6 mb-4">
@@ -779,196 +818,72 @@
         </div>
     </footer>
 
-    <!-- PAWBOT CHATBOT WIDGET -->
-    <button id="pawbot-launcher" aria-label="Open PawBot chat">
+    <!-- PawBot Floating Launcher -->
+    <a href="/pawbot" id="pawbot-launcher" aria-label="Open PawBot chat">
         <span>🐾</span>
         <div id="pawbot-badge">1</div>
-    </button>
-
-    <div id="pawbot-window" role="dialog" aria-label="PawBot Chat">
-        <div id="pawbot-header">
-            <div id="pawbot-avatar">🐾</div>
-            <div id="pawbot-header-info">
-                <h6>PawBot</h6>
-                <small>🟢 PetNova Assistant · Always here</small>
-            </div>
-            <button id="pawbot-close" aria-label="Close chat">✕</button>
-        </div>
-
-        <div id="pawbot-messages"></div>
-
-        <div id="pawbot-quick">
-            <button class="pb-quick-btn">🐶 Find a dog</button>
-            <button class="pb-quick-btn">🐱 Find a cat</button>
-            <button class="pb-quick-btn">🏠 Rescue a pet</button>
-            <button class="pb-quick-btn">🏥 Find a vet</button>
-            <button class="pb-quick-btn">🧩 Take a quiz</button>
-            <button class="pb-quick-btn">💕 Find a mate</button>
-        </div>
-
-        <div id="pawbot-input-area">
-            <textarea id="pawbot-input" rows="1" placeholder="Ask PawBot anything… 🐾"></textarea>
-            <button id="pawbot-send" aria-label="Send">➤</button>
-        </div>
-        <div id="pawbot-powered">✨ Powered by Google Gemini</div>
-    </div>
-
-    <script>
-        // Service card hover
-        document.querySelectorAll('.service-card').forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                if (!this.classList.contains('featured-card'))
-                    this.style.transform = 'translateY(-8px) scale(1.02)';
-            });
-            card.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0) scale(1)';
-            });
-        });
-
-        // Navbar scroll
-        window.addEventListener('scroll', function() {
-            document.querySelector('.navbar-custom')
-                    .classList.toggle('scrolled', window.scrollY > 50);
-        });
-
-        // Active nav link
-        const currentPage = window.location.pathname;
-        document.querySelectorAll('.nav-link-custom').forEach(link => {
-            if (link.getAttribute('href') === currentPage) {
-                document.querySelectorAll('.nav-link-custom').forEach(l => l.classList.remove('active'));
-                link.classList.add('active');
-            }
-        });
-    </script>
+    </a>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // Dark mode
-        (function(){
-            const toggle = document.getElementById('darkModeToggle');
-            const applyMode = enabled => {
-                document.body.classList.toggle('dark-mode', enabled);
-                if (toggle) toggle.checked = enabled;
-            };
-            applyMode(localStorage.getItem('darkMode') === 'true');
-            if (toggle) toggle.addEventListener('change', function() {
-                applyMode(this.checked);
-                localStorage.setItem('darkMode', this.checked);
+        /* ── Scroll shadow ── */
+        const pnNav = document.getElementById('pnNav');
+        window.addEventListener('scroll', () => pnNav.classList.toggle('scrolled', scrollY > 20));
+
+        /* ── Mobile hamburger ── */
+        document.getElementById('pnToggler')?.addEventListener('click', () =>
+            document.getElementById('pnLinks').classList.toggle('open')
+        );
+
+        /* ── Mobile: services dropdown tap ── */
+        document.getElementById('servicesToggle')?.addEventListener('click', e => {
+            e.stopPropagation();
+            document.getElementById('servicesItem').classList.toggle('drop-open');
+        });
+
+        /* ── Active link highlight ── */
+        const path = window.location.pathname;
+        document.querySelectorAll('.pn-link').forEach(li => {
+            const a = li.querySelector('a');
+            if (a && a.getAttribute('href') === path) {
+                document.querySelectorAll('.pn-link').forEach(l => l.classList.remove('active'));
+                li.classList.add('active');
+            }
+        });
+
+        /* ── Service card hover ── */
+        document.querySelectorAll('.service-card').forEach(card => {
+            card.addEventListener('mouseenter', function () {
+                if (!this.classList.contains('featured-card'))
+                    this.style.transform = 'translateY(-8px) scale(1.02)';
             });
-        })();
+            card.addEventListener('mouseleave', function () {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        /* ── PawBot badge delay ── */
+        setTimeout(() => {
+            const badge = document.getElementById('pawbot-badge');
+            if (badge) badge.style.display = 'flex';
+        }, 2500);
     </script>
 
     <script>
-    // PAWBOT CHATBOT LOGIC
-    (function () {
-        const launcher  = document.getElementById('pawbot-launcher');
-        const chatWin   = document.getElementById('pawbot-window');
-        const closeBtn  = document.getElementById('pawbot-close');
-        const msgArea   = document.getElementById('pawbot-messages');
-        const inputEl   = document.getElementById('pawbot-input');
-        const sendBtn   = document.getElementById('pawbot-send');
-        const badge     = document.getElementById('pawbot-badge');
-        const quickArea = document.getElementById('pawbot-quick');
-
-        let history = [];
-        let isOpen  = false;
-        let waiting = false;
-        let greeted = false;
-
-        function toggleChat() {
-            isOpen = !isOpen;
-            chatWin.classList.toggle('open', isOpen);
-            if (isOpen) {
-                badge.style.display = 'none';
-                if (!greeted) { greet(); greeted = true; }
-                setTimeout(() => inputEl.focus(), 300);
-            }
-        }
-        launcher.addEventListener('click', toggleChat);
-        closeBtn.addEventListener('click', toggleChat);
-
-        function greet() {
-            appendMsg('bot',
-                "Hi there! 🐾 I'm **PawBot**, your PetNova assistant!\n\n" +
-                "I can help you find pets, explore our services (buying, selling, rescue, vets, care tips & more), " +
-                "or answer any pet-care questions. What can I help you with today?"
-            );
-        }
-
-        function appendMsg(role, text) {
-            const div = document.createElement('div');
-            div.className = 'pb-msg ' + role;
-            div.innerHTML = text
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\n/g, '<br>');
-            msgArea.appendChild(div);
-            msgArea.scrollTop = msgArea.scrollHeight;
-        }
-
-        function showTyping() {
-            const el = document.createElement('div');
-            el.className = 'pb-typing'; el.id = 'pb-typing-el';
-            el.innerHTML = '<span></span><span></span><span></span>';
-            msgArea.appendChild(el);
-            msgArea.scrollTop = msgArea.scrollHeight;
-        }
-        function hideTyping() {
-            const el = document.getElementById('pb-typing-el');
-            if (el) el.remove();
-        }
-
-        async function sendMessage(text) {
-            text = text.trim();
-            if (!text || waiting) return;
-
-            quickArea.style.display = 'none';
-            appendMsg('user', text);
-            history.push({ role: 'user', content: text });
-            inputEl.value = '';
-            inputEl.style.height = 'auto';
-
-            waiting = true;
-            sendBtn.disabled = true;
-            showTyping();
-
-            try {
-                const res = await fetch('/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ messages: history }),
-                });
-                const data = await res.json();
-                hideTyping();
-                const reply = data.reply || "Sorry, something went wrong. Please try again! 🐾";
-                appendMsg('bot', reply);
-                history.push({ role: 'assistant', content: reply });
-            } catch (err) {
-                hideTyping();
-                appendMsg('bot', "Oops! Can't reach the server right now. Please try again. 🐾");
-            }
-
-            waiting = false;
-            sendBtn.disabled = false;
-            inputEl.focus();
-        }
-
-        document.querySelectorAll('.pb-quick-btn').forEach(btn => {
-            btn.addEventListener('click', () => sendMessage(btn.textContent.trim()));
-        });
-
-        sendBtn.addEventListener('click', () => sendMessage(inputEl.value));
-        inputEl.addEventListener('keydown', e => {
-            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(inputEl.value); }
-        });
-
-        inputEl.addEventListener('input', () => {
-            inputEl.style.height = 'auto';
-            inputEl.style.height = Math.min(inputEl.scrollHeight, 100) + 'px';
-        });
-
-        setTimeout(() => { if (!isOpen) badge.style.display = 'flex'; }, 2500);
-    })();
+        /* ── Dark mode ── */
+        (function () {
+            const toggle = document.getElementById('darkModeToggle');
+            const apply = on => {
+                document.body.classList.toggle('dark-mode', on);
+                if (toggle) toggle.checked = on;
+            };
+            apply(localStorage.getItem('darkMode') === 'true');
+            toggle?.addEventListener('change', function () {
+                apply(this.checked);
+                localStorage.setItem('darkMode', this.checked);
+            });
+        })();
     </script>
 
 </body>

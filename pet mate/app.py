@@ -7,10 +7,9 @@ import sqlite3
 from dotenv import load_dotenv
 import requests as http_requests
 
-
-
 # ─── Load env and app ─────────────────────────────
 load_dotenv()
+
 app = Flask(__name__)
 app.config.update(
     SESSION_COOKIE_NAME="petnova_session",
@@ -18,22 +17,20 @@ app.config.update(
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SAMESITE="Lax"
 )
-FLASK_SECRET = os.getenv("FLASK_SECRET")
-app.secret_key = FLASK_SECRET
 
-#app.config['SERVER_NAME'] = 'localhost:5000'
-#app.config['SESSION_COOKIE_DOMAIN'] = 'localhost'
+app.secret_key = os.getenv("FLASK_SECRET", "THIS_IS_A_FIXED_SECRET_123456789")
+GROQ_API_KEY   = os.getenv("GROQ_API_KEY")
 
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "index"
 
 # ─── Google OAuth setup ──────────────────────────
-GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_ID     = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 
-print("client id :",GOOGLE_CLIENT_ID)
-print("client secret:",GOOGLE_CLIENT_SECRET)
+print("client id     :", GOOGLE_CLIENT_ID)
+print("client secret :", GOOGLE_CLIENT_SECRET)
 
 oauth = OAuth(app)
 google = oauth.register(
@@ -46,11 +43,10 @@ google = oauth.register(
     client_kwargs={'scope': 'openid email profile'}
 )
 
-
 # ─── User Model ──────────────────────────────────
 class User(UserMixin):
     def __init__(self, id, name):
-        self.id = id
+        self.id   = id
         self.name = name
 
 @login_manager.user_loader
@@ -65,11 +61,6 @@ def load_user(user_id):
 UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-# ── Groq API Key (FREE — no billing needed) ───────────────────────────────────
-
-GROQ_API_KEY= os.getenv("GROQ_API_KEY")
-# ──────────────────────────────────────────────────────────────────────────────
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 
@@ -108,7 +99,8 @@ def init_db():
             conn.execute("ALTER TABLE lost_found_reports ADD COLUMN timestamp DATETIME DEFAULT CURRENT_TIMESTAMP")
         except sqlite3.OperationalError:
             pass
-    with sqlite3.connect("users.db") as conn:   #db login
+
+    with sqlite3.connect("users.db") as conn:
         conn.execute('''
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -117,39 +109,27 @@ def init_db():
             )
         ''')
 
-
-
 # ─── Page routes ──────────────────────────────────────────────────────────────
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-"""@app.route("/login/google")
-def login():
-    redirect_uri = "http://localhost:5000/callback"
-    return google.authorize_redirect(redirect_uri)
-"""
-
 @app.route("/login/google")
 def login():
-    redirect_uri = url_for('callback', _external=True)
-    print("REDIRECT URI:", redirect_uri)
+    redirect_uri = "http://localhost:5000/callback"
+    print("SESSION BEFORE LOGIN:", dict(session))
     return google.authorize_redirect(redirect_uri)
-    print("SESSION BEFORE LOGIN:", dict(session))  # DEBUG
-    return google.authorize_redirect(redirect_uri)
-
 
 @app.route("/callback")
 def callback():
-    print("SESSION IN CALLBACK:", dict(session))  # DEBUG
-    token = google.authorize_access_token()
-
-    resp = google.get('userinfo')
+    print("SESSION IN CALLBACK:", dict(session))
+    token     = google.authorize_access_token()
+    resp      = google.get('userinfo')
     user_info = resp.json()
 
     email = user_info['email']
-    name = user_info['name']
+    name  = user_info['name']
 
     with sqlite3.connect("users.db") as conn:
         user = conn.execute("SELECT * FROM users WHERE email=?", (email,)).fetchone()
@@ -161,14 +141,11 @@ def callback():
     login_user(User(user[0], user[2]))
     return redirect("/")
 
-
 @app.route("/logout")
 @login_required
 def logout():
     logout_user()
     return redirect("/")
-
-
 
 @app.route('/quiz')
 def quiz():
@@ -253,7 +230,7 @@ def sell_pet_redirect():
 def find_mate():
     pets = []
     selected_category = None
-    selected_breed = None
+    selected_breed    = None
     with sqlite3.connect("pets.db") as conn:
         categories = [row[0] for row in conn.execute("SELECT DISTINCT category FROM pets").fetchall()]
         breeds_per_category = {}
@@ -271,7 +248,7 @@ def find_mate():
         if selected_category:
             query += " AND category=?"; params.append(selected_category)
         if selected_breed:
-            query += " AND breed=?"; params.append(selected_breed)
+            query += " AND breed=?";    params.append(selected_breed)
         with sqlite3.connect("pets.db") as conn:
             pets = conn.execute(query, params).fetchall()
     return render_template('mate.html', pets=pets, categories=categories,
@@ -395,8 +372,17 @@ def vet():
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  PAWBOT CHATBOT — Groq (FREE, no billing, very fast)
-#  Free limits: 14,400 requests/day, 500,000 tokens/day on llama-3.3-70b
+#  PAWBOT — Dedicated chat page
+# ══════════════════════════════════════════════════════════════════════════════
+
+@app.route('/pawbot')
+def pawbot():
+    """Serves the full-page PawBot chat interface."""
+    return render_template('chatbot.html')
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  PAWBOT — Chat API endpoint (used by chatbot.html)
 # ══════════════════════════════════════════════════════════════════════════════
 
 SYSTEM_PROMPT = (
@@ -404,29 +390,25 @@ SYSTEM_PROMPT = (
     "You help users find pets, understand the platform's services (buying, selling, rescue, "
     "finding mates for breeding, vet directory, pet shops directory, personalized care tips, "
     "and pet quizzes), and answer general pet-care questions. "
-    "PetNova pages: / home, /pets browse all, /buy buy pets, /sell list a pet, "
-    "/mate find breeding partner, /rescue lost & found, /vet vet directory, "
-    "/petaccessories pet shops, /care-tips care tips, /quiz quizzes, /add add a pet. "
-    "Keep answers concise, warm, and helpful. Use pet-related emojis occasionally. "
-    "If asked about something unrelated to pets or PetNova, politely redirect back to pets."
+    "Keep answers concise, warm, and helpful. Use pet-related emojis occasionally."
 )
 
 @app.route('/chat', methods=['POST'])
 def chat():
+    """Handles chat messages from the PawBot interface and proxies them to Groq."""
     try:
+        if not GROQ_API_KEY:
+            return jsonify({"reply": "⚠️ API key is missing. Check your .env file!"}), 500
+
         data    = request.get_json(force=True)
         history = data.get("messages", [])
 
-        # Groq uses the same format as OpenAI — simple and clean
         messages = [{"role": "system", "content": SYSTEM_PROMPT}]
         for msg in history:
-            messages.append({
-                "role": msg["role"],   # "user" or "assistant" — no conversion needed
-                "content": msg["content"]
-            })
+            messages.append({"role": msg["role"], "content": msg["content"]})
 
         payload = {
-            "model": "llama-3.3-70b-versatile",   # free, fast, very capable
+            "model": "llama-3.3-70b-versatile",
             "messages": messages,
             "max_tokens": 512,
             "temperature": 0.7
@@ -442,29 +424,14 @@ def chat():
             timeout=30
         )
 
-        print(f"[PawBot] Groq status: {resp.status_code}")
-
         if resp.status_code != 200:
-            err_msg = resp.json().get('error', {}).get('message', resp.text)
-            print(f"[PawBot] Groq error: {err_msg}")
-            return jsonify({"reply": f"⚠️ API error: {err_msg}"}), 500
+            return jsonify({"reply": f"⚠️ API error: {resp.text}"}), 500
 
         reply = resp.json()["choices"][0]["message"]["content"]
         return jsonify({"reply": reply})
 
-    except http_requests.exceptions.Timeout:
-        print("[PawBot] Timeout")
-        return jsonify({"reply": "Request timed out. Please try again! 🐾"}), 504
-
-    except http_requests.exceptions.ConnectionError as e:
-        print(f"[PawBot] Connection error: {e}")
-        return jsonify({"reply": "Cannot connect to server. Check your internet. 🐾"}), 503
-
     except Exception as e:
-        print(f"[PawBot] Error: {type(e).__name__}: {e}")
         return jsonify({"reply": f"⚠️ Error: {str(e)}"}), 500
-
-# ══════════════════════════════════════════════════════════════════════════════
 
 
 if __name__ == '__main__':
