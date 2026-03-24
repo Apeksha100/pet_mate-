@@ -1,4 +1,5 @@
 import os
+import re
 from flask import Flask, render_template, request, redirect, send_from_directory, jsonify, session, url_for
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from authlib.integrations.flask_client import OAuth
@@ -335,40 +336,57 @@ def add_report():
     conn.close()
     return jsonify({"message": "Report added successfully!"})
 
-def generate_care_tips(category, age_group):
-    tips = []
-    animal_tips = {
-        'Dog':     ['Schedule regular vet checkups every 6-12 months.',
-                    'Provide daily walks and mental stimulation with puzzles.',
-                    'Brush their coat weekly and check for ticks after outdoor time.'],
-        'Cat':     ['Give fresh water daily and use multiple water stations.',
-                    'Clean the litter box daily to reduce stress and prevent infection.',
-                    'Add vertical spaces and play sessions to satisfy hunting instincts.'],
-        'Bird':    ['Rotate toys weekly to keep them mentally active.',
-                    'Offer a balanced diet: pellets, fresh fruits, and greens.',
-                    'Ensure cage is cleaned and placed away from drafts.'],
-        'Reptile': ['Maintain strict temperature and humidity gradients in the enclosure.',
-                    'Use UVB lighting on a reliable timer for bone health.',
-                    'Feed species-appropriate prey and avoid overfeeding.'],
-        'Small':   ['Provide a spacious enclosure with hiding spots and chew toys.',
-                    'Change bedding frequently and keep living area dry.',
-                    'Introduce safe fresh vegetables gradually into their diet.']
+
+
+
+def get_groq_care_tips(selected_category, selected_age, pet_name):
+    prompt = (
+        f"You are an experienced Vet, a friendly pet care assistant for PetNova. "
+        f"Generate 4-6 concise practical care tips for a {selected_age} {selected_category}. "
+        f"Include breed-agnostic advice, nutrition, activity, grooming, and health checks. "
+        f"If pet name is provided ({pet_name}), include it once in a warm tone. "
+        "Return each tip on a new line, without numbering."
+    )
+
+    if selected_category == '' or selected_age == '':
+        raise ValueError("Pet type and age group are required")
+
+    to_bearer = SYSTEM_PROMPT
+    messages = [
+        {"role": "system", "content": to_bearer},
+        {"role": "user", "content": prompt}
+    ]
+
+    payload = {
+        "model": "llama-3.3-70b-versatile",
+        "messages": messages,
+        "max_tokens": 300,
+        "temperature": 0.7
     }
-    tips.extend(animal_tips.get(category, [
-        'Keep your pet comfortable with a safe, clean environment.',
-        'Watch for behavior changes and seek veterinary advice if needed.',
-        'Provide appropriate nutrition, exercise, and love daily.'
-    ]))
-    if age_group == 'Puppy/Kitten':
-        tips.append('Start training early with short positive reinforcement sessions.')
-        tips.append('Schedule vaccinations and deworming as recommended by your vet.')
-    elif age_group == 'Adult':
-        tips.append('Keep up with dental care and regular weight checks.')
-        tips.append('Maintain a consistent feeding schedule to avoid weight gain.')
-    elif age_group == 'Senior':
-        tips.append('Monitor joint health and consider senior-specific diets.')
-        tips.append('Offer softer bedding and easier access to water and food bowls.')
+
+    resp = http_requests.post(
+        "https://api.groq.com/openai/v1/chat/completions",
+        json=payload,
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {GROQ_API_KEY}"
+        },
+        timeout=30
+    )
+
+    if resp.status_code != 200:
+        raise RuntimeError(f"Groq API error {resp.status_code}: {resp.text}")
+
+    text = resp.json().get("choices", [{}])[0].get("message", {}).get("content", "")
+    tips = []
+    for line in text.splitlines():
+        clean = re.sub(r'^\s*[-*\d\.\)\s]+', '', line).strip()
+        if clean:
+            tips.append(clean)
+    if not tips:
+        raise RuntimeError("No tips returned by Groq")
     return tips
+
 
 @app.route('/care-tips', methods=['GET', 'POST'])
 def care_tips():
@@ -376,16 +394,25 @@ def care_tips():
     selected_age      = ''
     pet_name          = ''
     tips              = []
+    warning           = ''
+
     if request.method == 'POST':
         selected_category = request.form.get('category', '')
         selected_age      = request.form.get('age_group', '')
         pet_name          = request.form.get('pet_name', '').strip()
-        tips              = generate_care_tips(selected_category, selected_age)
+
+        try:
+            tips = get_groq_care_tips(selected_category, selected_age, pet_name)
+        except Exception as e:
+            warning = f"Groq service unavailable, showing fallback tips: {e}"
+            tips = get_groq_care_tips(selected_category, selected_age, pet_name)
+
     return render_template('pet_care_tips.html',
                            pet_name=pet_name,
                            selected_category=selected_category,
                            selected_age=selected_age,
-                           tips=tips)
+                           tips=tips,
+                           warning=warning)
 
 @app.route('/vet')
 def vet():

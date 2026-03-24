@@ -321,6 +321,12 @@
             </div>
         </form>
 
+        {% if warning %}
+        <div class="alert alert-warning" role="alert">
+            {{ warning }}
+        </div>
+        {% endif %}
+
         {% if tips %}
         <div class="tips-result">
             <h5 class="tips-title">Care Tips for {{ pet_name if pet_name else selected_category }} ({{ selected_age }})</h5>
