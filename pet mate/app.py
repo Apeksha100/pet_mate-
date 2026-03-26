@@ -18,9 +18,9 @@ app.config.update(
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SAMESITE="Lax"
 )
-
-app.secret_key = os.getenv("FLASK_SECRET", "THIS_IS_A_FIXED_SECRET_123456789")
-GROQ_API_KEY   = os.getenv("GROQ_API_KEY")
+app.secret_key = "super_secret_key_12345"
+print("SECRET KEY:",app.secret_key)
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -38,12 +38,11 @@ google = oauth.register(
     name='google',
     client_id=GOOGLE_CLIENT_ID,
     client_secret=GOOGLE_CLIENT_SECRET,
-    authorize_url='https://accounts.google.com/o/oauth2/auth',
-    access_token_url='https://oauth2.googleapis.com/token',
-    api_base_url='https://openidconnect.googleapis.com/v1/',
-    client_kwargs={'scope': 'openid email profile'}
+    server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
+    client_kwargs={
+        'scope': 'openid email profile'
+    }
 )
-
 # ─── User Model ──────────────────────────────────
 class User(UserMixin):
     def __init__(self, id, name):
@@ -137,9 +136,9 @@ def login():
 
 @app.route("/callback")
 def callback():
-    print("SESSION IN CALLBACK:", dict(session))
-    token     = google.authorize_access_token()
-    resp      = google.get('userinfo')
+    token = google.authorize_access_token()
+    # fetch user info from full endpoint
+    resp = google.get('https://openidconnect.googleapis.com/v1/userinfo')
     user_info = resp.json()
 
     email = user_info['email']
@@ -154,7 +153,7 @@ def callback():
 
     login_user(User(user[0], user[2]))
     return redirect("/")
-
+    
 @app.route("/logout")
 @login_required
 def logout():
@@ -465,6 +464,11 @@ def chat():
     except Exception as e:
         return jsonify({"reply": f"⚠️ Error: {str(e)}"}), 500
 
+redirect_uri = "http://localhost:5000/callback"
+@app.route("/test-session")
+def test_session():
+    session["test"] = "working"
+    return "Session set!"
 
 if __name__ == '__main__':
     init_db()
