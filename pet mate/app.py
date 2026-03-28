@@ -7,19 +7,28 @@ from werkzeug.utils import secure_filename
 import sqlite3
 from dotenv import load_dotenv
 import requests as http_requests
+from flask_session import Session
 
 # ─── Load env and app ─────────────────────────────
 load_dotenv()
 
 app = Flask(__name__)
 app.config.update(
+    SECRET_KEY=os.getenv("FLASK_SECRET", "THIS_IS_A_FIXED_SECRET_123456789"),
     SESSION_COOKIE_NAME="petnova_session",
     SESSION_COOKIE_SECURE=False,
     SESSION_COOKIE_HTTPONLY=True,
-    SESSION_COOKIE_SAMESITE="Lax"
+    SESSION_COOKIE_SAMESITE="Lax",
+    SESSION_COOKIE_PATH="/",
+    SESSION_TYPE="filesystem",
+    SESSION_FILE_DIR=os.path.join(os.path.dirname(__file__), ".flask_session"),
+    SESSION_PERMANENT=False,
+    SESSION_USE_SIGNER=True,
 )
-app.secret_key = "super_secret_key_12345"
-print("SECRET KEY:",app.secret_key)
+
+os.makedirs(app.config["SESSION_FILE_DIR"], exist_ok=True)
+Session(app)
+
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 login_manager = LoginManager()
@@ -40,9 +49,11 @@ google = oauth.register(
     client_secret=GOOGLE_CLIENT_SECRET,
     server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
     client_kwargs={
-        'scope': 'openid email profile'
+        'scope': 'openid email profile',
+        'prompt': 'select_account',
     }
 )
+
 # ─── User Model ──────────────────────────────────
 class User(UserMixin):
     def __init__(self, id, name):
@@ -57,6 +68,11 @@ def load_user(user_id):
             return User(user[0], user[2])
     return None
 
+# ─── Inject current_user into ALL templates ──────
+@app.context_processor
+def inject_user():
+    return dict(current_user=current_user)
+
 
 UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -69,7 +85,7 @@ def allowed_file(filename):
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  SYSTEM PROMPT — defined at top so all functions can use it
+#  SYSTEM PROMPT
 # ══════════════════════════════════════════════════════════════════════════════
 
 SYSTEM_PROMPT = (
@@ -130,34 +146,51 @@ def index():
 
 @app.route("/login/google")
 def login():
-    redirect_uri = "http://localhost:5000/callback"
-    print("SESSION BEFORE LOGIN:", dict(session))
+    redirect_uri = url_for("callback", _external=True)
     return google.authorize_redirect(redirect_uri)
 
 @app.route("/callback")
 def callback():
-    token = google.authorize_access_token()
-    # fetch user info from full endpoint
-    resp = google.get('https://openidconnect.googleapis.com/v1/userinfo')
-    user_info = resp.json()
+    try:
+        token     = google.authorize_access_token()
+        user_info = token.get('userinfo')
 
-    email = user_info['email']
-    name  = user_info['name']
+        # Fallback if userinfo not embedded in token
+        if not user_info:
+            resp      = google.get('https://openidconnect.googleapis.com/v1/userinfo', token=token)
+            user_info = resp.json()
 
-    with sqlite3.connect("users.db") as conn:
-        user = conn.execute("SELECT * FROM users WHERE email=?", (email,)).fetchone()
-        if not user:
-            conn.execute("INSERT INTO users (email, name) VALUES (?, ?)", (email, name))
-            conn.commit()
+        email = user_info['email']
+        name  = user_info.get('name', email)
+        photo = user_info.get('picture', '')
+
+        with sqlite3.connect("users.db") as conn:
             user = conn.execute("SELECT * FROM users WHERE email=?", (email,)).fetchone()
+            if not user:
+                conn.execute("INSERT INTO users (email, name) VALUES (?, ?)", (email, name))
+                conn.commit()
+                user = conn.execute("SELECT * FROM users WHERE email=?", (email,)).fetchone()
 
-    login_user(User(user[0], user[2]))
-    return redirect("/")
-    
+        login_user(User(user[0], user[2]))
+
+        # ✅ Store in Flask session so Jinja2 templates can access it
+        session['user'] = {
+            'name':  name,
+            'email': email,
+            'photo': photo,
+        }
+
+        return redirect("/")
+
+    except Exception as e:
+        print(f"OAuth callback error: {e}")
+        return redirect("/?login_error=1")
+
 @app.route("/logout")
 @login_required
 def logout():
     logout_user()
+    session.pop('user', None)   # ✅ Clear user from session on logout
     return redirect("/")
 
 @app.route('/quiz')
@@ -416,17 +449,15 @@ def vet():
 
 @app.route('/pawbot')
 def pawbot():
-    """Serves the full-page PawBot chat interface."""
     return render_template('chatbot.html')
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  PAWBOT — Chat API endpoint (used by chatbot.html)
+#  PAWBOT — Chat API endpoint
 # ══════════════════════════════════════════════════════════════════════════════
 
 @app.route('/chat', methods=['POST'])
 def chat():
-    """Handles chat messages from the PawBot interface and proxies them to Groq."""
     try:
         if not GROQ_API_KEY:
             return jsonify({"reply": "⚠️ API key is missing. Check your .env file!"}), 500
@@ -464,11 +495,6 @@ def chat():
     except Exception as e:
         return jsonify({"reply": f"⚠️ Error: {str(e)}"}), 500
 
-redirect_uri = "http://localhost:5000/callback"
-@app.route("/test-session")
-def test_session():
-    session["test"] = "working"
-    return "Session set!"
 
 if __name__ == '__main__':
     init_db()

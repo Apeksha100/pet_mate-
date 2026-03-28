@@ -236,6 +236,20 @@
             color: #fff;
         }
 
+        /* User avatar in navbar */
+        .pn-avatar {
+            width: 26px; height: 26px; border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(102,126,234,0.4);
+        }
+        .pn-avatar-fallback {
+            width: 26px; height: 26px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--brand-from), var(--brand-to));
+            display: flex; align-items: center; justify-content: center;
+            font-size: .75rem; color: #fff; font-weight: 700;
+            flex-shrink: 0;
+        }
+
         /* Dark mode toggle */
         .pn-toggle { display: flex; align-items: center; gap: 7px; }
         .pn-toggle input[type=checkbox] {
@@ -312,6 +326,26 @@
         }
         .hero-section h1,
         .hero-section p { color: var(--hero-text); }
+
+        /* Welcome banner shown after login */
+        .welcome-banner {
+            background: linear-gradient(135deg, rgba(102,126,234,0.15), rgba(118,75,162,0.15));
+            border: 1px solid rgba(102,126,234,0.3);
+            border-radius: 16px;
+            padding: 12px 24px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+        .welcome-banner img {
+            width: 36px; height: 36px; border-radius: 50%;
+            object-fit: cover; border: 2px solid rgba(255,255,255,0.5);
+        }
+        .welcome-banner span {
+            font-size: 1rem; font-weight: 600; color: var(--hero-text);
+        }
 
         /* ═══════════════════════════════════════════
            SERVICE CARDS
@@ -546,13 +580,6 @@
                     </a>
                 </li>
 
-               <!-- <li class="pn-link">
-                    <a href="/quiz">
-                        <span class="pn-link-icon">🧩</span>
-                        <span class="pn-link-label">Quiz</span>
-                    </a>
-                </li>
--->
                 <li class="pn-link">
                     <a href="/pawbot">
                         <span class="pn-link-icon">🤖</span>
@@ -578,16 +605,24 @@
 
                 <li class="pn-divider"></li>
 
-                <!-- LOGIN / USER — Jinja2 block -->
-                {% if session.get('user') %}
+                <!-- ✅ FIXED: LOGIN / USER using current_user from Flask-Login -->
+                {% if current_user.is_authenticated %}
                 <li class="pn-link" id="userItem">
                     <button class="pn-drop-toggle">
-                        <span class="pn-link-icon">👤</span>
-                        <span class="pn-link-label">{{ session['user']['name'] }}</span>
+                        <!-- Show Google profile photo if available, else initials -->
+                        {% if session.get('user', {}).get('photo') %}
+                            <img src="{{ session['user']['photo'] }}" class="pn-avatar" alt="avatar">
+                        {% else %}
+                            <div class="pn-avatar-fallback">
+                                {{ current_user.name[0].upper() }}
+                            </div>
+                        {% endif %}
+                        <span class="pn-link-label">{{ current_user.name.split()[0] }}</span>
                         <span class="pn-drop-caret">▼</span>
                     </button>
                     <div class="pn-dropdown">
-                        <a href="/dashboard"><span>📊</span> Dashboard</a>
+                        <a href="#"><span>👤</span> {{ current_user.name }}</a>
+                        <!--<a href="#"><span>📧</span> {{ session.get('user', {}).get('email', '') }}</a>-->
                         <a href="/logout"><span>🚪</span> Logout</a>
                     </div>
                 </li>
@@ -626,6 +661,17 @@
     <!-- Hero -->
     <div class="hero-section">
         <div class="container">
+            <!-- ✅ Welcome banner shown when logged in -->
+            {% if current_user.is_authenticated %}
+            <div class="welcome-banner">
+                {% if session.get('user', {}).get('photo') %}
+                    <img src="{{ session['user']['photo'] }}" alt="avatar">
+                {% else %}
+                    <span style="font-size:1.5rem;">👋</span>
+                {% endif %}
+                <span>Welcome back, {{ current_user.name.split()[0] }}! 🐾</span>
+            </div>
+            {% endif %}
             <h1 class="display-3 mb-4">🐾 Welcome to PetNova 🐾</h1>
             <p class="lead mb-5">Your complete platform for everything pet-related - from finding your perfect companion to connecting with other pet lovers</p>
         </div>
