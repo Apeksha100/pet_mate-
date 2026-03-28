@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - PetNova</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        :root {
+            --brand-from:       #667eea;
+            --brand-to:         #764ba2;
+            --body-bg-start:    #667eea;
+            --body-bg-end:      #764ba2;
+            --card-bg:          rgba(255,255,255,0.97);
+            --card-border:      rgba(255,255,255,0.3);
+            --card-shadow:      0 15px 40px rgba(0,0,0,0.15);
+            --card-hover-shadow:0 25px 50px rgba(0,0,0,0.25);
+            --service-title-color: #222;
+            --service-desc-color:  #555;
+            --nav-bg:           rgba(255,255,255,0.85);
+            --nav-border:       rgba(102,126,234,0.18);
+            --link-color:       #3d3558;
+            --link-hover-bg:    rgba(102,126,234,0.1);
+            --drop-bg:          #ffffff;
+            --drop-shadow:      0 16px 40px rgba(102,126,234,0.18);
+            --how-it-works-text:#555;
+            --footer-bg:        #2d1b69;
+            --footer-text:      #ddd;
+            --footer-heading:   #ffffff;
+            --footer-link:      #ccc;
+            --footer-link-hover:#a78bfa;
+            --footer-border:    #333;
+            --footer-bottom:    #aaa;
+            --hero-text:        #fff;
+            --stat-muted:       rgba(255,255,255,0.75);
+            --quick-bg:         #f4f2ff;
+            --quick-border:     rgba(102,126,234,0.15);
+            --quick-color:      #3d3558;
+            --section-label:    #888;
+        }
+
+        body.dark-mode {
+            --body-bg-start:    #1a1035;
+            --body-bg-end:      #0d0820;
+            --card-bg:          rgba(30,25,55,0.97);
+            --card-border:      rgba(102,126,234,0.2);
+            --card-shadow:      0 15px 40px rgba(0,0,0,0.5);
+            --card-hover-shadow:0 25px 50px rgba(0,0,0,0.7);
+            --service-title-color: #e8e0ff;
+            --service-desc-color:  #b0a8d0;
+            --nav-bg:           rgba(14,10,32,0.94);
+            --nav-border:       rgba(102,126,234,0.25);
+            --link-color:       #c5bbee;
+            --link-hover-bg:    rgba(102,126,234,0.15);
+            --drop-bg:          #1a1535;
+            --drop-shadow:      0 16px 40px rgba(0,0,0,0.6);
+            --how-it-works-text:#b0a8d0;
+            --footer-bg:        #1a0e42;
+            --footer-text:      #b0a8d0;
+            --footer-heading:   #d4c8ff;
+            --footer-link:      #9988cc;
+            --footer-link-hover:#a78bfa;
+            --footer-border:    #2a1f4a;
+            --footer-bottom:    #6b5f99;
+            --hero-text:        #e8e0ff;
+            --quick-bg:         rgba(102,126,234,0.1);
+            --quick-border:     rgba(102,126,234,0.2);
+            --quick-color:      #c5bbee;
+            --section-label:    #7a6fa8;
+        }
+
+        * { font-family: 'Plus Jakarta Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+        body {
+            background: linear-gradient(135deg, var(--body-bg-start) 0%, var(--body-bg-end) 100%);
+            min-height: 100vh;
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+
+        /* ── NAVBAR (identical to index.html) ── */
+        .pn-nav {
+            background: var(--nav-bg);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid var(--nav-border);
+            box-shadow: 0 4px 24px rgba(102,126,234,0.10);
+            padding: 0;
+            position: sticky; top: 0; z-index: 1000;
+            transition: background .35s, box-shadow .35s;
+        }
+        .pn-nav.scrolled { box-shadow: 0 6px 32px rgba(102,126,234,0.22); }
+        .pn-nav .container { height: 64px; display: flex; align-items: center; }
+
+        .pn-brand {
+            display: flex; align-items: center; gap: 10px;
+            text-decoration: none;
+            font-size: 1.45rem; font-weight: 800; letter-spacing: -.5px;
+            background: linear-gradient(135deg, var(--brand-from), var(--brand-to));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; white-space: nowrap;
+            transition: opacity .2s; margin-right: 1.5rem;
+        }
+        .pn-brand:hover { opacity: .82; }
+        .pn-brand-icon {
+            width: 36px; height: 36px; border-radius: 10px;
+            background: linear-gradient(135deg, var(--brand-from), var(--brand-to));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.05rem; flex-shrink: 0;
+            box-shadow: 0 4px 14px rgba(102,126,234,0.4);
+        }
+        .pn-links {
+            display: flex; align-items: center;
+            gap: 2px; list-style: none; margin: 0; padding: 0; margin-left: auto;
+        }
+        .pn-link { position: relative; }
+        .pn-link > a, .pn-link > .pn-drop-toggle {
+            display: flex; align-items: center; gap: 6px; padding: 7px 11px;
+            border-radius: 10px; font-size: .85rem; font-weight: 600;
+            color: var(--link-color); text-decoration: none; white-space: nowrap;
+            transition: background .2s, color .2s, transform .15s;
+            border: none; background: transparent; cursor: pointer;
+        }
+        .pn-link > a:hover, .pn-link > .pn-drop-toggle:hover {
+            background: var(--link-hover-bg); color: #667eea; transform: translateY(-1px);
+        }
+        .pn-link-icon {
+            width: 26px; height: 26px; border-radius: 7px;
+            background: var(--link-hover-bg);
+            display: flex; align-items: center; justify-content: center;
+            font-size: .8rem; transition: background .2s; flex-shrink: 0;
+        }
+        .pn-link.active > a, .pn-link.active > .pn-drop-toggle {
+            background: linear-gradient(135deg, var(--brand-from), var(--brand-to)); color: #fff;
+        }
+        .pn-link.active .pn-link-icon { background: rgba(255,255,255,.22); }
+        .pn-dropdown {
+            position: absolute; top: calc(100% + 10px); right: 0; min-width: 200px;
+            background: var(--drop-bg); border-radius: 14px; box-shadow: var(--drop-shadow);
+            border: 1px solid var(--nav-border); padding: 8px;
+            opacity: 0; pointer-events: none;
+            transform: translateY(6px) scale(.97); transform-origin: top right;
+            transition: opacity .2s, transform .2s; z-index: 999;
+        }
+        .pn-link:hover .pn-dropdown, .pn-link:focus-within .pn-dropdown {
+            opacity: 1; pointer-events: all; transform: translateY(0) scale(1);
+        }
+        .pn-dropdown a {
+            display: flex; align-items: center; gap: 9px; padding: 9px 12px;
+            border-radius: 9px; font-size: .855rem; font-weight: 600;
+            color: var(--link-color); text-decoration: none; transition: background .18s, color .18s;
+        }
+        .pn-dropdown a:hover {
+            background: linear-gradient(135deg, rgba(102,126,234,.12), rgba(118,75,162,.12)); color: #667eea;
+        }
+        .pn-drop-caret { font-size: .58rem; opacity: .55; margin-left: 1px; transition: transform .2s; }
+        .pn-link:hover .pn-drop-caret { transform: rotate(180deg); }
+        .pn-divider { width: 1px; height: 28px; background: var(--nav-border); margin: 0 5px; flex-shrink: 0; }
+        .pn-avatar { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(102,126,234,0.4); }
+        .pn-avatar-fallback {
+            width: 26px; height: 26px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--brand-from), var(--brand-to));
+            display: flex; align-items: center; justify-content: center;
+            font-size: .75rem; color: #fff; font-weight: 700; flex-shrink: 0;
+        }
+        .pn-toggle { display: flex; align-items: center; gap: 7px; }
+        .pn-toggle input[type=checkbox] {
+            width: 36px; height: 20px; appearance: none;
+            background: rgba(102,126,234,0.22); border-radius: 20px; cursor: pointer;
+            position: relative; transition: background .3s; flex-shrink: 0;
+        }
+        .pn-toggle input[type=checkbox]:checked { background: linear-gradient(135deg, var(--brand-from), var(--brand-to)); }
+        .pn-toggle input[type=checkbox]::after {
+            content:''; position: absolute; top: 2px; left: 2px;
+            width: 16px; height: 16px; border-radius: 50%;
+            background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.25); transition: left .25s;
+        }
+        .pn-toggle input[type=checkbox]:checked::after { left: 18px; }
+        .pn-toggle-label { font-size: .76rem; font-weight: 700; color: var(--link-color); text-transform: uppercase; letter-spacing: .5px; }
+        .pn-toggler {
+            display: none; flex-direction: column; gap: 5px;
+            background: linear-gradient(135deg, var(--brand-from), var(--brand-to));
+            border: none; border-radius: 10px; padding: 10px; cursor: pointer; margin-left: auto;
+        }
+        .pn-toggler span { display: block; width: 20px; height: 2px; background: #fff; border-radius: 2px; transition: all .3s; }
+
+        @media (max-width: 1100px) {
+            .pn-link-label { display: none; }
+            .pn-link > a, .pn-link > .pn-drop-toggle { padding: 7px 8px; }
+            .pn-link-icon { width: 30px; height: 30px; font-size: .95rem; }
+        }
+        @media (max-width: 768px) {
+            .pn-toggler { display: flex; }
+            .pn-links {
+                display: none; flex-direction: column; align-items: stretch;
+                position: fixed; top: 64px; left: 0; right: 0;
+                background: var(--drop-bg); border-bottom: 1px solid var(--nav-border);
+                padding: 12px 16px; box-shadow: 0 12px 30px rgba(0,0,0,.15);
+                gap: 4px; max-height: calc(100vh - 64px); overflow-y: auto;
+            }
+            .pn-links.open { display: flex; }
+            .pn-link > a, .pn-link > .pn-drop-toggle { width: 100%; padding: 10px 14px; }
+            .pn-link-label { display: block !important; }
+            .pn-dropdown { position: static; opacity: 1; pointer-events: all; transform: none; box-shadow: none; border: none; background: var(--link-hover-bg); display: none; }
+            .pn-link.drop-open .pn-dropdown { display: block; }
+            .pn-divider { display: none; }
+        }
+
+        /* ── DASHBOARD CONTENT ── */
+        .dash-hero {
+            padding: 2.5rem 0 0;
+            color: var(--hero-text);
+        }
+
+        /* Profile card */
+        .profile-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 2rem 2.2rem;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--card-border);
+            margin-bottom: 1.5rem;
+            display: flex; align-items: center;
+            gap: 1.5rem; flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .profile-left { display: flex; align-items: center; gap: 1.2rem; }
+        .big-avatar {
+            width: 72px; height: 72px; border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; color: #fff; font-weight: 800;
+            overflow: hidden; flex-shrink: 0;
+            border: 3px solid rgba(102,126,234,0.3);
+            box-shadow: 0 8px 24px rgba(102,126,234,0.3);
+        }
+        .big-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .profile-name { font-size: 1.4rem; font-weight: 800; color: var(--service-title-color); margin-bottom: 2px; }
+        .profile-email { font-size: 0.875rem; color: var(--service-desc-color); }
+        .profile-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            background: linear-gradient(135deg, rgba(102,126,234,0.12), rgba(118,75,162,0.12));
+            border: 1px solid rgba(102,126,234,0.25);
+            color: #667eea; font-size: 0.75rem; font-weight: 700;
+            padding: 4px 10px; border-radius: 20px; margin-top: 6px;
+        }
+        .profile-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn-home {
+            display: flex; align-items: center; gap: 6px;
+            padding: 9px 18px; border-radius: 10px;
+            font-size: .85rem; font-weight: 700;
+            border: 1px solid var(--nav-border);
+            background: transparent; color: var(--link-color);
+            text-decoration: none; transition: all .2s;
+        }
+        .btn-home:hover { background: var(--link-hover-bg); color: #667eea; }
+        .btn-logout {
+            display: flex; align-items: center; gap: 6px;
+            padding: 9px 18px; border-radius: 10px;
+            font-size: .85rem; font-weight: 700;
+            background: linear-gradient(135deg, #dc3545, #e83e8c);
+            color: #fff; text-decoration: none;
+            border: none; transition: all .2s;
+            box-shadow: 0 4px 14px rgba(220,53,69,0.3);
+        }
+        .btn-logout:hover { opacity: .88; color: #fff; transform: translateY(-2px); }
+
+        /* Stat cards */
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 1.5rem 1.8rem;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--card-border);
+            margin-bottom: 1.5rem;
+            display: flex; align-items: center; gap: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover { transform: translateY(-5px); box-shadow: var(--card-hover-shadow); }
+        .stat-icon-wrap {
+            width: 56px; height: 56px; border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.6rem; flex-shrink: 0;
+        }
+        .stat-number { font-size: 2rem; font-weight: 800; color: var(--service-title-color); line-height: 1; }
+        .stat-label { font-size: 0.82rem; color: var(--service-desc-color); margin-top: 3px; font-weight: 600; }
+
+        /* Section label */
+        .section-label {
+            font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1px; color: var(--hero-text); opacity: 0.7;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Service card (same as index) */
+        .service-card {
+            background: var(--card-bg);
+            border-radius: 20px; padding: 1.5rem 1.8rem;
+            box-shadow: var(--card-shadow); transition: all 0.4s ease;
+            border: 1px solid var(--card-border); height: 100%;
+            margin-bottom: 1.5rem;
+        }
+        .service-card:hover { transform: translateY(-6px); box-shadow: var(--card-hover-shadow); }
+        .service-card-title { font-size: 1rem; font-weight: 700; color: var(--service-title-color); margin-bottom: 0.75rem; }
+
+        /* Quick links */
+        .quick-link {
+            display: flex; align-items: center; gap: 12px;
+            padding: 0.9rem 1.1rem; border-radius: 12px;
+            background: var(--quick-bg);
+            text-decoration: none; color: var(--quick-color);
+            font-weight: 600; font-size: 0.9rem;
+            transition: all 0.2s; margin-bottom: 0.6rem;
+            border: 1px solid var(--quick-border);
+        }
+        .quick-link:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff; transform: translateX(5px);
+            border-color: transparent;
+        }
+        .quick-link:hover .ql-icon { background: rgba(255,255,255,0.2); }
+        .ql-icon {
+            width: 32px; height: 32px; border-radius: 8px;
+            background: rgba(102,126,234,0.12);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; flex-shrink: 0; transition: background .2s;
+        }
+
+        /* Activity feed */
+        .activity-item {
+            display: flex; align-items: flex-start; gap: 12px;
+            padding: 0.85rem 0;
+            border-bottom: 1px solid rgba(102,126,234,0.08);
+        }
+        .activity-item:last-child { border-bottom: none; }
+        .activity-dot {
+            width: 36px; height: 36px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; flex-shrink: 0;
+        }
+        .activity-text { font-size: 0.875rem; color: var(--service-title-color); font-weight: 600; line-height: 1.4; }
+        .activity-time { font-size: 0.75rem; color: var(--service-desc-color); margin-top: 2px; }
+
+        /* Floating pets */
+        .floating-elements { position: fixed; width: 100%; height: 100%; overflow: hidden; pointer-events: none; top: 0; left: 0; z-index: 0; }
+        .floating-pet { position: absolute; font-size: 2rem; opacity: 0.06; animation: float 25s infinite linear; }
+        @keyframes float {
+            from { transform: translateX(-100px) rotate(0deg); }
+            to   { transform: translateX(calc(100vw + 100px)) rotate(360deg); }
+        }
+
+        /* Footer */
+        .footer-custom {
+            background: var(--footer-bg) !important; color: var(--footer-text) !important;
+            padding: 3rem 0 1rem; margin-top: 4rem;
+            transition: background 0.4s ease, color 0.4s ease; position: relative; z-index: 1;
+        }
+        .footer-heading { color: var(--footer-heading) !important; font-weight: bold; margin-bottom: 1.5rem; }
+        .footer-text { color: var(--footer-text) !important; line-height: 1.6; margin-bottom: 1.5rem; }
+        .footer-links { list-style: none; padding: 0; }
+        .footer-links li { margin-bottom: 0.8rem; }
+        .footer-links a { color: var(--footer-link) !important; text-decoration: none; transition: all 0.3s ease; }
+        .footer-links a:hover { color: var(--footer-link-hover) !important; padding-left: 5px; }
+        .footer-bottom { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--footer-border); text-align: center; color: var(--footer-bottom) !important; }
+        .footer-custom p, .footer-custom span, .footer-custom small, .footer-custom li { color: inherit; }
+
+        /* PawBot launcher */
+        #pawbot-launcher {
+            position: fixed; bottom: 28px; right: 28px;
+            width: 64px; height: 64px; border-radius: 50%;
+            background: linear-gradient(135deg,#7c5cfc 0%,#b06aff 100%);
+            box-shadow: 0 8px 28px rgba(124,92,252,.6);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 9999; text-decoration: none;
+            transition: transform .25s ease, box-shadow .25s ease;
+            animation: launcher-pulse 3s ease-in-out infinite;
+        }
+        #pawbot-launcher:hover { transform: scale(1.12); box-shadow: 0 14px 38px rgba(124,92,252,.75); animation: none; }
+        #pawbot-launcher span { font-size: 1.9rem; line-height: 1; }
+        @keyframes launcher-pulse {
+            0%,100% { box-shadow: 0 8px 28px rgba(124,92,252,.6); }
+            50%      { box-shadow: 0 8px 40px rgba(124,92,252,.9), 0 0 0 8px rgba(124,92,252,.1); }
+        }
+        #pawbot-launcher::before {
+            content: 'Chat with PawBot'; position: absolute; right: 74px; top: 50%;
+            transform: translateY(-50%); background: rgba(30,24,52,0.95); color: #e8e0ff;
+            font-size: 0.78rem; font-weight: 600; white-space: nowrap; padding: 6px 12px;
+            border-radius: 20px; border: 1px solid rgba(124,92,252,.3);
+            opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
+        }
+        #pawbot-launcher:hover::before { opacity: 1; }
+
+        .main-content { position: relative; z-index: 1; }
+    </style>
+</head>
+<body>
+
+    <!-- Floating bg pets -->
+    <div class="floating-elements">
+        <div class="floating-pet" style="top:10%;animation-delay:0s;">🐕</div>
+        <div class="floating-pet" style="top:30%;animation-delay:7s;">🐱</div>
+        <div class="floating-pet" style="top:55%;animation-delay:14s;">🦜</div>
+        <div class="floating-pet" style="top:75%;animation-delay:21s;">🐰</div>
+        <div class="floating-pet" style="top:20%;animation-delay:5s;">🐠</div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="pn-nav" id="pnNav">
+        <div class="container">
+            <a class="pn-brand" href="/">
+                <div class="pn-brand-icon">🐾</div>
+                PetNova
+            </a>
+            <button class="pn-toggler" id="pnToggler" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="pn-links" id="pnLinks">
+                <li class="pn-link"><a href="/"><span class="pn-link-icon">🏠</span><span class="pn-link-label">Home</span></a></li>
+                <li class="pn-link"><a href="/pets"><span class="pn-link-icon">👀</span><span class="pn-link-label">Browse</span></a></li>
+                <li class="pn-link"><a href="/buy"><span class="pn-link-icon">🛒</span><span class="pn-link-label">Buy</span></a></li>
+                <li class="pn-link"><a href="/add"><span class="pn-link-icon">➕</span><span class="pn-link-label">Add Pet</span></a></li>
+                <li class="pn-link"><a href="/pawbot"><span class="pn-link-icon">🤖</span><span class="pn-link-label">PawBot</span></a></li>
+                <li class="pn-link" id="servicesItem">
+                    <button class="pn-drop-toggle" id="servicesToggle">
+                        <span class="pn-link-icon">🔧</span>
+                        <span class="pn-link-label">Services</span>
+                        <span class="pn-drop-caret">▼</span>
+                    </button>
+                    <div class="pn-dropdown">
+                        <a href="/care-tips"><span>🩺</span> Care Tips</a>
+                        <a href="/mate"><span>💕</span> Find Mate</a>
+                        <a href="/rescue"><span>🏠</span> Rescue</a>
+                        <a href="/vet"><span>🏥</span> Vet Directory</a>
+                        <a href="/petaccessories"><span>🏪</span> Pet Shops</a>
+                    </div>
+                </li>
+                <li class="pn-divider"></li>
+                {% if current_user.is_authenticated %}
+                <li class="pn-link active" id="userItem">
+                    <button class="pn-drop-toggle">
+                        {% if session.get('user', {}).get('photo') %}
+                            <img src="{{ session['user']['photo'] }}" class="pn-avatar" alt="avatar">
+                        {% else %}
+                            <div class="pn-avatar-fallback">{{ current_user.name[0].upper() }}</div>
+                        {% endif %}
+                        <span class="pn-link-label">{{ current_user.name.split()[0] }}</span>
+                        <span class="pn-drop-caret">▼</span>
+                    </button>
+                    <div class="pn-dropdown">
+                        <a href="/dashboard"><span>📊</span> Dashboard</a>
+                        <a href="/logout"><span>🚪</span> Logout</a>
+                    </div>
+                </li>
+                {% else %}
+                <li class="pn-link">
+                    <a href="/login/google" class="pn-login-btn">
+                        <span>🔐</span><span class="pn-link-label">Login with Google</span>
+                    </a>
+                </li>
+                {% endif %}
+                <li class="pn-link" style="padding: 0 4px;">
+                    <label class="pn-toggle">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span class="pn-toggle-label">Dark</span>
+                    </label>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <div class="dash-hero">
+            <div class="container">
+
+                <!-- Profile Card -->
+                <div class="profile-card">
+                    <div class="profile-left">
+                        <div class="big-avatar">
+                            {% if session.get('user', {}).get('photo') %}
+                                <img src="{{ session['user']['photo'] }}" alt="avatar">
+                            {% else %}
+                                {{ current_user.name[0].upper() }}
+                            {% endif %}
+                        </div>
+                        <div>
+                            <div class="profile-name">{{ current_user.name }} 👋</div>
+                            <div class="profile-email">{{ session.get('user', {}).get('email', '') }}</div>
+                            <div class="profile-badge">🐾 PetNova Member</div>
+                        </div>
+                    </div>
+                    <div class="profile-actions">
+                        <a href="/" class="btn-home">🏠 <span>Home</span></a>
+                        <a href="/logout" class="btn-logout">🚪 <span>Logout</span></a>
+                    </div>
+                </div>
+
+                <!-- Stats Row -->
+                <p class="section-label">Your Stats</p>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="stat-card">
+                            <div class="stat-icon-wrap" style="background:linear-gradient(135deg,rgba(102,126,234,0.15),rgba(118,75,162,0.15));">🐾</div>
+                            <div>
+                                <div class="stat-number">{{ pet_count }}</div>
+                                <div class="stat-label">Total Pets Listed</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-card">
+                            <div class="stat-icon-wrap" style="background:linear-gradient(135deg,rgba(232,62,140,0.15),rgba(253,126,20,0.15));">🏠</div>
+                            <div>
+                                <div class="stat-number">{{ rescue_count }}</div>
+                                <div class="stat-label">Rescue Reports</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-card">
+                            <div class="stat-icon-wrap" style="background:linear-gradient(135deg,rgba(40,167,69,0.15),rgba(32,201,151,0.15));">🤖</div>
+                            <div>
+                                <div class="stat-number">∞</div>
+                                <div class="stat-label">PawBot Chats</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions + Activity -->
+                <div class="row g-3 pb-5">
+                    <!-- Quick Actions -->
+                    <div class="col-lg-5">
+                        <p class="section-label">Quick Actions</p>
+                        <div class="service-card">
+                            <a href="/add" class="quick-link"><div class="ql-icon">➕</div> Add a Pet</a>
+                            <a href="/pets" class="quick-link"><div class="ql-icon">👀</div> Browse All Pets</a>
+                            <a href="/buy" class="quick-link"><div class="ql-icon">🛒</div> Buy a Pet</a>
+                            <a href="/mate" class="quick-link"><div class="ql-icon">💕</div> Find a Mate</a>
+                            <a href="/rescue" class="quick-link"><div class="ql-icon">🏠</div> Rescue Center</a>
+                            <a href="/care-tips" class="quick-link"><div class="ql-icon">🩺</div> Care Tips</a>
+                            <a href="/vet" class="quick-link"><div class="ql-icon">🏥</div> Vet Directory</a>
+                            <a href="/pawbot" class="quick-link"><div class="ql-icon">🤖</div> Chat with PawBot</a>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="col-lg-7">
+                        <p class="section-label">Platform Activity</p>
+                        <div class="service-card">
+                            <div class="service-card-title mb-3">Recent Updates</div>
+                            <div class="activity-item">
+                                <div class="activity-dot" style="background:rgba(102,126,234,0.12);">🐾</div>
+                                <div>
+                                    <div class="activity-text">Welcome to PetNova Dashboard!</div>
+                                    <div class="activity-time">You're logged in as {{ current_user.name }}</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-dot" style="background:rgba(40,167,69,0.12);">➕</div>
+                                <div>
+                                    <div class="activity-text">{{ pet_count }} pets listed on the platform</div>
+                                    <div class="activity-time">Browse or add your own</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-dot" style="background:rgba(220,53,69,0.12);">🏠</div>
+                                <div>
+                                    <div class="activity-text">{{ rescue_count }} rescue reports submitted</div>
+                                    <div class="activity-time">Help pets find their forever homes</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-dot" style="background:rgba(124,92,252,0.12);">🤖</div>
+                                <div>
+                                    <div class="activity-text">PawBot is ready to help</div>
+                                    <div class="activity-time">Ask anything about pets or the platform</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-dot" style="background:rgba(232,62,140,0.12);">💕</div>
+                                <div>
+                                    <div class="activity-text">Find a mate for your pet</div>
+                                    <div class="activity-time">Connect with compatible pets nearby</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer-custom">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h4 class="footer-heading">🐾 PetNova</h4>
+                    <p class="footer-text">Your complete platform for everything pet-related. Connecting pet lovers, facilitating adoptions, and building a stronger pet community.</p>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="footer-heading">Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/pets">Browse Pets</a></li>
+                        <li><a href="/add">Add Pet</a></li>
+                        <li><a href="/pawbot">🤖 PawBot</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-heading">Services</h5>
+                    <ul class="footer-links">
+                        <li><a href="/buy">Buy Pets</a></li>
+                        <li><a href="/sell">Sell Pets</a></li>
+                        <li><a href="/mate">Find Mate</a></li>
+                        <li><a href="/rescue">Pet Rescue</a></li>
+                        <li><a href="/vet">Vet Directory</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-heading">Get in Touch</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">📧 info@petnova.com</a></li>
+                        <li><a href="#">📍 Mumbai, India</a></li>
+                        <li><a href="#">🕒 24/7 Support</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 PetNova. All rights reserved. | College Project</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- PawBot Launcher -->
+    <a href="/pawbot" id="pawbot-launcher" aria-label="Open PawBot chat">
+        <span>🐾</span>
+    </a>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const pnNav = document.getElementById('pnNav');
+        window.addEventListener('scroll', () => pnNav.classList.toggle('scrolled', scrollY > 20));
+        document.getElementById('pnToggler')?.addEventListener('click', () =>
+            document.getElementById('pnLinks').classList.toggle('open'));
+        document.getElementById('servicesToggle')?.addEventListener('click', e => {
+            e.stopPropagation();
+            document.getElementById('servicesItem').classList.toggle('drop-open');
+        });
+    </script>
+    <script>
+        (function () {
+            const toggle = document.getElementById('darkModeToggle');
+            const apply = on => {
+                document.body.classList.toggle('dark-mode', on);
+                if (toggle) toggle.checked = on;
+            };
+            apply(localStorage.getItem('darkMode') === 'true');
+            toggle?.addEventListener('change', function () {
+                apply(this.checked); localStorage.setItem('darkMode', this.checked);
+            });
+        })();
+    </script>
+</body>
+</html>

@@ -103,7 +103,7 @@ def init_db():
             CREATE TABLE IF NOT EXISTS pets (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT, breed TEXT, location TEXT,
-                age INTEGER, purpose TEXT, photo TEXT, category TEXT
+                age INTEGER, purpose TEXT, photo TEXT, category TEXT, user_id INTEGER
             )
         ''')
         try:
@@ -155,7 +155,6 @@ def callback():
         token     = google.authorize_access_token()
         user_info = token.get('userinfo')
 
-        # Fallback if userinfo not embedded in token
         if not user_info:
             resp      = google.get('https://openidconnect.googleapis.com/v1/userinfo', token=token)
             user_info = resp.json()
@@ -172,19 +171,40 @@ def callback():
                 user = conn.execute("SELECT * FROM users WHERE email=?", (email,)).fetchone()
 
         login_user(User(user[0], user[2]))
-
-        # ✅ Store in Flask session so Jinja2 templates can access it
-        session['user'] = {
-            'name':  name,
-            'email': email,
-            'photo': photo,
-        }
-
-        return redirect("/")
+        session['user'] = {'name': name, 'email': email, 'photo': photo}
+        print("✅ Login success, redirecting to dashboard")
+        return redirect("/dashboard") 
 
     except Exception as e:
         print(f"OAuth callback error: {e}")
         return redirect("/?login_error=1")
+
+
+@app.route("/dashboard")
+@login_required
+def dashboard():
+    with sqlite3.connect("users.db") as conn:
+        user_data = conn.execute(
+            "SELECT * FROM users WHERE id=?", (current_user.id,)
+        ).fetchone()
+
+    with sqlite3.connect("pets.db") as conn:
+        pet_count = conn.execute("SELECT COUNT(*) FROM pets").fetchone()[0]
+
+    with sqlite3.connect("rescue.db") as conn:
+        rescue_count = conn.execute(
+            "SELECT COUNT(*) FROM lost_found_reports"
+        ).fetchone()[0]
+
+    user = session.get('user', {})
+    return render_template("dashboard.html",
+                           user_data=user_data,
+                           user=user,
+                           pet_count=pet_count,
+                           rescue_count=rescue_count)
+
+
+
 
 @app.route("/logout")
 @login_required
