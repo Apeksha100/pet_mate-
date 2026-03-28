@@ -536,68 +536,117 @@
     <!-- ═══════════════════════════════════════════
          NAVBAR
     ═══════════════════════════════════════════ -->
-<nav class="pn-nav" id="pnNav">
-    <div class="container">
-        <a class="pn-brand" href="/">
-            <div class="pn-brand-icon">🐾</div>
-            PetNova
-        </a>
-        <button class="pn-toggler" id="pnToggler" aria-label="Menu">
-            <span></span><span></span><span></span>
-        </button>
-        <ul class="pn-links" id="pnLinks">
-            <li class="pn-link"><a href="/"><span class="pn-link-icon">🏠</span><span class="pn-link-label">Home</span></a></li>
-            <li class="pn-link"><a href="/pets"><span class="pn-link-icon">👀</span><span class="pn-link-label">Browse</span></a></li>
-            <li class="pn-link"><a href="/buy"><span class="pn-link-icon">🛒</span><span class="pn-link-label">Buy</span></a></li>
-            <li class="pn-link active"><a href="/add"><span class="pn-link-icon">➕</span><span class="pn-link-label">Add Pet</span></a></li>
-            <li class="pn-link"><a href="/pawbot"><span class="pn-link-icon">🤖</span><span class="pn-link-label">PawBot</span></a></li>
-            <li class="pn-link" id="servicesItem">
-                <button class="pn-drop-toggle" id="servicesToggle">
-                    <span class="pn-link-icon">🔧</span>
-                    <span class="pn-link-label">Services</span>
-                    <span class="pn-drop-caret">▼</span>
-                </button>
-                <div class="pn-dropdown">
-                    <a href="/care-tips"><span>🩺</span> Care Tips</a>
-                    <a href="/mate"><span>💕</span> Find Mate</a>
-                    <a href="/rescue"><span>🏠</span> Rescue</a>
-                    <a href="/vet"><span>🏥</span> Vet Directory</a>
-                    <a href="/petaccessories"><span>🏪</span> Pet Shops</a>
-                </div>
-            </li>
-            <li class="pn-divider"></li>
-            {% if current_user.is_authenticated %}
-            <li class="pn-link" id="userItem">
-                <button class="pn-drop-toggle">
-                    {% if session.get('user', {}).get('photo') %}
-                        <img src="{{ session['user']['photo'] }}" class="pn-avatar" alt="avatar">
-                    {% else %}
-                        <div class="pn-avatar-fallback">{{ current_user.name[0].upper() }}</div>
-                    {% endif %}
-                    <span class="pn-link-label">{{ current_user.name.split()[0] }}</span>
-                    <span class="pn-drop-caret">▼</span>
-                </button>
-                <div class="pn-dropdown">
-                    <a href="/dashboard"><span>👤</span> {{ current_user.name }}</a>
-                    <a href="/logout"><span>🚪</span> Logout</a>
-                </div>
-            </li>
-            {% else %}
-            <li class="pn-link">
-                <a href="/login/google" class="pn-login-btn">
-                    <span>🔐</span><span class="pn-link-label">Login with Google</span>
-                </a>
-            </li>
-            {% endif %}
-            <li class="pn-link" style="padding: 0 4px;">
-                <label class="pn-toggle">
-                    <input type="checkbox" id="darkModeToggle">
-                    <span class="pn-toggle-label">Dark</span>
-                </label>
-            </li>
-        </ul>
-    </div>
-</nav>
+    <nav class="pn-nav" id="pnNav">
+        <div class="container">
+            <!-- Brand -->
+            <a class="pn-brand" href="/">
+                <div class="pn-brand-icon">🐾</div>
+                PetNova
+            </a>
+
+            <!-- Hamburger (mobile) -->
+            <button class="pn-toggler" id="pnToggler" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+
+            <!-- Links -->
+            <ul class="pn-links" id="pnLinks">
+
+                <li class="pn-link active">
+                    <a href="/">
+                        <span class="pn-link-icon">🏠</span>
+                        <span class="pn-link-label">Home</span>
+                    </a>
+                </li>
+
+                <li class="pn-link">
+                    <a href="/pets">
+                        <span class="pn-link-icon">👀</span>
+                        <span class="pn-link-label">Browse</span>
+                    </a>
+                </li>
+
+                <li class="pn-link">
+                    <a href="/buy">
+                        <span class="pn-link-icon">🛒</span>
+                        <span class="pn-link-label">Buy</span>
+                    </a>
+                </li>
+
+                <li class="pn-link">
+                    <a href="/add">
+                        <span class="pn-link-icon">➕</span>
+                        <span class="pn-link-label">Add Pet</span>
+                    </a>
+                </li>
+
+                <li class="pn-link">
+                    <a href="/pawbot">
+                        <span class="pn-link-icon">🤖</span>
+                        <span class="pn-link-label">PawBot</span>
+                    </a>
+                </li>
+
+                <!-- Services dropdown -->
+                <li class="pn-link" id="servicesItem">
+                    <button class="pn-drop-toggle" id="servicesToggle">
+                        <span class="pn-link-icon">🔧</span>
+                        <span class="pn-link-label">Services</span>
+                        <span class="pn-drop-caret">▼</span>
+                    </button>
+                    <div class="pn-dropdown">
+                        <a href="/care-tips"><span>🩺</span> Care Tips</a>
+                        <a href="/mate"><span>💕</span> Find Mate</a>
+                        <a href="/rescue"><span>🏠</span> Rescue</a>
+                        <a href="/vet"><span>🏥</span> Vet Directory</a>
+                        <a href="/petaccessories"><span>🏪</span> Pet Shops</a>
+                    </div>
+                </li>
+
+                <li class="pn-divider"></li>
+
+                <!-- ✅ FIXED: LOGIN / USER using current_user from Flask-Login -->
+                {% if current_user.is_authenticated %}
+                <li class="pn-link" id="userItem">
+                    <button class="pn-drop-toggle">
+                        <!-- Show Google profile photo if available, else initials -->
+                        {% if session.get('user', {}).get('photo') %}
+                            <img src="{{ session['user']['photo'] }}" class="pn-avatar" alt="avatar">
+                        {% else %}
+                            <div class="pn-avatar-fallback">
+                                {{ current_user.name[0].upper() }}
+                            </div>
+                        {% endif %}
+                        <span class="pn-link-label">{{ current_user.name.split()[0] }}</span>
+                        <span class="pn-drop-caret">▼</span>
+                    </button>
+                    <div class="pn-dropdown">
+                        <a href="/dashboard"><span>👤</span> {{ current_user.name }}</a>
+                        <!--<a href="#"><span>📧</span> {{ session.get('user', {}).get('email', '') }}</a>-->
+                        <a href="/logout"><span>🚪</span> Logout</a>
+                    </div>
+                </li>
+                {% else %}
+                <li class="pn-link">
+                    <a href="/login/google" class="pn-login-btn">
+                        <span>🔐</span>
+                        <span class="pn-link-label">Login with Google</span>
+                    </a>
+                </li>
+                {% endif %}
+
+                <!-- Dark mode toggle -->
+                <li class="pn-link" style="padding: 0 4px;">
+                    <label class="pn-toggle">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span class="pn-toggle-label">Dark</span>
+                    </label>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+
     <!-- Floating background pets -->
     <div class="floating-elements">
         <div class="floating-pet" style="top:10%;animation-delay:0s;">🐕</div>

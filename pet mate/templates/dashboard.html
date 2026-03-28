@@ -586,7 +586,48 @@
                         </div>
                     </div>
                 </div>
-
+                                <!-- My Pets -->
+                <p class="section-label">My Pets</p>
+                <div class="service-card mb-5">
+                    {% if my_pets %}
+                    <div class="row g-3">
+                        {% for pet in my_pets %}
+                        <div class="col-md-4">
+                            <div style="background:var(--quick-bg);border-radius:14px;padding:1rem;border:1px solid var(--quick-border);">
+                                {% if pet[6] %}
+                                <img src="/uploads/{{ pet[6] }}"
+                                    style="width:100%;height:140px;object-fit:cover;border-radius:10px;margin-bottom:0.75rem;">
+                                {% endif %}
+                                <div style="font-weight:700;color:var(--service-title-color);font-size:1rem;">{{ pet[1] }}</div>
+                                <div style="font-size:0.8rem;color:var(--service-desc-color);margin-top:2px;">
+                                    {{ pet[7] }} · {{ pet[2] }} · {{ pet[3] }} · {{ pet[9] if pet[9] else 'Unknown' }}
+                                </div>
+                                <div style="margin-top:8px;display:flex;align-items:center;justify-content:space-between;">
+                                    <span style="background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:2px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;">
+                                        {{ pet[5] }}
+                                    </span>
+                                    <form method="POST" action="/delete_pet/{{ pet[0] }}"
+                                        onsubmit="return confirm('Delete {{ pet[1] }}?')">
+                                        <button type="submit"
+                                                style="background:linear-gradient(135deg,#dc3545,#e83e8c);color:#fff;border:none;border-radius:20px;padding:2px 12px;font-size:0.75rem;font-weight:600;cursor:pointer;">
+                                            🗑 Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div style="text-align:center;padding:2rem;color:var(--service-desc-color);">
+                        <div style="font-size:2.5rem;margin-bottom:0.5rem;">🐾</div>
+                        <p>You haven't added any pets yet.</p>
+                        <a href="/add" style="background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:8px 20px;border-radius:20px;text-decoration:none;font-weight:600;">
+                            ➕ Add Your First Pet
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>

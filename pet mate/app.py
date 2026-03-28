@@ -110,6 +110,14 @@ def init_db():
             conn.execute("ALTER TABLE pets ADD COLUMN category TEXT")
         except sqlite3.OperationalError:
             pass
+        try:
+            conn.execute("ALTER TABLE pets ADD COLUMN user_id INTEGER")
+        except sqlite3.OperationalError:
+            pass
+        try:
+            conn.execute("ALTER TABLE pets ADD COLUMN gender TEXT")
+        except sqlite3.OperationalError:
+            pass
 
     with sqlite3.connect("rescue.db") as conn:
         conn.execute('''
@@ -189,7 +197,12 @@ def dashboard():
         ).fetchone()
 
     with sqlite3.connect("pets.db") as conn:
-        pet_count = conn.execute("SELECT COUNT(*) FROM pets").fetchone()[0]
+        pet_count = conn.execute(
+            "SELECT COUNT(*) FROM pets WHERE user_id=?", (current_user.id,)
+        ).fetchone()[0]
+        my_pets = conn.execute(
+            "SELECT * FROM pets WHERE user_id=?", (current_user.id,)
+        ).fetchall()
 
     with sqlite3.connect("rescue.db") as conn:
         rescue_count = conn.execute(
@@ -201,9 +214,8 @@ def dashboard():
                            user_data=user_data,
                            user=user,
                            pet_count=pet_count,
-                           rescue_count=rescue_count)
-
-
+                           rescue_count=rescue_count,
+                           my_pets=my_pets)
 
 
 @app.route("/logout")
@@ -238,6 +250,7 @@ def add_petshop():
     return render_template('add-petshop.html')
 
 @app.route('/add', methods=['GET', 'POST'])
+@login_required
 def add_pet():
     pet = None
     if request.method == 'POST':
@@ -245,6 +258,7 @@ def add_pet():
         category = request.form.get('category')
         breed    = request.form.get('breed')
         location = request.form.get('location')
+        gender   = request.form.get('gender')
         age      = request.form.get('age')
         purpose  = request.form.get('purpose')
         try:
@@ -262,11 +276,23 @@ def add_pet():
 
         with sqlite3.connect("pets.db") as conn:
             conn.execute(
-                "INSERT INTO pets (name, breed, location, age, purpose, photo, category) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                (name, breed, location, age, purpose, photo, category)
+                "INSERT INTO pets (name, breed, location, age, purpose, photo, category, user_id, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (name, breed, location, age, purpose, photo, category, current_user.id, gender)
             )
         pet = [None, name, breed, location, age, purpose, photo]
     return render_template('add_pet.html', pet=pet)
+
+@app.route('/delete_pet/<int:pet_id>', methods=['POST'])
+@login_required
+def delete_pet(pet_id):
+    with sqlite3.connect("pets.db") as conn:
+        conn.execute(
+            "DELETE FROM pets WHERE id=? AND user_id=?",
+            (pet_id, current_user.id)
+        )
+    return redirect('/dashboard')
+
+    
 
 @app.route('/pets')
 def list_pets():
@@ -292,11 +318,14 @@ def buy_pet(pet_id):
 def sell_pet_redirect():
     return redirect('/add')
 
+
+
 @app.route('/mate', methods=['GET', 'POST'])
 def find_mate():
     pets = []
     selected_category = None
     selected_breed    = None
+    selected_gender   = None
     with sqlite3.connect("pets.db") as conn:
         categories = [row[0] for row in conn.execute("SELECT DISTINCT category FROM pets").fetchall()]
         breeds_per_category = {}
@@ -309,18 +338,35 @@ def find_mate():
     if request.method == 'POST':
         selected_category = request.form.get('category')
         selected_breed    = request.form.get('breed')
+        selected_gender   = request.form.get('my_gender')  # user's pet gender
+
+        # opposite gender logic
+        opposite = None
+        if selected_gender == 'Male':
+            opposite = 'Female'
+        elif selected_gender == 'Female':
+            opposite = 'Male'
+
         query  = "SELECT * FROM pets WHERE purpose='Mate'"
         params = []
         if selected_category:
             query += " AND category=?"; params.append(selected_category)
         if selected_breed:
-            query += " AND breed=?";    params.append(selected_breed)
+            query += " AND breed=?"; params.append(selected_breed)
+        if opposite:
+            query += " AND gender=?"; params.append(opposite)
+
         with sqlite3.connect("pets.db") as conn:
             pets = conn.execute(query, params).fetchall()
+
     return render_template('mate.html', pets=pets, categories=categories,
                            breeds_per_category=breeds_per_category,
                            selected_category=selected_category,
-                           selected_breed=selected_breed)
+                           selected_breed=selected_breed,
+                           selected_gender=selected_gender)
+
+
+
 
 @app.route('/search', methods=['GET', 'POST'])
 def search_pets():

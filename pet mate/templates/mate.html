@@ -409,14 +409,24 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-md-6 mb-3">
+                            <label class="form-label">My Pet's Gender *</label>
+                            <div class="input-group has-icon">
+                                <span class="input-group-text">⚧</span>
+                                <select name="my_gender" class="form-control" required>
+                                    <option value="">Select Gender</option>
+                                    <option value="Male">♂ Male (find Female)</option>
+                                    <option value="Female">♀ Female (find Male)</option>
+                                </select>
+                            </div>
+                        </div>
                         </div>
                     </div>
                     <button type="submit" class="btn-search">💕 Find Compatible Mates</button>
                 </form>
             </div>
 
-            <!-- Results Section -->
-            <div id="resultsSection">
+            {% if request.method == 'POST' %}
                 {% if pets %}
                 <div class="row">
                     {% for pet in pets %}
@@ -426,26 +436,14 @@
                                 {{ pet[1] }}
                                 <span class="pet-badge">Available for Mating</span>
                             </h4>
-                            <div class="pet-info">
-                                <span class="pet-info-icon">🏷️</span>
-                                <span><strong>Category:</strong> {{ pet[7] }}</span>
-                            </div>
-                            <div class="pet-info">
-                                <span class="pet-info-icon">🎯</span>
-                                <span><strong>Breed:</strong> {{ pet[2] }}</span>
-                            </div>
-                            <div class="pet-info">
-                                <span class="pet-info-icon">📍</span>
-                                <span><strong>Location:</strong> {{ pet[3] }}</span>
-                            </div>
-                            <div class="pet-info">
-                                <span class="pet-info-icon">🎂</span>
-                                <span><strong>Age:</strong> {{ pet[4] }} years</span>
-                            </div>
+                            <div class="pet-info"><span class="pet-info-icon">🏷️</span><span><strong>Category:</strong> {{ pet[7] }}</span></div>
+                            <div class="pet-info"><span class="pet-info-icon">🎯</span><span><strong>Breed:</strong> {{ pet[2] }}</span></div>
+                            <div class="pet-info"><span class="pet-info-icon">📍</span><span><strong>Location:</strong> {{ pet[3] }}</span></div>
+                            <div class="pet-info"><span class="pet-info-icon">🎂</span><span><strong>Age:</strong> {{ pet[4] }} years</span></div>
+                            <div class="pet-info"><span class="pet-info-icon">⚧</span><span><strong>Gender:</strong> {{ pet[9] }}</span></div>
                             {% if pet[6] %}
                             <div class="pet-info">
-                                <img src="{{ url_for('static', filename='uploads/' + pet[6]) }}" alt="{{ pet[1] }}"
-                                     style="max-width:100%;border-radius:10px;margin-top:10px;">
+                                <img src="{{ url_for('static', filename='uploads/' + pet[6]) }}" alt="{{ pet[1] }}" style="max-width:100%;border-radius:10px;margin-top:10px;">
                             </div>
                             {% endif %}
                             <button class="btn-contact">📞 Contact Owner</button>
@@ -454,25 +452,22 @@
                     {% endfor %}
                 </div>
                 {% else %}
-                <div id="noResults">
-                    <div class="empty-state">
-                        <div class="empty-state-icon">😔</div>
-                        <h3>No Pets Found</h3>
-                        <p class="text-muted">We couldn't find any pets matching your criteria. Try adjusting your search filters or check back later.</p>
-                    </div>
+                <div class="empty-state">
+                    <div class="empty-state-icon">😔</div>
+                    <h3>No Pets Found</h3>
+                    <p class="text-muted">No opposite gender pets found. Try a different category or breed.</p>
                 </div>
                 {% endif %}
-            </div>
-
-            <!-- Initial State -->
-            <div class="empty-state" id="initialState">
+            {% else %}
+            <div class="empty-state">
                 <div class="empty-state-icon">💕</div>
                 <h3>Start Your Search</h3>
-                <p class="text-muted">Select your pet's category and breed above to find compatible mates in your area</p>
+                <p class="text-muted">Select your pet's category, breed and gender above to find compatible mates</p>
             </div>
+            {% endif %}
+            </div>  {# closes container pb-5 #}
         </div>
     </div>
-
     <!-- Footer -->
     <footer class="footer-custom">
         <div class="container">
